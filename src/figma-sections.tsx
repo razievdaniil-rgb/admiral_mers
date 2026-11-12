@@ -10,6 +10,7 @@ import {
   Plus,
 } from "lucide-react";
 import { gsap } from "gsap";
+import { XrayImage } from "./xray-image";
 import { AboutFilm } from "./about-film";
 import { assetUrl, media } from "./assets";
 import { branches, branchStatus, history, mapLink, services } from "./data";
@@ -389,32 +390,34 @@ export function FigmaHome({ onBook }: Props) {
           <p className="fhero-subtitle">Ремонт и обслуживание только</p>
           <h1 className="fhero-title">MERCEDES-BENZ</h1>
           <div className="fhero-car-area" ref={car}>
-            <img
+            <XrayImage
               className="fhero-car"
-              src={assetUrl(media.hero)}
+              src={media.hero}
               alt="Серебристый Mercedes-Benz — ТехЦентр Адмирал"
-              fetchPriority="high"
-            />
-            <a
-              href="#/services"
-              className="hero-node hero-node-engine"
-              aria-label="Посмотреть диагностику и услуги"
+              priority
+              cutaway="media/xray/hero-v2.webp"
             >
-              <span>
-                <Plus size={14} />
-              </span>
-              <em>Диагностика и ремонт</em>
-            </a>
-            <a
-              href="#/services/suspension"
-              className="hero-node hero-node-wheel"
-              aria-label="Услуги по ходовой и тормозам"
-            >
-              <span>
-                <Plus size={14} />
-              </span>
-              <em>Ходовая и тормоза</em>
-            </a>
+              <a
+                href="#/services"
+                className="hero-node hero-node-engine"
+                aria-label="Посмотреть диагностику и услуги"
+              >
+                <span>
+                  <Plus size={14} />
+                </span>
+                <em>Диагностика и ремонт</em>
+              </a>
+              <a
+                href="#/services/suspension"
+                className="hero-node hero-node-wheel"
+                aria-label="Услуги по ходовой и тормозам"
+              >
+                <span>
+                  <Plus size={14} />
+                </span>
+                <em>Ходовая и тормоза</em>
+              </a>
+            </XrayImage>
           </div>
           <div className="fhero-actions">
             <button className="button" onClick={() => onBook()}>

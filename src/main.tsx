@@ -46,6 +46,7 @@ import { FigmaHome, FigmaTimeline, ApproachCards } from "./figma-sections";
 import "./figma.css";
 import "./motion-polish.css";
 import "./ux-refinement.css";
+import "./xray-image.css";
 import { SmoothScroll } from "./smooth-scroll";
 import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";

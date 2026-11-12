@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Plus, ZoomIn, ZoomOut } from "lucide-react";
-import { assetUrl } from "./assets";
+import { XrayImage } from "./xray-image";
 const points = [
   { id: "engine", label: "Двигатель", x: 29, y: 43 },
   { id: "suspension", label: "Ходовая и тормоза", x: 23, y: 70 },
@@ -20,6 +20,7 @@ export function VehicleInspector({
   onSelect: (id: string | null) => void;
   isActive: boolean;
 }) {
+  const [controlsHost, setControlsHost] = useState<HTMLDivElement | null>(null);
   const [zoom, setZoom] = useState(false);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -124,37 +125,43 @@ export function VehicleInspector({
             transform: `translate(${pan.x}px,${pan.y}px) scale(${zoom ? 1.65 : 1})`,
           }}
         >
-          <img
-            src={assetUrl(src)}
+          <XrayImage
+            src={src}
             alt={`Mercedes-Benz ${model}`}
-            draggable={false}
-          />
-          {points.map((p) => (
-            <button
-              key={p.id}
-              className={`vehicle-node ${active === p.id ? "active" : ""}`}
-              style={{ left: `${p.x}%`, top: `${p.y}%` }}
-              aria-label={`Узел: ${p.label}`}
-              aria-pressed={active === p.id}
-              onClick={() => onSelect(active === p.id ? null : p.id)}
-            >
-              <Plus size={16} />
-              <span>{p.label}</span>
-            </button>
-          ))}
+            cutaway={`media/xray/${src.includes("Rectangle17") ? "s" : src.includes("Rectangle18") ? "gle" : "e"}.webp`}
+            enabled={isActive}
+            controlsHost={controlsHost}
+          >
+            {points.map((p) => (
+              <button
+                key={p.id}
+                className={`vehicle-node ${active === p.id ? "active" : ""}`}
+                style={{ left: `${p.x}%`, top: `${p.y}%` }}
+                aria-label={`Узел: ${p.label}`}
+                aria-pressed={active === p.id}
+                onClick={() => onSelect(active === p.id ? null : p.id)}
+              >
+                <Plus size={16} />
+                <span>{p.label}</span>
+              </button>
+            ))}
+          </XrayImage>
         </div>
       </div>
-      <button
-        className="vehicle-zoom"
-        aria-pressed={zoom}
-        onClick={() => {
-          setZoom(!zoom);
-          setPan({ x: 0, y: 0 });
-        }}
-      >
-        {zoom ? <ZoomOut size={16} /> : <ZoomIn size={16} />}
-        <span>{zoom ? "Общий вид" : "Приблизить"}</span>
-      </button>
+      <div className="vehicle-explorer-controls">
+        <div ref={setControlsHost} className="xray-controls-host" />
+        <button
+          className="vehicle-zoom"
+          aria-pressed={zoom}
+          onClick={() => {
+            setZoom(!zoom);
+            setPan({ x: 0, y: 0 });
+          }}
+        >
+          {zoom ? <ZoomOut size={16} /> : <ZoomIn size={16} />}
+          <span>{zoom ? "Общий вид" : "Приблизить"}</span>
+        </button>
+      </div>
       {zoom && <span className="vehicle-pan-hint">Перетащите изображение</span>}
     </div>
   );
