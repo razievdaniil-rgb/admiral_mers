@@ -287,3 +287,151 @@
     overflow: hidden;
   }
 }
+/* Secondary controls stay quiet until deliberately used. */
+.xray-toggle,
+.vehicle-explorer-controls .xray-toggle {
+  border-color: transparent;
+  background: transparent;
+  color: #a4afbf;
+  font-weight: 400;
+  box-shadow: none;
+}
+.xray-toggle svg {
+  opacity: 0.75;
+}
+.xray-toggle:hover,
+.xray-toggle:focus-visible {
+  color: #eef2f8;
+  background: #ffffff08;
+  border-color: #ffffff20;
+}
+.xray-toggle[aria-pressed="true"] {
+  background: #ffffff05;
+  color: #cbd6e5;
+  border-color: #ffffff18;
+}
+.fhero .hero-node {
+  height: 38px;
+  gap: 8px;
+  padding: 4px 9px 4px 4px;
+  background: #0a0f1633;
+  border-color: transparent;
+  box-shadow: none;
+  color: #c1c9d6;
+}
+.fhero .hero-node-engine {
+  right: -12%;
+  top: 36%;
+  flex-direction: row;
+  padding: 4px 9px 4px 4px;
+}
+.fhero .hero-node-wheel {
+  left: -6%;
+  top: 62%;
+}
+.fhero .hero-node > span {
+  flex-basis: 27px;
+  width: 27px;
+  height: 27px;
+  background: #0a11195c;
+  border-color: #c6d3e445;
+  color: #c6d1df;
+}
+.fhero .hero-node > span svg {
+  width: 14px;
+  height: 14px;
+}
+.fhero .hero-node em {
+  font-size: 12px;
+  font-weight: 400;
+  text-shadow: 0 1px 5px #000;
+}
+.fhero .hero-node::before {
+  content: "";
+  position: absolute;
+  left: -32px;
+  top: 50%;
+  width: 26px;
+  height: 1px;
+  background: #b0c1d442;
+  pointer-events: none;
+}
+.fhero .hero-node-wheel::before {
+  left: auto;
+  right: -32px;
+}
+.fhero .hero-node:hover,
+.fhero .hero-node:focus-visible {
+  background: #0d141ebf;
+  border-color: #ffffff22;
+  color: #f1f4f9;
+  box-shadow: none;
+}
+.fhero .hero-node:hover > span,
+.fhero .hero-node:focus-visible > span {
+  background: #dce5f01a;
+  border-color: #dce5f094;
+  color: #f3f6fa;
+}
+@media (min-width: 701px) and (max-width: 1100px) {
+  .fhero .hero-node-engine {
+    right: 0;
+    top: 7%;
+  }
+  .fhero .hero-node-wheel {
+    left: 0;
+    top: 72%;
+  }
+  .fhero .hero-node::before {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .fhero .hero-node {
+    height: 32px;
+    gap: 6px;
+    padding: 3px 6px 3px 3px;
+  }
+  .fhero .hero-node-engine {
+    right: 0;
+    top: 0;
+  }
+  .fhero .hero-node-wheel {
+    left: 0;
+    top: 76%;
+  }
+  .fhero .hero-node > span {
+    flex-basis: 23px;
+    width: 23px;
+    height: 23px;
+  }
+  .fhero .hero-node em {
+    font-size: 11px;
+  }
+  .fhero .hero-node::before {
+    display: none;
+  }
+}
+.fhero-content {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (max-width: 1100px) {
+  .fhero-car-area {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    container-type: size;
+    display: grid;
+    place-items: center;
+  }
+  .fhero-car.xray-image {
+    width: min(100cqw, 190.44cqh);
+    height: min(100cqh, 52.51cqw);
+    aspect-ratio: 1335/701;
+  }
+}
+@media (max-width: 700px) {
+  .fhero .hero-node-engine {
+    top: -38px;
+  }
+}
