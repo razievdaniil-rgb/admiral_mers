@@ -14,7 +14,7 @@ export function SmoothScroll() {
           smoothWheel: true,
           syncTouch: false,
           prevent: (node) =>
-            !!node.closest("dialog,.inspector-viewport.zoomed,select"),
+            !!node.closest("dialog,.vehicle-explorer-viewport.zoomed,select"),
         });
         const tick = (time: number) => lenis.raf(time * 1000);
         const reset = () => lenis.scrollTo(0, { immediate: true, force: true });

@@ -51,35 +51,26 @@ export function CategoryModal({
         {model ? `${model}. ` : ""}
         {service.intro}
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Название услуги</th>
-            <th>Комментарий</th>
-            <th>Стоимость</th>
-          </tr>
-        </thead>
-        <tbody>
-          {service.works.map((w) => (
-            <tr key={w}>
-              <td>
-                <a
-                  href={
-                    service.id === "engine" && /трансмис/i.test(w)
-                      ? `#/services/transmission${model ? "?model=" + encodeURIComponent(model) : ""}`
-                      : url
-                  }
-                  onClick={onClose}
-                >
-                  {w}
-                </a>
-              </td>
-              <td>Перечень уточняется после осмотра</td>
-              <td>По согласованию</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ul className="category-work-list">
+        {service.works.map((w) => (
+          <li key={w}>
+            <a
+              href={
+                service.id === "engine" && /трансмис/i.test(w)
+                  ? `#/services/transmission${model ? "?model=" + encodeURIComponent(model) : ""}`
+                  : url
+              }
+              onClick={onClose}
+            >
+              {w}
+              <ArrowUpRight size={17} />
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p className="category-price-note">
+        Стоимость и сроки согласуем после осмотра автомобиля.
+      </p>
       <div className="category-actions">
         <a className="text-link" href={url} onClick={onClose}>
           Подробнее об услуге

@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -8,7 +9,7 @@ import {
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { gsap } from "gsap";
 import { assetUrl, media } from "./assets";
-import { models } from "./data";
+import { models, services } from "./data";
 import { VehicleInspector } from "./vehicle-inspector";
 const showcase = [
   { id: "e", generation: "W213" },
@@ -26,18 +27,22 @@ export function SmoothCatalog({
   onBook: (b: { model: string }) => void;
   renderServices: (model: string) => ReactNode;
 }) {
+  const pickerId = useId();
   const [index, setIndex] = useState(0),
     [busy, setBusy] = useState(false),
+    [activeNode, setActiveNode] = useState<string | null>(null),
     [otherId, setOtherId] = useState("b"),
     [otherGeneration, setOtherGeneration] = useState("W247");
   const stage = useRef<HTMLDivElement>(null),
     slides = useRef<(HTMLDivElement | null)[]>([]),
     previous = useRef(0),
+    watchdog = useRef<ReturnType<typeof setTimeout> | null>(null),
     motion = useRef<gsap.core.Timeline | null>(null),
     direction = useRef(1),
     initialized = useRef(false),
     locked = useRef(false),
     touch = useRef<{ x: number; y: number } | null>(null);
+  const selectedService = services.find((s) => s.id === activeNode);
   const selected = showcase[index],
     other = models.find((m) => m.id === otherId)!;
   const label = `${selected.name} ${selected.generation.replace(/\s*\([^)]*\)/g, "")}`;
@@ -67,6 +72,7 @@ export function SmoothCatalog({
     const incoming = panels[index],
       outgoing = panels[previous.current];
     const finish = () => {
+      if (watchdog.current) clearTimeout(watchdog.current);
       gsap.set(outgoing, { autoAlpha: 0 });
       gsap.set(incoming, { xPercent: 0, scale: 1, rotationY: 0, autoAlpha: 1 });
       locked.current = false;
@@ -86,6 +92,12 @@ export function SmoothCatalog({
       zIndex: 2,
     });
     gsap.set(outgoing, { zIndex: 1 });
+    watchdog.current = setTimeout(() => {
+      if (locked.current) {
+        motion.current?.kill();
+        finish();
+      }
+    }, 1500);
     motion.current = gsap
       .timeline({ onComplete: finish })
       .to(
@@ -109,14 +121,6 @@ export function SmoothCatalog({
           ease: "power3.inOut",
         },
         0,
-      )
-      .fromTo(
-        incoming?.querySelectorAll(
-          ".inspector-views,.inspector-tools,.node-panel",
-        ) || [],
-        { opacity: 0 },
-        { opacity: 1, duration: 0.35 },
-        0.8,
       );
   }, [index]);
   useEffect(() => {
@@ -126,6 +130,7 @@ export function SmoothCatalog({
     });
     return () => {
       motion.current?.kill();
+      if (watchdog.current) clearTimeout(watchdog.current);
     };
   }, []);
   useEffect(() => {
@@ -142,47 +147,27 @@ export function SmoothCatalog({
   }, [index]);
   return (
     <>
-      <section className="catalog container smooth-catalog">
-        <div className="catalog-toolbar">
-          <label>
-            Модель в обзоре
-            <select
-              value={selected.id}
-              disabled={busy}
-              onChange={(e) =>
-                select(showcase.findIndex((m) => m.id === e.target.value))
-              }
-            >
-              {showcase.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name} {m.generation.replace(/\s*\([^)]*\)/g, "")}
-                </option>
-              ))}
-            </select>
-          </label>
-          <span className="showcase-counter">
-            {index + 1} / {showcase.length}
-          </span>
-        </div>
+      <section className="garage container">
         <div
-          className="model-presets"
-          aria-label="Модели с интерактивной схемой"
+          className="garage-models"
+          role="group"
+          aria-label="Выбор автомобиля"
         >
           {showcase.map((m, i) => (
             <button
               key={m.id}
-              className={index === i ? "active" : ""}
+              aria-pressed={index === i}
               disabled={busy}
               onClick={() => select(i)}
             >
-              {m.name} {m.generation.replace(/\s*\([^)]*\)/g, "")}
-              <ArrowUpRight size={15} />
+              {m.name}
+              <span>{m.generation.replace(/\s*\([^)]*\)/g, "")}</span>
             </button>
           ))}
         </div>
         <div
           ref={stage}
-          className="model-stage"
+          className="garage-stage"
           role="group"
           tabIndex={0}
           aria-label="Витрина моделей. Стрелки влево и вправо переключают классы."
@@ -214,37 +199,17 @@ export function SmoothCatalog({
           }}
         >
           <button
-            className="icon-button prev-model"
+            className="garage-arrow prev-model"
             aria-label="Предыдущий класс"
             disabled={busy}
             onClick={() => select(index - 1)}
           >
             <ChevronLeft />
           </button>
-          <div className="model-side-previews">
-            {[-1, 1].map((delta) => {
-              const i = (index + delta + showcase.length) % showcase.length,
-                m = showcase[i];
-              return (
-                <button
-                  key={delta}
-                  className={`model-side-preview ${delta < 0 ? "left" : "right"}`}
-                  disabled={busy}
-                  onClick={() => select(i)}
-                  aria-label={`Выбрать ${m.name} ${m.generation}`}
-                >
-                  <span>
-                    {m.name} {m.generation.replace(/\s*\([^)]*\)/g, "")}
-                  </span>
-                  <img src={assetUrl(m.image)} alt="" />
-                </button>
-              );
-            })}
-          </div>
-          <div className="catalog-track">
+          <div className="garage-track">
             {showcase.map((vehicle, i) => (
               <div
-                className="catalog-slide"
+                className="garage-slide"
                 key={vehicle.id}
                 ref={(el) => {
                   slides.current[i] = el;
@@ -252,15 +217,18 @@ export function SmoothCatalog({
                 aria-hidden={i !== index}
                 inert={i !== index || busy}
               >
-                <div className="model-head">
-                  <h1>
+                <div className="garage-model-title">
+                  <h2>
                     {vehicle.name}
                     <small>{vehicle.generation}</small>
-                  </h1>
+                  </h2>
                 </div>
-                <div className="model-image">
+                <div className="garage-vehicle">
                   <VehicleInspector
                     src={vehicle.image}
+                    active={activeNode}
+                    onSelect={setActiveNode}
+                    isActive={i === index}
                     model={
                       vehicle.name +
                       " " +
@@ -275,29 +243,76 @@ export function SmoothCatalog({
             {label}
           </span>
           <button
-            className="icon-button next-model"
+            className="garage-arrow next-model"
             aria-label="Следующий класс"
             disabled={busy}
             onClick={() => select(index + 1)}
           >
             <ChevronRight />
           </button>
-          <div className="model-stage-footer">
+        </div>
+        <div className="garage-work-panel">
+          <div
+            className="garage-work-options"
+            role="group"
+            aria-label="Узлы автомобиля"
+          >
+            {[
+              ["diagnostics", "Диагностика"],
+              ["engine", "Двигатель"],
+              ["suspension", "Ходовая"],
+              ["electrics", "Электрика"],
+            ].map(([id, title]) => (
+              <button
+                key={id}
+                aria-pressed={activeNode === id}
+                onClick={() => setActiveNode(activeNode === id ? null : id)}
+              >
+                {title}
+              </button>
+            ))}
+          </div>
+          {selectedService && (
+            <div className="garage-selected-work" aria-live="polite">
+              <div>
+                <h3>{selectedService.short}</h3>
+                <p>{selectedService.works.slice(0, 2).join(" · ")}</p>
+              </div>
+              <a
+                className="text-link"
+                href={`#/services/${selectedService.id}?model=${encodeURIComponent(label)}`}
+              >
+                Смотреть работы
+                <ArrowUpRight size={17} />
+              </a>
+            </div>
+          )}
+          <div className="garage-actions">
+            <p>
+              {selectedService
+                ? "Выбранный автомобиль"
+                : "Выберите узел на машине или направление выше"}
+              <span>{label}</span>
+            </p>
             <button className="button" onClick={() => onBook({ model: label })}>
-              Обсудить автомобиль
+              Записаться
               <ArrowUpRight size={18} />
             </button>
           </div>
         </div>
         <details className="all-models-picker">
           <summary>
-            Другой класс или поколение Mercedes-Benz?<span>Все модели</span>
+            У меня другая модель
+            <span>
+              Выбрать класс и кузов <ChevronRight size={16} />
+            </span>
           </summary>
-          <p>Выберите свой автомобиль — обсудим работы для его поколения.</p>
+          <p>Обслуживаем весь модельный ряд. Укажите автомобиль для записи.</p>
           <div>
-            <label>
+            <label htmlFor={`${pickerId}-model`}>
               Ваш Mercedes
               <select
+                id={`${pickerId}-model`}
                 value={otherId}
                 onChange={(e) => {
                   const m = models.find((x) => x.id === e.target.value)!;
@@ -312,9 +327,10 @@ export function SmoothCatalog({
                 ))}
               </select>
             </label>
-            <label>
+            <label htmlFor={`${pickerId}-generation`}>
               Поколение / кузов
               <select
+                id={`${pickerId}-generation`}
                 value={otherGeneration}
                 onChange={(e) => setOtherGeneration(e.target.value)}
               >
@@ -329,15 +345,18 @@ export function SmoothCatalog({
                 onBook({ model: `${other.name} ${otherGeneration}` })
               }
             >
-              Обсудить {other.name}
+              Записаться: {other.name}
               <ArrowUpRight size={17} />
             </button>
           </div>
         </details>
       </section>
-      <section className="container catalog-services section">
+      <section
+        className="container catalog-services section"
+        id="catalog-services"
+      >
         <div className="section-heading">
-          <h2>Услуги для вашего Mercedes</h2>
+          <h2>Все направления работ</h2>
           <p>
             Выберите направление. Точный перечень работ согласуем после осмотра.
           </p>

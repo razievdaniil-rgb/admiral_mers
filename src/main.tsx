@@ -45,6 +45,7 @@ import "./style.css";
 import { FigmaHome, FigmaTimeline, ApproachCards } from "./figma-sections";
 import "./figma.css";
 import "./motion-polish.css";
+import "./ux-refinement.css";
 import { SmoothScroll } from "./smooth-scroll";
 import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
@@ -142,6 +143,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 function Header({ route }: { route: string }) {
   const [open, setOpen] = useState(false);
+  const book = useBook();
   const toggle = useRef<HTMLButtonElement>(null);
   useEffect(() => setOpen(false), [route]);
   useEffect(() => {
@@ -203,6 +205,13 @@ function Header({ route }: { route: string }) {
           <span>Ежедневно · 09:00–20:00</span>
           {phone}
         </a>
+        <a
+          className="mobile-call"
+          href={telephone}
+          aria-label="Позвонить в Адмирал"
+        >
+          <Phone size={19} />
+        </a>
         <div className="header-book">
           <BookButton />
         </div>
@@ -233,6 +242,16 @@ function Header({ route }: { route: string }) {
             {phone}
             <Phone size={20} />
           </a>
+          <button
+            className="button mobile-menu-book"
+            onClick={() => {
+              setOpen(false);
+              book();
+            }}
+          >
+            Записаться
+            <ArrowUpRight size={18} />
+          </button>
           <p>Только Mercedes-Benz. С 1999 года.</p>
         </nav>
       )}
@@ -318,14 +337,11 @@ function BranchCards() {
             </span>
           </div>
           <p className="eyebrow">{b.label}</p>
-          <h3>
-            {b.name}
-            <ArrowUpRight size={28} />
-          </h3>
+          <h3>{b.name}</h3>
           <p>{b.address.replace("Москва, ", "")}</p>
           <div className="branch-actions">
             <a href={mapLink(b.address)} target="_blank" rel="noreferrer">
-              Построить маршрут
+              Маршрут
               <ArrowUpRight size={16} />
             </a>
             <BookButton booking={{ branch: b.id }} className="text-button">
@@ -400,8 +416,8 @@ function ServicesPage() {
     <>
       <Intro
         eyebrow="Услуги"
-        title="Услуги"
-        description="От компактного A-Класса до коммерческого Sprinter. Выберите автомобиль и расскажите, какая помощь нужна."
+        title="Услуги для вашего Mercedes"
+        description="Обслуживаем весь модельный ряд. Выберите автомобиль или укажите другую модель."
       />
       <Catalog />
       <CTA />
@@ -451,6 +467,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
           <Image
             src={media.service}
             alt="Специалисты проводят диагностику автомобиля Mercedes-Benz"
+            eager
           />
           <span>
             <Icon size={26} />
@@ -601,7 +618,7 @@ function ContactsPage() {
     <>
       <Intro
         eyebrow="Контакты"
-        title="Будем рады знакомству."
+        title="Два техцентра в Москве"
         description="Выберите удобный техцентр. Перед визитом позвоните — поможем с записью и подскажем, как проехать."
       />
       <section className="container contact-section">
@@ -672,7 +689,8 @@ function BookingModal({
     return () => {
       element?.close();
       document.body.style.overflow = overflow;
-      previous?.focus();
+      if (previous?.isConnected) previous.focus();
+      else document.querySelector<HTMLButtonElement>(".menu-toggle")?.focus();
     };
   }, []);
   return (
@@ -698,15 +716,15 @@ function BookingModal({
             <X />
           </button>
           <Eyebrow>Начнём с вашего Mercedes</Eyebrow>
-          <h2 id="booking-title">
-            Записаться
-            <br />
-            <span>в Адмирал.</span>
-          </h2>
+          <h2 id="booking-title">Запись в техцентр</h2>
           <p className="demo-note">
             Демонстрация формы. Отправка заявок пока не подключена. Для записи
             позвоните нам.
           </p>
+          <a className="booking-call" href={telephone}>
+            <Phone size={18} />
+            Позвонить {phone}
+          </a>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -795,10 +813,6 @@ function BookingModal({
                 </p>
               )}
             </div>
-            <a className="booking-call" href={telephone}>
-              <Phone size={18} />
-              {phone}
-            </a>
             <p className="form-privacy">
               Данные не отправляются и не сохраняются.{" "}
               <a href="#/privacy" onClick={onClose}>
@@ -853,17 +867,11 @@ function App() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        if (path !== "/")
-          gsap.fromTo(
-            main.current,
-            { opacity: 0.15 },
-            { opacity: 1, duration: 0.5, ease: "power2.out" },
-          );
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) =>
           gsap.from(el, {
-            opacity: 0,
-            y: 14,
-            duration: 1.1,
+            opacity: el.getBoundingClientRect().top < innerHeight ? 1 : 0,
+            y: 10,
+            duration: 0.65,
             ease: "power3.out",
             scrollTrigger: { trigger: el, start: "top 94%", once: true },
           }),

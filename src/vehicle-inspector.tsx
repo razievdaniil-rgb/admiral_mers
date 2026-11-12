@@ -1,15 +1,6 @@
-import { useEffect, useId, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  Plus,
-  Minus,
-  RotateCcw,
-  Play,
-  Pause,
-  Move,
-} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Plus, ZoomIn, ZoomOut } from "lucide-react";
 import { assetUrl } from "./assets";
-import { services } from "./data";
 const points = [
   { id: "engine", label: "Двигатель", x: 29, y: 43 },
   { id: "suspension", label: "Ходовая и тормоза", x: 23, y: 70 },
@@ -19,110 +10,75 @@ const points = [
 export function VehicleInspector({
   src,
   model,
+  active,
+  onSelect,
+  isActive,
 }: {
   src: string;
   model: string;
+  active: string | null;
+  onSelect: (id: string | null) => void;
+  isActive: boolean;
 }) {
-  const panelId = useId();
-  const [active, setActive] = useState<string | null>(null),
-    [view, setView] = useState("all"),
-    [zoom, setZoom] = useState(1),
-    [pan, setPan] = useState({ x: 0, y: 0 }),
-    [tour, setTour] = useState(false);
+  const [zoom, setZoom] = useState(false);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
   const drag = useRef<{ x: number; y: number; px: number; py: number } | null>(
     null,
   );
-  const choose = (id: string) => {
-    setView(id);
-    setZoom(id === "all" ? 1 : 1.7);
-    setPan({ x: 0, y: 0 });
-  };
   useEffect(() => {
-    if (zoom === 1) {
+    if (!isActive) {
+      setZoom(false);
       setPan({ x: 0, y: 0 });
-      setView("all");
+      setDragging(false);
+      drag.current = null;
     }
-  }, [zoom]);
-  useEffect(() => {
-    if (!tour) return;
-    let index = 0;
-    setActive(points[0].id);
-    choose("front");
-    const timer = setInterval(() => {
-      index++;
-      if (index === points.length) {
-        setTour(false);
-        choose("all");
-        clearInterval(timer);
-        return;
-      }
-      setActive(points[index].id);
-      choose(index === 3 ? "rear" : index === 2 ? "all" : "front");
-    }, 2600);
-    return () => clearInterval(timer);
-  }, [tour]);
-  const service = services.find((s) => s.id === active);
+  }, [isActive]);
   return (
-    <div className="interactive-vehicle inspector">
-      <div className="inspector-views" aria-label="Область осмотра">
-        {[
-          ["all", "Весь автомобиль"],
-          ["front", "Передняя часть"],
-          ["rear", "Задняя часть"],
-        ].map(([id, label]) => (
-          <button
-            key={id}
-            aria-pressed={view === id}
-            onClick={() => {
-              setTour(false);
-              choose(id);
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+    <div className="vehicle-explorer">
       <div
-        className={`inspector-viewport ${zoom > 1 ? "zoomed" : ""}`}
-        tabIndex={0}
+        className={`vehicle-explorer-viewport ${zoom ? "zoomed" : ""}`}
+        tabIndex={zoom ? 0 : -1}
         role="group"
-        aria-label="Изображение автомобиля. Плюс и минус меняют масштаб, стрелки перемещают увеличенное изображение."
-        style={{ touchAction: zoom > 1 ? "none" : "pan-y" }}
+        aria-label={
+          zoom
+            ? "Увеличенное изображение. Перетаскивайте или используйте стрелки."
+            : `Mercedes-Benz ${model}`
+        }
+        style={{ touchAction: zoom ? "none" : "pan-y" }}
         onKeyDown={(e) => {
-          if (e.target !== e.currentTarget) return;
-          if (e.key === "+" || e.key === "=") {
-            e.preventDefault();
-            setZoom((z) => Math.min(2.4, z + 0.2));
-          } else if (e.key === "-") {
-            e.preventDefault();
-            setZoom((z) => Math.max(1, z - 0.2));
-          } else if (
-            zoom > 1 &&
+          if (!zoom || e.target !== e.currentTarget) return;
+          if (e.key === "Escape") {
+            setZoom(false);
+            setPan({ x: 0, y: 0 });
+          }
+          if (
             ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)
           ) {
             e.preventDefault();
+            e.stopPropagation();
             setPan((p) => ({
               x: Math.max(
-                -120,
+                -100,
                 Math.min(
-                  120,
+                  100,
                   p.x +
                     (e.key === "ArrowLeft"
-                      ? 15
+                      ? 18
                       : e.key === "ArrowRight"
-                        ? -15
+                        ? -18
                         : 0),
                 ),
               ),
               y: Math.max(
-                -45,
+                -35,
                 Math.min(
-                  45,
+                  35,
                   p.y +
                     (e.key === "ArrowUp"
-                      ? 10
+                      ? 12
                       : e.key === "ArrowDown"
-                        ? -10
+                        ? -12
                         : 0),
                 ),
               ),
@@ -130,39 +86,42 @@ export function VehicleInspector({
           }
         }}
         onPointerDown={(e) => {
-          if (zoom <= 1 || (e.target as HTMLElement).closest("button")) return;
-          setTour(false);
+          if (!zoom || (e.target as HTMLElement).closest("button")) return;
           drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
+          setDragging(true);
           e.currentTarget.setPointerCapture(e.pointerId);
         }}
         onPointerMove={(e) => {
           if (!drag.current) return;
-          const max = e.currentTarget.clientWidth * 0.22;
+          const max = e.currentTarget.clientWidth * 0.2;
           setPan({
             x: Math.max(
               -max,
               Math.min(max, drag.current.px + e.clientX - drag.current.x),
             ),
             y: Math.max(
-              -45,
-              Math.min(45, drag.current.py + e.clientY - drag.current.y),
+              -35,
+              Math.min(35, drag.current.py + e.clientY - drag.current.y),
             ),
           });
         }}
-        onPointerUp={() => (drag.current = null)}
-        onPointerCancel={() => (drag.current = null)}
-        onLostPointerCapture={() => (drag.current = null)}
+        onPointerUp={() => {
+          drag.current = null;
+          setDragging(false);
+        }}
+        onPointerCancel={() => {
+          drag.current = null;
+          setDragging(false);
+        }}
+        onLostPointerCapture={() => {
+          drag.current = null;
+          setDragging(false);
+        }}
       >
         <div
-          className={`vehicle-frame inspector-plane ${drag.current ? "dragging" : ""}`}
+          className={`vehicle-explorer-frame ${dragging ? "dragging" : ""}`}
           style={{
-            transform: `translate(${pan.x}px,${pan.y}px) scale(${zoom})`,
-            transformOrigin:
-              view === "front"
-                ? "25% 55%"
-                : view === "rear"
-                  ? "78% 55%"
-                  : "50% 55%",
+            transform: `translate(${pan.x}px,${pan.y}px) scale(${zoom ? 1.65 : 1})`,
           }}
         >
           <img
@@ -173,98 +132,30 @@ export function VehicleInspector({
           {points.map((p) => (
             <button
               key={p.id}
-              className={`hotspot ${active === p.id ? "active" : ""}`}
+              className={`vehicle-node ${active === p.id ? "active" : ""}`}
               style={{ left: `${p.x}%`, top: `${p.y}%` }}
               aria-label={`Узел: ${p.label}`}
-              aria-expanded={active === p.id}
-              aria-controls={panelId}
-              onClick={() => {
-                setTour(false);
-                setActive(active === p.id ? null : p.id);
-              }}
+              aria-pressed={active === p.id}
+              onClick={() => onSelect(active === p.id ? null : p.id)}
             >
-              <Plus size={14} />
+              <Plus size={16} />
               <span>{p.label}</span>
             </button>
           ))}
         </div>
       </div>
-      <div className="inspector-tools">
-        <span>
-          <Move size={13} />
-          {zoom > 1
-            ? "Перетащите, чтобы рассмотреть"
-            : "Выберите узел автомобиля"}
-        </span>
-        <div>
-          <button
-            className="icon-button"
-            aria-label="Уменьшить автомобиль"
-            disabled={zoom <= 1}
-            onClick={() => {
-              setTour(false);
-              setZoom((z) => Math.max(1, z - 0.2));
-            }}
-          >
-            <Minus size={15} />
-          </button>
-          <output aria-label="Масштаб">{Math.round(zoom * 100)}%</output>
-          <button
-            className="icon-button"
-            aria-label="Увеличить автомобиль"
-            disabled={zoom >= 2.4}
-            onClick={() => {
-              setTour(false);
-              setZoom((z) => Math.min(2.4, z + 0.2));
-            }}
-          >
-            <Plus size={15} />
-          </button>
-          <button
-            className="icon-button"
-            aria-label="Сбросить осмотр"
-            onClick={() => {
-              setTour(false);
-              setActive(null);
-              choose("all");
-            }}
-          >
-            <RotateCcw size={14} />
-          </button>
-          <button
-            className="tour-button"
-            aria-pressed={tour}
-            onClick={() => setTour(!tour)}
-          >
-            {tour ? <Pause size={14} /> : <Play size={14} />}
-            <span>{tour ? "Остановить" : "Автообзор"}</span>
-          </button>
-        </div>
-      </div>
-      <div className="node-panel" id={panelId} aria-live="polite">
-        {service ? (
-          <>
-            <div>
-              <span className="node-label">{model}</span>
-              <h3>{service.short}</h3>
-              <p>{service.works.slice(0, 2).join(" · ")}</p>
-            </div>
-            <a
-              className="text-link"
-              href={`#/services/${service.id}?model=${encodeURIComponent(model)}`}
-            >
-              Смотреть работы
-              <ArrowUpRight size={18} />
-            </a>
-          </>
-        ) : (
-          <p className="node-hint">
-            <Plus size={17} />
-            Нажмите на двигатель, колесо или другой узел — покажем работы по
-            нему.
-          </p>
-        )}
-      </div>
+      <button
+        className="vehicle-zoom"
+        aria-pressed={zoom}
+        onClick={() => {
+          setZoom(!zoom);
+          setPan({ x: 0, y: 0 });
+        }}
+      >
+        {zoom ? <ZoomOut size={16} /> : <ZoomIn size={16} />}
+        <span>{zoom ? "Общий вид" : "Приблизить"}</span>
+      </button>
+      {zoom && <span className="vehicle-pan-hint">Перетащите изображение</span>}
     </div>
   );
 }
