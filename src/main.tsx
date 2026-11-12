@@ -11,7 +11,6 @@ import {
   ArrowUpRight,
   ArrowRight,
   ChevronLeft,
-  ChevronRight,
   Plus,
   X,
   Menu,
@@ -36,7 +35,6 @@ import {
   branches,
   branchStatus,
   mapLink,
-  models,
   phone,
   services,
   telephone,
@@ -46,7 +44,9 @@ import { assetUrl, media } from "./assets";
 import "./style.css";
 import { FigmaHome, FigmaTimeline, ApproachCards } from "./figma-sections";
 import "./figma.css";
-import { VehicleInspector } from "./vehicle-inspector";
+import "./motion-polish.css";
+import { SmoothScroll } from "./smooth-scroll";
+import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -386,178 +386,13 @@ function Home() {
   const book = useBook();
   return <FigmaHome onBook={book} />;
 }
-function InteractiveVehicle({ src, model }: { src: string; model: string }) {
-  return <VehicleInspector src={src} model={model} />;
-}
 function Catalog() {
-  const [modelId, setModelId] = useState("e");
-  const [generation, setGeneration] = useState("W213");
-  const model = models.find((m) => m.id === modelId)!;
-  const index = models.indexOf(model);
-  const select = (id: string) => {
-    const m = models.find((x) => x.id === id)!;
-    setModelId(id);
-    setGeneration(
-      m.generations.find((g) => media.models[`${id}-${g}`]) ||
-        m.generations.at(-1)!,
-    );
-  };
-  const move = (direction: number) =>
-    select(models[(index + direction + models.length) % models.length].id);
-  const car = media.models[`${modelId}-${generation}`] || "";
+  const book = useBook();
   return (
-    <>
-      <section className="catalog container">
-        <div
-          className="model-presets"
-          aria-label="Модели с интерактивной схемой"
-        >
-          {[
-            ["e", "E-Класс W213"],
-            ["s", "S-Класс W222"],
-            ["gle", "GLE / ML W166"],
-          ].map(([id, label]) => (
-            <button
-              key={id}
-              className={modelId === id ? "active" : ""}
-              onClick={() => select(id)}
-            >
-              {label}
-              <ArrowUpRight size={15} />
-            </button>
-          ))}
-        </div>
-        <div className="catalog-toolbar">
-          <label>
-            Ваш Mercedes
-            <select value={modelId} onChange={(e) => select(e.target.value)}>
-              {models.map((m) => (
-                <option value={m.id} key={m.id}>
-                  {m.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Поколение / кузов
-            <select
-              value={generation}
-              onChange={(e) => setGeneration(e.target.value)}
-            >
-              {model.generations.map((g) => (
-                <option key={g}>{g}</option>
-              ))}
-            </select>
-          </label>
-          <span className="catalog-count">
-            {String(index + 1).padStart(2, "0")} / {models.length}
-          </span>
-        </div>
-        <div
-          className="model-stage"
-          tabIndex={0}
-          role="group"
-          aria-label="Витрина моделей. Стрелки влево и вправо переключают классы."
-          onKeyDown={(e) => {
-            if (e.target !== e.currentTarget) return;
-            if (e.key === "ArrowRight") {
-              e.preventDefault();
-              move(1);
-            }
-            if (e.key === "ArrowLeft") {
-              e.preventDefault();
-              move(-1);
-            }
-          }}
-        >
-          <div className="model-head" aria-live="polite">
-            <span>{model.kind}</span>
-            <h2 key={model.id}>
-              {model.name}
-              <small>{generation}</small>
-            </h2>
-          </div>
-          <button
-            className="icon-button prev-model"
-            aria-label="Предыдущий класс"
-            onClick={() => move(-1)}
-          >
-            <ChevronLeft />
-          </button>
-          <div className="model-side-previews">
-            {["s", "e", "gle"]
-              .filter((id) => id !== modelId)
-              .slice(0, 2)
-              .map((id, i) => {
-                const m = models.find((x) => x.id === id)!;
-                const g = m.generations.find(
-                  (x) => media.models[`${id}-${x}`],
-                )!;
-                return (
-                  <button
-                    key={id}
-                    className={`model-side-preview ${i === 0 ? "left" : "right"}`}
-                    onClick={() => select(id)}
-                    aria-label={`Выбрать ${m.name} ${g}`}
-                  >
-                    <span>
-                      {m.name} {g.replace(/\s*\([^)]*\)/g, "")}
-                    </span>
-                    <Image src={media.models[`${id}-${g}`]} alt="" />
-                  </button>
-                );
-              })}
-          </div>
-          <div className="model-image" key={`${modelId}-${generation}`}>
-            {car ? (
-              <InteractiveVehicle
-                src={car}
-                model={`${model.name} ${generation}`}
-              />
-            ) : (
-              <div className="model-type">
-                <CarFront size={82} strokeWidth={0.65} />
-                <span>{generation}</span>
-                <p>Mercedes-Benz {model.name}</p>
-              </div>
-            )}
-          </div>
-          <button
-            className="icon-button next-model"
-            aria-label="Следующий класс"
-            onClick={() => move(1)}
-          >
-            <ChevronRight />
-          </button>
-          <div className="model-stage-footer">
-            <span>Только Mercedes-Benz</span>
-            <BookButton
-              className="secondary"
-              booking={{ model: `${model.name} ${generation}` }}
-            >
-              Обсудить автомобиль
-            </BookButton>
-          </div>
-        </div>
-        <p className="catalog-note">
-          Основные классы и поколения. Если вашего автомобиля нет в списке,
-          позвоните нам. Применимость работ и комплектацию уточним по VIN.
-        </p>
-      </section>
-      <section className="container catalog-services section">
-        <div className="section-heading" data-reveal>
-          <Eyebrow>Что требуется автомобилю?</Eyebrow>
-          <h2>
-            Выберите <span>направление.</span>
-          </h2>
-          <p>
-            Категории работ общие. Точный перечень для {model.name} {generation}{" "}
-            определим после обращения.
-          </p>
-        </div>
-        <ServiceGrid selectedModel={`${model.name} ${generation}`} />
-      </section>
-    </>
+    <SmoothCatalog
+      onBook={book}
+      renderServices={(model) => <ServiceGrid selectedModel={model} />}
+    />
   );
 }
 function ServicesPage() {
@@ -1018,12 +853,18 @@ function App() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        if (path !== "/")
+          gsap.fromTo(
+            main.current,
+            { opacity: 0.15 },
+            { opacity: 1, duration: 0.5, ease: "power2.out" },
+          );
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) =>
           gsap.from(el, {
             opacity: 0,
-            y: 32,
-            duration: 0.85,
-            ease: "power2.out",
+            y: 14,
+            duration: 1.1,
+            ease: "power3.out",
             scrollTrigger: { trigger: el, start: "top 94%", once: true },
           }),
         );
@@ -1048,6 +889,7 @@ function App() {
   }, [path]);
   return (
     <BookContext.Provider value={(b) => setBooking(b || {})}>
+      <SmoothScroll />
       <a
         className="skip-link"
         href="#main"

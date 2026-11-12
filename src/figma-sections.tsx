@@ -314,7 +314,7 @@ export function FigmaHome({ onBook }: Props) {
           },
         });
         gsap.to(".fhero-car", {
-          y: 35,
+          y: 12,
           ease: "none",
           scrollTrigger: {
             trigger: ".fhero",
@@ -327,12 +327,49 @@ export function FigmaHome({ onBook }: Props) {
           .toArray<HTMLElement>(".figma-photo-pair figure")
           .forEach((el) =>
             gsap.from(el, {
-              clipPath: "inset(0 0 100% 0)",
-              duration: 1.2,
-              ease: "power3.inOut",
-              scrollTrigger: { trigger: el, start: "top 85%", once: true },
+              opacity: 0,
+              y: 18,
+              duration: 1.3,
+              ease: "power3.out",
+              scrollTrigger: { trigger: el, start: "top 92%", once: true },
             }),
           );
+        gsap.fromTo(
+          ".who-story-line",
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#intro",
+              start: "top 75%",
+              end: "bottom 65%",
+              scrub: 1.4,
+            },
+          },
+        );
+        gsap.from(".who-story-step", {
+          opacity: 0.3,
+          y: 10,
+          stagger: 0.2,
+          duration: 0.9,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".who-story-rail",
+            start: "top 88%",
+            once: true,
+          },
+        });
+        gsap.to(".figma-photo-pair img", {
+          scale: 1.045,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".figma-photo-pair",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.5,
+          },
+        });
       }, root);
       return () => ctx.revert();
     });
@@ -436,6 +473,20 @@ export function FigmaHome({ onBook }: Props) {
             27 лет опыта, внимание к автомобилю и понятный разговор с
             владельцем.
           </p>
+        </div>
+        <div className="who-story-rail" aria-label="Путь техцентра">
+          <div className="who-story-line" />
+          {[
+            ["1999", "Адмирала Макарова, 26"],
+            ["Киевская", "Основной техцентр"],
+            ["15 ноября", "Открываем вторую точку"],
+          ].map(([year, label]) => (
+            <div className="who-story-step" key={year}>
+              <span />
+              <strong>{year}</strong>
+              <p>{label}</p>
+            </div>
+          ))}
         </div>
         <div className="figma-photo-pair">
           <figure>
