@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   ArrowUpRight,
   Plus,
@@ -23,6 +23,7 @@ export function VehicleInspector({
   src: string;
   model: string;
 }) {
+  const panelId = useId();
   const [active, setActive] = useState<string | null>(null),
     [view, setView] = useState("all"),
     [zoom, setZoom] = useState(1),
@@ -176,7 +177,7 @@ export function VehicleInspector({
               style={{ left: `${p.x}%`, top: `${p.y}%` }}
               aria-label={`Узел: ${p.label}`}
               aria-expanded={active === p.id}
-              aria-controls="vehicle-node-panel"
+              aria-controls={panelId}
               onClick={() => {
                 setTour(false);
                 setActive(active === p.id ? null : p.id);
@@ -240,7 +241,7 @@ export function VehicleInspector({
           </button>
         </div>
       </div>
-      <div className="node-panel" id="vehicle-node-panel" aria-live="polite">
+      <div className="node-panel" id={panelId} aria-live="polite">
         {service ? (
           <>
             <div>

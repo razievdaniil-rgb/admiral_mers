@@ -31,8 +31,9 @@ export function SmoothCatalog({
     [otherId, setOtherId] = useState("b"),
     [otherGeneration, setOtherGeneration] = useState("W247");
   const stage = useRef<HTMLDivElement>(null),
-    slide = useRef<HTMLDivElement>(null),
-    motion = useRef<gsap.core.Tween | null>(null),
+    slides = useRef<(HTMLDivElement | null)[]>([]),
+    previous = useRef(0),
+    motion = useRef<gsap.core.Timeline | null>(null),
     direction = useRef(1),
     initialized = useRef(false),
     locked = useRef(false),
@@ -44,47 +45,79 @@ export function SmoothCatalog({
     next = (next + showcase.length) % showcase.length;
     if (next === index || locked.current) return;
     direction.current = next === (index + 1) % showcase.length ? 1 : -1;
-    if (matchMedia("(prefers-reduced-motion:reduce)").matches) {
-      setIndex(next);
-      return;
-    }
+    previous.current = index;
     locked.current = true;
     setBusy(true);
-    motion.current = gsap.to(slide.current, {
-      x: -direction.current * 72,
-      opacity: 0,
-      scale: 0.98,
-      duration: 0.3,
-      ease: "power2.inOut",
-      onComplete: () => setIndex(next),
-    });
+    setIndex(next);
   };
   useLayoutEffect(() => {
+    const panels = slides.current;
     if (!initialized.current) {
       initialized.current = true;
+      panels.forEach((panel, i) =>
+        gsap.set(panel, {
+          xPercent: i === index ? 0 : 110,
+          autoAlpha: i === index ? 1 : 0,
+        }),
+      );
       return;
     }
-    if (matchMedia("(prefers-reduced-motion:reduce)").matches) {
-      gsap.set(slide.current, { clearProps: "transform,opacity" });
+    if (previous.current === index) return;
+    motion.current?.kill();
+    const incoming = panels[index],
+      outgoing = panels[previous.current];
+    const finish = () => {
+      gsap.set(outgoing, { autoAlpha: 0 });
+      gsap.set(incoming, { xPercent: 0, scale: 1, rotationY: 0, autoAlpha: 1 });
       locked.current = false;
       setBusy(false);
+    };
+    if (matchMedia("(prefers-reduced-motion:reduce)").matches) {
+      finish();
       return;
     }
-    motion.current = gsap.fromTo(
-      slide.current,
-      { x: direction.current * 90, opacity: 0, scale: 0.98 },
-      {
-        x: 0,
-        opacity: 1,
-        scale: 1,
-        duration: 0.7,
-        ease: "power3.out",
-        onComplete: () => {
-          locked.current = false;
-          setBusy(false);
+    const d = direction.current;
+    // Both real vehicles share the stage throughout the change, like a garage selector.
+    gsap.set(incoming, {
+      xPercent: d * 110,
+      scale: 0.9,
+      rotationY: d * -7,
+      autoAlpha: 1,
+      zIndex: 2,
+    });
+    gsap.set(outgoing, { zIndex: 1 });
+    motion.current = gsap
+      .timeline({ onComplete: finish })
+      .to(
+        outgoing,
+        {
+          xPercent: d * -110,
+          scale: 0.9,
+          rotationY: d * 7,
+          duration: 1.15,
+          ease: "power3.inOut",
         },
-      },
-    );
+        0,
+      )
+      .to(
+        incoming,
+        {
+          xPercent: 0,
+          scale: 1,
+          rotationY: 0,
+          duration: 1.15,
+          ease: "power3.inOut",
+        },
+        0,
+      )
+      .fromTo(
+        incoming?.querySelectorAll(
+          ".inspector-views,.inspector-tools,.node-panel",
+        ) || [],
+        { opacity: 0 },
+        { opacity: 1, duration: 0.35 },
+        0.8,
+      );
   }, [index]);
   useEffect(() => {
     showcase.forEach((x) => {
@@ -208,21 +241,39 @@ export function SmoothCatalog({
               );
             })}
           </div>
-          <div className="catalog-slide" ref={slide}>
-            <div className="model-head" aria-live="polite">
-              <h1>
-                {selected.name}
-                <small>{selected.generation}</small>
-              </h1>
-            </div>
-            <div className="model-image">
-              <VehicleInspector
-                key={selected.id}
-                src={selected.image}
-                model={label}
-              />
-            </div>
+          <div className="catalog-track">
+            {showcase.map((vehicle, i) => (
+              <div
+                className="catalog-slide"
+                key={vehicle.id}
+                ref={(el) => {
+                  slides.current[i] = el;
+                }}
+                aria-hidden={i !== index}
+                inert={i !== index || busy}
+              >
+                <div className="model-head">
+                  <h1>
+                    {vehicle.name}
+                    <small>{vehicle.generation}</small>
+                  </h1>
+                </div>
+                <div className="model-image">
+                  <VehicleInspector
+                    src={vehicle.image}
+                    model={
+                      vehicle.name +
+                      " " +
+                      vehicle.generation.replace(/\s*\([^)]*\)/g, "")
+                    }
+                  />
+                </div>
+              </div>
+            ))}
           </div>
+          <span className="sr-only" role="status">
+            {label}
+          </span>
           <button
             className="icon-button next-model"
             aria-label="Следующий класс"
