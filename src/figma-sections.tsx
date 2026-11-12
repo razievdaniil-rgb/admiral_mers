@@ -10,6 +10,7 @@ import {
   Plus,
 } from "lucide-react";
 import { gsap } from "gsap";
+import { AboutFilm } from "./about-film";
 import { assetUrl, media } from "./assets";
 import { branches, branchStatus, history, mapLink, services } from "./data";
 type Booking = { service?: string; branch?: string; model?: string };
@@ -334,42 +335,6 @@ export function FigmaHome({ onBook }: Props) {
               scrollTrigger: { trigger: el, start: "top 92%", once: true },
             }),
           );
-        gsap.fromTo(
-          ".who-story-line",
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "#intro",
-              start: "top 75%",
-              end: "bottom 65%",
-              scrub: 1.4,
-            },
-          },
-        );
-        gsap.from(".who-story-step", {
-          opacity: 0.3,
-          y: 10,
-          stagger: 0.2,
-          duration: 0.9,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".who-story-rail",
-            start: "top 88%",
-            once: true,
-          },
-        });
-        gsap.to(".figma-photo-pair img", {
-          scale: 1.045,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".figma-photo-pair",
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1.5,
-          },
-        });
       }, root);
       return () => ctx.revert();
     });
@@ -474,39 +439,7 @@ export function FigmaHome({ onBook }: Props) {
             владельцем.
           </p>
         </div>
-        <div className="who-story-rail" aria-label="Путь техцентра">
-          <div className="who-story-line" />
-          {[
-            ["1999", "Адмирала Макарова, 26"],
-            ["Киевская", "Основной техцентр"],
-            ["15 ноября", "Открываем вторую точку"],
-          ].map(([year, label]) => (
-            <div className="who-story-step" key={year}>
-              <span />
-              <strong>{year}</strong>
-              <p>{label}</p>
-            </div>
-          ))}
-        </div>
-        <div className="figma-photo-pair">
-          <figure>
-            {picture(
-              media.history,
-              "ТехЦентр Адмирал: фотография из истории сервиса",
-            )}
-            <figcaption>
-              Наш путь начался на Адмирала Макарова, 26. Там мы работали 25 лет
-              — с командой, увлечённой Mercedes-Benz.
-            </figcaption>
-          </figure>
-          <figure>
-            {picture(media.workshop, "Ремонтная зона на Киевской, 14")}
-            <figcaption>
-              Сегодня мы на Киевской, 14. А 15 ноября открывается вторая точка
-              на Гостиничном проезде.
-            </figcaption>
-          </figure>
-        </div>
+        <AboutFilm />
         <div className="figma-facts" data-reveal>
           <span>
             <strong>27</strong>лет опыта
