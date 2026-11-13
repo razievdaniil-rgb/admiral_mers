@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -10,12 +10,13 @@ import {
   Plus,
 } from "lucide-react";
 import { gsap } from "gsap";
-import { XrayImage } from "./xray-image";
 import { AboutFilm } from "./about-film";
+import { Vehicle3D } from "./vehicle-3d";
+import { vehicles } from "./vehicle-library";
+import { BranchShowcase } from "./branch-showcase";
 import { HeroAtmosphere } from "./hero-atmosphere";
-import { CarAssembly } from "./car-assembly";
 import { assetUrl, media } from "./assets";
-import { branches, branchStatus, history, mapLink, services } from "./data";
+import { history, services } from "./data";
 type Booking = { service?: string; branch?: string; model?: string };
 type Props = { onBook: (booking?: Booking) => void };
 const picture = (path: string, alt: string, className = "") => (
@@ -57,7 +58,7 @@ export function PromotionCarousel({ onBook }: Props) {
   const offers = [
     {
       title: "Первое знакомство",
-      text: "Познакомьтесь с техцентром и обсудите ваш автомобиль.",
+      text: "Познакомьтесь с техцентром и обсудите Ваш автомобиль.",
       image: media.promotions[0],
       service: "",
     },
@@ -249,7 +250,7 @@ export function ApproachCards() {
     ["Опыт мастеров", "Занимаемся автомобилями Mercedes-Benz с 1999 года."],
     [
       "Индивидуальный подход",
-      "Учитываем историю, состояние автомобиля и ваши задачи.",
+      "Учитываем историю, состояние автомобиля и Ваши задачи.",
     ],
     ["Подбор запчастей", "Варианты и стоимость согласуем перед началом работ."],
     [
@@ -280,34 +281,22 @@ export function ApproachCards() {
 }
 export function FigmaHome({ onBook }: Props) {
   const root = useRef<HTMLDivElement>(null);
-  const car = useRef<HTMLDivElement>(null);
-  const [branch, setBranch] = useState(0);
   useLayoutEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion:no-preference)", () => {
       const ctx = gsap.context(() => {
         gsap
           .timeline()
-          .from(".fhero-subtitle", { autoAlpha: 0, y: 20, duration: 0.7 })
+          .from(".fhero-subtitle", { y: 20, duration: 0.7 })
           .from(
             ".fhero-title",
-            { yPercent: 35, autoAlpha: 0, duration: 0.9, ease: "power3.out" },
+            { yPercent: 15, duration: 0.9, ease: "power3.out" },
             0.15,
           )
-          .from(".fhero-actions", { autoAlpha: 0, y: 15, duration: 0.6 }, 0.85);
+          .from(".fhero-actions", { y: 15, duration: 0.6 }, 0.85);
         gsap.to(".fhero-emblem-right", {
           rotation: 12,
           y: 45,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".fhero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-        gsap.to(".fhero-car", {
-          y: 12,
           ease: "none",
           scrollTrigger: {
             trigger: ".fhero",
@@ -332,33 +321,11 @@ export function FigmaHome({ onBook }: Props) {
     });
     return () => mm.revert();
   }, []);
-  useEffect(() => {
-    if (!car.current) return;
-    const el = car.current;
-    const move = (e: PointerEvent) => {
-      if (
-        !matchMedia("(pointer:fine) and (prefers-reduced-motion:no-preference)")
-          .matches
-      )
-        return;
-      const r = el.getBoundingClientRect();
-      el.style.setProperty(
-        "--mx",
-        `${(e.clientX - r.left - r.width / 2) * 0.018}px`,
-      );
-      el.style.setProperty(
-        "--my",
-        `${(e.clientY - r.top - r.height / 2) * 0.01}px`,
-      );
-    };
-    el.addEventListener("pointermove", move);
-    return () => el.removeEventListener("pointermove", move);
-  }, []);
-  const b = branches[branch];
   return (
     <div className="figma-home" ref={root}>
       <section className="fhero">
         <HeroAtmosphere />
+        <Vehicle3D vehicle={vehicles[0]} hero />
         <div
           className="fhero-background"
           style={{ backgroundImage: `url(${assetUrl(media.atmosphere)})` }}
@@ -381,38 +348,7 @@ export function FigmaHome({ onBook }: Props) {
         <div className="container fhero-content">
           <p className="fhero-subtitle">Ремонт и обслуживание только</p>
           <h1 className="fhero-title">MERCEDES-BENZ</h1>
-          <div className="fhero-car-area" ref={car}>
-            <CarAssembly>
-              <XrayImage
-                className="fhero-car"
-                src={media.hero}
-                alt="Серебристый Mercedes-Benz — ТехЦентр Адмирал"
-                priority
-                cutaway="media/xray/hero-v2.webp"
-              >
-                <a
-                  href="#/services"
-                  className="hero-node hero-node-engine"
-                  aria-label="Посмотреть диагностику и услуги"
-                >
-                  <span>
-                    <Plus size={14} />
-                  </span>
-                  <em>Диагностика и ремонт</em>
-                </a>
-                <a
-                  href="#/services/suspension"
-                  className="hero-node hero-node-wheel"
-                  aria-label="Услуги по ходовой и тормозам"
-                >
-                  <span>
-                    <Plus size={14} />
-                  </span>
-                  <em>Ходовая и тормоза</em>
-                </a>
-              </XrayImage>
-            </CarAssembly>
-          </div>
+          <div className="fhero-car-area fhero-3d-space" aria-hidden="true" />
           <div className="fhero-actions">
             <button className="button" onClick={() => onBook()}>
               Записаться
@@ -453,53 +389,14 @@ export function FigmaHome({ onBook }: Props) {
           <ArrowUpRight size={17} />
         </a>
       </section>
-      <section className="figma-map-band">
-        <div className="container">
-          <div className="figma-map-copy">
-            <h2>
-              КАК ДО НАС
-              <br />
-              ДОБРАТЬСЯ
-            </h2>
-            <div className="branch-tabs" aria-label="Выбор техцентра">
-              {branches.map((x, i) => (
-                <button
-                  key={x.id}
-                  aria-pressed={branch === i}
-                  onClick={() => setBranch(i)}
-                >
-                  {x.name}
-                </button>
-              ))}
-            </div>
-            <p>{b.address}</p>
-            <span className="branch-status">{branchStatus(b.new)}</span>
-            <a
-              className="button"
-              href={mapLink(b.address)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Маршрут в Яндексе
-              <ArrowUpRight size={16} />
-            </a>
-          </div>
-          <div className="figma-mini-map" key={b.id}>
-            <iframe
-              title={`Карта: ${b.name}`}
-              src={`https://yandex.ru/map-widget/v1/?ll=${b.coords.join("%2C")}&z=16&pt=${b.coords.join("%2C")},pm2wtm`}
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </section>
+      <BranchShowcase onBook={(branch) => onBook({ branch })} />
       <section className="figma-service-section container section">
         <div className="figma-centered-heading" data-reveal>
           <h2>ВСЁ ДЛЯ ВАШЕГО MERCEDES</h2>
           <p>
             Техника, кузов, электрика, дооснащение и детейлинг.
             <br />
-            Выберите направление — обсудим работы для вашего автомобиля.
+            Выберите направление — обсудим работы для Вашего автомобиля.
           </p>
         </div>
         <div className="figma-service-links">

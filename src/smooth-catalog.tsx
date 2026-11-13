@@ -1,25 +1,8 @@
-import {
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
-import { gsap } from "gsap";
-import { assetUrl, media } from "./assets";
 import { models, services } from "./data";
-import { VehicleInspector } from "./vehicle-inspector";
-const showcase = [
-  { id: "e", generation: "W213" },
-  { id: "s", generation: "W222" },
-  { id: "gle", generation: "W166 (ML / GLE)" },
-].map((item) => ({
-  ...item,
-  name: models.find((m) => m.id === item.id)!.name,
-  image: media.models[`${item.id}-${item.generation}`],
-}));
+import { vehicles, vehicleLabel } from "./vehicle-library";
+import { Vehicle3D } from "./vehicle-3d";
 export function SmoothCatalog({
   onBook,
   renderServices,
@@ -29,138 +12,23 @@ export function SmoothCatalog({
 }) {
   const pickerId = useId();
   const [index, setIndex] = useState(0),
-    [busy, setBusy] = useState(false),
+    [busy, setBusy] = useState(true),
     [activeNode, setActiveNode] = useState<string | null>(null),
     [otherId, setOtherId] = useState("b"),
     [otherGeneration, setOtherGeneration] = useState("W247");
-  const [imageError, setImageError] = useState("");
-  const alive = useRef(true);
-  const imageLoads = useRef(new Map<number, Promise<boolean>>());
-  const loadImage = (next: number) => {
-    let pending = imageLoads.current.get(next);
-    if (!pending) {
-      const image = new Image();
-      image.src = assetUrl(showcase[next].image);
-      pending = image.decode().then(
-        () => true,
-        () => {
-          imageLoads.current.delete(next);
-          return false;
-        },
-      );
-      imageLoads.current.set(next, pending);
-    }
-    return pending;
-  };
-  const stage = useRef<HTMLDivElement>(null),
-    slides = useRef<(HTMLDivElement | null)[]>([]),
-    previous = useRef(0),
-    watchdog = useRef<ReturnType<typeof setTimeout> | null>(null),
-    motion = useRef<gsap.core.Timeline | null>(null),
-    direction = useRef(1),
-    locked = useRef(false),
-    touch = useRef<{ x: number; y: number } | null>(null);
-  const selectedService = services.find((s) => s.id === activeNode);
-  const selected = showcase[index],
-    other = models.find((m) => m.id === otherId)!;
-  const label = `${selected.name} ${selected.generation.replace(/\s*\([^)]*\)/g, "")}`;
-  const select = async (next: number) => {
-    next = (next + showcase.length) % showcase.length;
-    if (next === index || locked.current) return;
-    locked.current = true;
+  const touch = useRef<{ x: number; y: number } | null>(null);
+  const selected = vehicles[index],
+    label = vehicleLabel(selected),
+    other = models.find((m) => m.id === otherId)!,
+    selectedService = services.find((s) => s.id === activeNode);
+  const select = (next: number) => {
+    if (busy) return;
+    next = (next + vehicles.length) % vehicles.length;
+    if (next === index) return;
     setBusy(true);
-    setImageError("");
-    const ready = await loadImage(next);
-    if (!alive.current) return;
-    if (!ready) {
-      locked.current = false;
-      setBusy(false);
-      setImageError(
-        "Не удалось загрузить изображение. Попробуйте выбрать автомобиль ещё раз.",
-      );
-      return;
-    }
-    direction.current = next === (index + 1) % showcase.length ? 1 : -1;
-    previous.current = index;
     setIndex(next);
+    setActiveNode(null);
   };
-  useLayoutEffect(() => {
-    const panels = slides.current;
-    if (previous.current === index) return;
-    motion.current?.kill();
-    const incoming = panels[index],
-      outgoing = panels[previous.current];
-    const finish = () => {
-      if (watchdog.current) clearTimeout(watchdog.current);
-      gsap.set(incoming, { xPercent: 0, scale: 1 });
-      previous.current = index;
-      locked.current = false;
-      setBusy(false);
-    };
-    if (matchMedia("(prefers-reduced-motion:reduce)").matches) {
-      finish();
-      return;
-    }
-    const d = direction.current;
-    // Both real vehicles share the stage throughout the change, like a garage selector.
-    gsap.set(incoming, {
-      xPercent: d * 110,
-      scale: 0.9,
-      zIndex: 2,
-    });
-    gsap.set(outgoing, { zIndex: 1 });
-    watchdog.current = setTimeout(() => {
-      if (locked.current) {
-        motion.current?.kill();
-        finish();
-      }
-    }, 1500);
-    motion.current = gsap
-      .timeline({ onComplete: finish })
-      .to(
-        outgoing,
-        {
-          xPercent: d * -110,
-          scale: 0.9,
-          duration: 1.15,
-          ease: "power3.inOut",
-        },
-        0,
-      )
-      .to(
-        incoming,
-        {
-          xPercent: 0,
-          scale: 1,
-          duration: 1.15,
-          ease: "power3.inOut",
-        },
-        0,
-      );
-  }, [index]);
-  useEffect(() => {
-    alive.current = true;
-    showcase.forEach((_, i) => {
-      void loadImage(i);
-    });
-    return () => {
-      alive.current = false;
-      motion.current?.kill();
-      if (watchdog.current) clearTimeout(watchdog.current);
-    };
-  }, []);
-  useEffect(() => {
-    const el = stage.current;
-    if (!el) return;
-    const wheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 25) {
-        e.preventDefault();
-        select(index + (e.deltaX > 0 ? 1 : -1));
-      }
-    };
-    el.addEventListener("wheel", wheel, { passive: false });
-    return () => el.removeEventListener("wheel", wheel);
-  }, [index]);
   return (
     <>
       <section className="garage container">
@@ -169,7 +37,7 @@ export function SmoothCatalog({
           role="group"
           aria-label="Выбор автомобиля"
         >
-          {showcase.map((m, i) => (
+          {vehicles.map((m, i) => (
             <button
               key={m.id}
               aria-pressed={index === i}
@@ -177,13 +45,37 @@ export function SmoothCatalog({
               onClick={() => select(i)}
             >
               {m.name}
-              <span>{m.generation.replace(/\s*\([^)]*\)/g, "")}</span>
+              <span>{m.generation}</span>
             </button>
           ))}
         </div>
+        <div className="garage-3d-heading">
+          <div className="garage-3d-title" aria-live="polite">
+            <h2>{selected.name}</h2>
+            <p>{selected.generation}</p>
+          </div>
+          <div className="garage-3d-navigation">
+            <button
+              aria-label="Предыдущий класс"
+              disabled={busy}
+              onClick={() => select(index - 1)}
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <span>
+              {index + 1} / {vehicles.length}
+            </span>
+            <button
+              aria-label="Следующий класс"
+              disabled={busy}
+              onClick={() => select(index + 1)}
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </div>
         <div
-          ref={stage}
-          className="garage-stage"
+          className="garage-stage garage-stage-3d"
           role="group"
           tabIndex={0}
           aria-label="Витрина моделей. Стрелки влево и вправо переключают классы."
@@ -196,8 +88,7 @@ export function SmoothCatalog({
             }
           }}
           onTouchStart={(e) => {
-            if ((e.target as HTMLElement).closest(".zoomed,button,select"))
-              return;
+            if ((e.target as HTMLElement).closest("button,select")) return;
             touch.current = {
               x: e.touches[0].clientX,
               y: e.touches[0].clientY,
@@ -207,68 +98,17 @@ export function SmoothCatalog({
             if (!touch.current) return;
             const dx = e.changedTouches[0].clientX - touch.current.x,
               dy = e.changedTouches[0].clientY - touch.current.y;
-            if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)) {
-              e.preventDefault();
+            if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
               select(index + (dx < 0 ? 1 : -1));
             }
             touch.current = null;
           }}
         >
-          <button
-            className="garage-arrow prev-model"
-            aria-label="Предыдущий класс"
-            disabled={busy}
-            onClick={() => select(index - 1)}
-          >
-            <ChevronLeft />
-          </button>
-          <div className="garage-track">
-            {showcase.map((vehicle, i) => (
-              <div
-                className="garage-slide"
-                key={vehicle.id}
-                ref={(el) => {
-                  slides.current[i] = el;
-                }}
-                aria-hidden={i !== index}
-                data-visible={i === index || (busy && i === previous.current)}
-                inert={i !== index || busy}
-              >
-                <div className="garage-model-title">
-                  <h2>
-                    {vehicle.name}
-                    <small>{vehicle.generation}</small>
-                  </h2>
-                </div>
-                <div className="garage-vehicle">
-                  <VehicleInspector
-                    src={vehicle.image}
-                    active={activeNode}
-                    onSelect={setActiveNode}
-                    isActive={i === index}
-                    model={
-                      vehicle.name +
-                      " " +
-                      vehicle.generation.replace(/\s*\([^)]*\)/g, "")
-                    }
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          <span className="sr-only" role="status">
-            {label}
-          </span>
-          <button
-            className="garage-arrow next-model"
-            aria-label="Следующий класс"
-            disabled={busy}
-            onClick={() => select(index + 1)}
-          >
-            <ChevronRight />
-          </button>
+          <Vehicle3D
+            vehicle={selected}
+            onStatusChange={(state) => setBusy(state === "loading")}
+          />
         </div>
-        {imageError && <p role="status">{imageError}</p>}
         <div className="garage-work-panel">
           <div
             className="garage-work-options"
@@ -309,7 +149,7 @@ export function SmoothCatalog({
             <p>
               {selectedService
                 ? "Выбранный автомобиль"
-                : "Выберите узел на машине или направление выше"}
+                : "Выберите направление работ выше"}
               <span>{label}</span>
             </p>
             <button className="button" onClick={() => onBook({ model: label })}>

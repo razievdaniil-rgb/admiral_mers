@@ -46,7 +46,6 @@ import { FigmaHome, FigmaTimeline, ApproachCards } from "./figma-sections";
 import "./figma.css";
 import "./motion-polish.css";
 import "./ux-refinement.css";
-import "./xray-image.css";
 import { SmoothScroll } from "./smooth-scroll";
 import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
@@ -283,6 +282,13 @@ function Footer() {
         <span>© {new Date().getFullYear()} ТехЦентр Адмирал</span>
         <span>Независимый специализированный сервис Mercedes-Benz</span>
         <a href="#/privacy">О персональных данных</a>
+        <a
+          href={assetUrl("models/credits.html")}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Авторы 3D-моделей
+        </a>
       </div>
     </footer>
   );
@@ -420,7 +426,7 @@ function ServicesPage() {
     <>
       <Intro
         eyebrow="Услуги"
-        title="Услуги для вашего Mercedes"
+        title="Услуги для Вашего Mercedes"
         description="Обслуживаем весь модельный ряд. Выберите автомобиль или укажите другую модель."
       />
       <Catalog />
@@ -495,7 +501,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
           </ul>
           <p>
             Стоимость, сроки и объём работ согласуем после диагностики. Без
-            ремонта, о котором вы не договаривались.
+            ремонта, о котором Вы не договаривались.
           </p>
           <BookButton booking={{ service: service.id, model }}>
             Обсудить {service.id === "maintenance" ? "обслуживание" : "работы"}
@@ -541,7 +547,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
             [
               "01",
               "Обсуждаем задачу",
-              "Уточняем модель, историю и ваши наблюдения.",
+              "Уточняем модель, историю и Ваши наблюдения.",
             ],
             [
               "02",
@@ -693,7 +699,7 @@ function Privacy() {
       <section className="container legal-copy">
         <p>
           На этой версии сайта форма записи не отправляет и не сохраняет
-          введённые данные. Проверка заполнения выполняется в вашем браузере.
+          введённые данные. Проверка заполнения выполняется в Вашем браузере.
           После закрытия формы данные очищаются.
         </p>
         <p>
@@ -757,7 +763,7 @@ function BookingModal({
           <X />
         </button>
         <div className="booking-main">
-          <Eyebrow>Начнём с вашего Mercedes</Eyebrow>
+          <Eyebrow>Начнём с Вашего Mercedes</Eyebrow>
           <h2 id="booking-title">Запись в техцентр</h2>
           <p className="demo-note">
             Демонстрация формы. Отправка заявок пока не подключена. Для записи
@@ -781,7 +787,7 @@ function BookingModal({
                 required
                 minLength={2}
                 maxLength={80}
-                placeholder="Как к вам обращаться"
+                placeholder="Как к Вам обращаться"
                 onChange={() => setResult(false)}
               />
             </label>
@@ -876,7 +882,7 @@ function BookingModal({
             </span>
             <p>
               С 1999 года.
-              <br />С вниманием к вашему автомобилю.
+              <br />С вниманием к Вашему автомобилю.
             </p>
           </div>
         </div>
