@@ -10,6 +10,9 @@
 body {
   background: var(--black);
 }
+.figma-home > .fhero {
+  height: calc(100svh - var(--site-header-height) - 1px);
+}
 .header {
   background: #08090b;
 }
@@ -440,19 +443,36 @@ dialog[open].is-closing::backdrop {
 }
 @media (max-width: 700px) {
   .figma-home > .fhero {
-    height: auto;
+    height: calc(100svh - var(--site-header-height) - 1px);
     min-height: 0;
   }
   .fhero-content {
-    height: auto;
-    padding-block: 24px 30px;
-    grid-template-rows: auto auto minmax(260px, 36svh) auto;
+    height: 100%;
+    padding-block: clamp(12px, 2.5svh, 24px)
+      max(14px, env(safe-area-inset-bottom));
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
     grid-template-columns: minmax(0, 1fr);
   }
   .fhero-car-area {
-    width: calc(100% + 48px);
+    width: 100%;
+    height: 100%;
     max-width: none;
-    margin-inline: -24px;
+    min-height: 0;
+    margin: 0;
+  }
+  .fhero .car-assembly {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .fhero .fhero-car {
+    width: min(
+      calc(100% + 48px),
+      calc((100svh - var(--site-header-height) - 220px) * 1.904)
+    );
+    max-width: none;
+    height: auto;
+    margin: 0;
+    justify-self: center;
   }
   .fhero .hero-node-engine {
     right: 8%;
@@ -467,7 +487,7 @@ dialog[open].is-closing::backdrop {
     bottom: -14px;
   }
   .fhero-actions {
-    padding-top: 22px;
+    padding-top: 12px;
   }
   .logo .logo-since {
     font-size: 10px;
@@ -495,6 +515,95 @@ dialog[open].is-closing::backdrop {
   .branch-gallery-dialog > .crossfade-image {
     height: auto;
     aspect-ratio: 4 / 3;
+  }
+}
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+  :root {
+    --site-header-height: 64px;
+  }
+  .figma-home > .fhero {
+    height: calc(100svh - var(--site-header-height) - 1px);
+    min-height: 0;
+  }
+  .fhero-content {
+    height: 100%;
+    padding-block: 6px max(8px, env(safe-area-inset-bottom));
+    grid-template-rows: 20px 40px minmax(0, 1fr) 44px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .fhero-subtitle {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .fhero-title {
+    font-size: 32px;
+    line-height: 36px;
+    margin-top: 0;
+  }
+  .fhero-car-area {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-width: none;
+    margin: 0;
+  }
+  .fhero .car-assembly {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .fhero .fhero-car {
+    width: min(
+      100%,
+      calc((100svh - var(--site-header-height) - 150px) * 1.904)
+    );
+    height: auto;
+    max-width: none;
+    margin: 0;
+    justify-self: center;
+  }
+  .fhero-actions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 22px;
+    min-height: 44px;
+    padding-top: 4px;
+  }
+  .fhero-actions .button {
+    min-height: 38px;
+    padding: 7px 18px;
+    font-size: 13px;
+  }
+  .fhero-services {
+    font-size: 13px;
+  }
+  .fhero .hero-node-engine {
+    right: calc((100% - 100vw) / 2 + 20px);
+    top: 35%;
+  }
+  .fhero .hero-node-wheel {
+    left: calc((100% - 100vw) / 2 + 20px);
+    top: 50%;
+  }
+  .fhero .hero-node em {
+    font-size: 11px;
+  }
+  .fhero .xray-toggle {
+    right: 0;
+    bottom: -6px;
+    min-height: 26px;
+    padding: 3px;
+    font-size: 10px;
+  }
+}
+@media (max-width: 360px) and (orientation: portrait) {
+  .fhero .hero-node-wheel {
+    top: 70%;
+  }
+  .fhero .hero-node-engine {
+    top: 89%;
+  }
+  .fhero .xray-toggle {
+    bottom: -50px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
