@@ -40,7 +40,7 @@ export function Vehicle3D({
         ref={host}
         tabIndex={0}
         role="img"
-        aria-label="Mercedes-Benz: наведите на кузов, чтобы увидеть двигатель и салон. На телефоне коснитесь машины; с клавиатуры нажмите Enter."
+        aria-label="Mercedes-Benz в движении: скан показывает двигатель и салон. Наведите на кузов; на телефоне коснитесь машины, с клавиатуры нажмите Enter."
       />
       {failed && (
         <img

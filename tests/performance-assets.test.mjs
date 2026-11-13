@@ -65,3 +65,56 @@ test("hero keeps its geometry and download budgets", async () => {
     "Actual engine must be retained",
   );
 });
+
+test("four wheel pivots retain only rolling parts and stay within scene budgets", async () => {
+  const bytes = await readFile("dist/models/hero-optimized.glb");
+  const gltf = JSON.parse(
+    bytes
+      .subarray(20, 20 + bytes.readUInt32LE(12))
+      .toString()
+      .trim(),
+  );
+  const wheels = gltf.nodes.filter((n) => n.name?.startsWith("Admiral_Wheel_"));
+  assert.equal(
+    wheels.length,
+    4,
+    "The tyres and rims must rotate around four independent axles",
+  );
+  const roots = gltf.scenes[0].nodes,
+    centres = new Set();
+  for (const wheel of wheels) {
+    assert.equal(
+      wheel.children.length,
+      2,
+      "Keep tyre and rim together, without rotating brake calipers",
+    );
+    assert.deepEqual(wheel.extras.spinAxis, [1, 0, 0]);
+    assert.ok(wheel.extras.spinRadius > 0.2 && wheel.extras.spinRadius < 0.5);
+    centres.add(wheel.translation.map((x) => x.toFixed(3)).join(","));
+    for (const index of wheel.children) {
+      assert.ok(
+        !roots.includes(index),
+        "Rolling parts must not also be duplicated at the scene root",
+      );
+      assert.ok(gltf.nodes[index].mesh !== undefined);
+    }
+  }
+  assert.equal(centres.size, 4, "Wheel pivot centres must be distinct");
+  let calls = 0,
+    triangles = 0;
+  const walk = (index) => {
+    const node = gltf.nodes[index];
+    if (node.mesh !== undefined)
+      for (const primitive of gltf.meshes[node.mesh].primitives) {
+        calls++;
+        triangles += gltf.accessors[primitive.indices].count / 3;
+      }
+    for (const child of node.children ?? []) walk(child);
+  };
+  roots.forEach(walk);
+  assert.ok(calls <= 60);
+  assert.ok(
+    triangles < 130000,
+    "Count repeated wheel instances as well as unique meshes",
+  );
+});

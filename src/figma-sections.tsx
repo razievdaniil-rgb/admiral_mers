@@ -12,6 +12,7 @@ import {
 import { gsap } from "gsap";
 import { AboutFilm } from "./about-film";
 import { Vehicle3D } from "./vehicle-3d";
+import "./drive-story.css";
 import { vehicles } from "./vehicle-library";
 import { BranchShowcase } from "./branch-showcase";
 import { HeroAtmosphere } from "./hero-atmosphere";
@@ -323,44 +324,49 @@ export function FigmaHome({ onBook }: Props) {
   }, []);
   return (
     <div className="figma-home" ref={root}>
-      <section className="fhero">
-        <HeroAtmosphere />
-        <Vehicle3D vehicle={vehicles[0]} hero />
-        <div
-          className="fhero-background"
-          style={{ backgroundImage: `url(${assetUrl(media.atmosphere)})` }}
-        />
-        <img
-          className="fhero-emblem fhero-emblem-left"
-          src={assetUrl(media.symbols[0])}
-          alt=""
-        />
-        <img
-          className="fhero-emblem fhero-emblem-small"
-          src={assetUrl(media.symbols[1])}
-          alt=""
-        />
-        <img
-          className="fhero-emblem fhero-emblem-right"
-          src={assetUrl(media.symbols[2])}
-          alt=""
-        />
-        <div className="container fhero-content">
-          <p className="fhero-subtitle">Ремонт и обслуживание только</p>
-          <h1 className="fhero-title">MERCEDES-BENZ</h1>
-          <div className="fhero-car-area fhero-3d-space" aria-hidden="true" />
-          <div className="fhero-actions">
-            <button className="button" onClick={() => onBook()}>
-              Записаться
-              <ArrowUpRight size={16} />
-            </button>
-            <a className="fhero-services" href="#/services">
-              Выбрать свой Mercedes
-              <ArrowRight size={17} />
-            </a>
+      <div className="hero-drive-story">
+        <section className="fhero">
+          <HeroAtmosphere />
+          <Vehicle3D vehicle={vehicles[0]} hero />
+          <div
+            className="fhero-background"
+            style={{ backgroundImage: `url(${assetUrl(media.atmosphere)})` }}
+          />
+          <img
+            className="fhero-emblem fhero-emblem-left"
+            src={assetUrl(media.symbols[0])}
+            alt=""
+          />
+          <img
+            className="fhero-emblem fhero-emblem-small"
+            src={assetUrl(media.symbols[1])}
+            alt=""
+          />
+          <img
+            className="fhero-emblem fhero-emblem-right"
+            src={assetUrl(media.symbols[2])}
+            alt=""
+          />
+          <div className="container fhero-content">
+            <p className="fhero-subtitle">Ремонт и обслуживание только</p>
+            <h1 className="fhero-title">MERCEDES-BENZ</h1>
+            <div className="fhero-car-area fhero-3d-space" aria-hidden="true" />
+            <div className="fhero-actions">
+              <button className="button" onClick={() => onBook()}>
+                Записаться
+                <ArrowUpRight size={16} />
+              </button>
+              <a className="fhero-services" href="#/services">
+                Выбрать свой Mercedes
+                <ArrowRight size={17} />
+              </a>
+            </div>
           </div>
-        </div>
-      </section>
+          <span className="hero-drive-hint" aria-hidden="true">
+            Листайте — движение продолжается
+          </span>
+        </section>
+      </div>
       <PromotionCarousel onBook={onBook} />
       <section className="figma-who container section" id="intro">
         <div className="figma-centered-heading" data-reveal>

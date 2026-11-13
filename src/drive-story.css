@@ -1,0 +1,43 @@
+.hero-drive-story {
+  position: relative;
+  height: calc(180svh - var(--site-header-height));
+}
+.hero-drive-story > .fhero {
+  position: sticky;
+  max-height:none;
+  background:#08090b;
+  top: var(--site-header-height);
+  height: calc(100svh - var(--site-header-height));
+}
+.hero-drive-hint {
+  position: absolute;
+  left: max(24px, calc((100vw - 1280px) / 2));
+  bottom: 20px;
+  z-index: 2;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  color: #8995a5;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+.hero-drive-hint:before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(transparent, #9ba9bd);
+}
+@media (max-width: 899px), (prefers-reduced-motion: reduce) {
+  .hero-drive-story {
+    height: auto;
+  }
+  .hero-drive-story > .fhero {
+    position: relative;
+    top: auto;
+  }
+  .hero-drive-hint {
+    display: none;
+  }
+}

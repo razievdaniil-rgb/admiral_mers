@@ -3,6 +3,8 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { assetUrl } from "./assets";
+import { ASSEMBLY_SECONDS, DRIVE_SECONDS, drivePose } from "./drive-motion";
+import { createDriveStage } from "./drive-stage";
 export type VehicleEngine = ReturnType<typeof createVehicleEngine>;
 export function createVehicleEngine(
   host: HTMLElement,
@@ -40,6 +42,9 @@ export function createVehicleEngine(
   const rim = new T.DirectionalLight(0xc7d8ef, 1.8);
   rim.position.set(-4, 3, -4);
   scene.add(rim);
+  const sweepX = { value: 2.6 },
+    sweepStrength = { value: 0 },
+    carInverse = { value: new T.Matrix4() };
   const fade = { value: 1 },
     lens = { value: 0 },
     point = { value: new T.Vector3(0, 0.8, 0) },
@@ -50,7 +55,7 @@ export function createVehicleEngine(
     visible = true,
     frame = 0,
     previous = 0,
-    born = 0,
+    activeAge = 0,
     intro = false,
     ready = false,
     hover = false,
@@ -61,6 +66,75 @@ export function createVehicleEngine(
     lastPointer = -100,
     pointerPending = false;
   let pickMeshes: T.Mesh[] = [];
+  let wheels: {
+    node: T.Object3D;
+    base: T.Quaternion;
+    axis: T.Vector3;
+    radius: number;
+  }[] = [];
+  let stage: ReturnType<typeof createDriveStage> | null = null;
+  let drive = 0,
+    driveTarget = 0,
+    manualDrive = false,
+    scrollAnchor = 0,
+    scrollOrigin = 0,
+    scrollPending = false;
+  const wheelRotation = new T.Quaternion();
+  const story = host.closest(".hero-drive-story") as HTMLElement | null;
+  const sticky = host.closest(".fhero") as HTMLElement | null;
+  function applyDrive(progress: number, moving = false) {
+    if (!model || !hero) return;
+    const pose = drivePose(progress);
+    model.position.x = pose.x;
+    model.rotation.y = pose.yaw;
+    for (const wheel of wheels)
+      wheel.node.quaternion
+        .copy(wheel.base)
+        .multiply(
+          wheelRotation.setFromAxisAngle(
+            wheel.axis,
+            pose.travel / wheel.radius,
+          ),
+        );
+    model.updateMatrixWorld(true);
+    carInverse.value.copy(model.matrixWorld).invert();
+    sweepX.value = pose.scanX;
+    sweepStrength.value = reduced.matches ? 0 : pose.scanStrength;
+    stage?.update(
+      pose.scanX,
+      sweepStrength.value,
+      pose.travel - (pose.x + 0.48),
+      moving,
+    );
+    host.dataset.drive = progress.toFixed(4);
+    host.dataset.wheelRoll = pose.travel.toFixed(3);
+    host.dataset.sweep = sweepStrength.value > 0.05 ? "open" : "closed";
+  }
+  function readScroll() {
+    scrollPending = false;
+    if (!hero || !story || !sticky || !ready || reduced.matches) return;
+    const distance = story.offsetHeight - sticky.offsetHeight;
+    if (distance < 2) return;
+    const top = parseFloat(getComputedStyle(sticky).top) || 0;
+    const progress = T.MathUtils.clamp(
+      (top - story.getBoundingClientRect().top) / distance,
+      0,
+      1,
+    );
+    if (!manualDrive && progress > 0.005) {
+      manualDrive = true;
+      const completed = activeAge >= ASSEMBLY_SECONDS + DRIVE_SECONDS;
+      scrollAnchor = completed ? Math.floor(drive) : drive;
+      scrollOrigin = completed ? 0 : progress;
+    }
+    if (manualDrive)
+      driveTarget = Math.max(0, scrollAnchor + progress - scrollOrigin);
+  }
+  function onScroll() {
+    if (!hero) return;
+    scrollPending = true;
+    wake();
+  }
   const targetPoint = new T.Vector3(0, 0.8, 0);
   const pointer = new T.Vector2(2, 2),
     ray = new T.Raycaster(),
@@ -127,6 +201,9 @@ export function createVehicleEngine(
         uBody: fade,
         uLens: lens,
         uPoint: point,
+        uSweepX: sweepX,
+        uSweepStrength: sweepStrength,
+        uCarInverse: carInverse,
       });
       shader.vertexShader = shader.vertexShader
         .replace(
@@ -140,11 +217,11 @@ export function createVehicleEngine(
       shader.fragmentShader = shader.fragmentShader
         .replace(
           "#include <common>",
-          "#include <common>\nvarying vec3 vCutWorld;uniform float uBody;uniform float uLens;uniform vec3 uPoint;",
+          "#include <common>\nvarying vec3 vCutWorld;uniform float uBody;uniform float uLens;uniform vec3 uPoint;uniform float uSweepX;uniform float uSweepStrength;uniform mat4 uCarInverse;",
         )
         .replace(
           "#include <dithering_fragment>",
-          `#include <dithering_fragment>\nfloat grain=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(grain>uBody)discard;${shell ? "float opening=(1.-smoothstep(.9,1.18,distance(vCutWorld,uPoint)))*uLens;if(grain<opening)discard;" : ""}`,
+          `#include <dithering_fragment>\nfloat grain=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(grain>uBody)discard;${shell ? "float opening=(1.-smoothstep(.9,1.18,distance(vCutWorld,uPoint)))*uLens;float scanX=(uCarInverse*vec4(vCutWorld,1.)).x;float band=(1.-smoothstep(.34,.68,abs(scanX-uSweepX)))*uSweepStrength;if(grain<max(opening,band))discard;" : ""}`,
         );
     };
     m.userData.outerShell = shell;
@@ -290,6 +367,8 @@ export function createVehicleEngine(
         release(gltf.scene);
         return;
       }
+      stage?.dispose();
+      stage = null;
       release(model);
       release(particles);
       particles = null;
@@ -305,13 +384,37 @@ export function createVehicleEngine(
         )
           pickMeshes.push(o);
       });
+      wheels = [];
+      model.updateMatrixWorld(true);
+      model.traverse((node) => {
+        if (node.name.startsWith("Admiral_Wheel_")) {
+          const scale = node.getWorldScale(new T.Vector3()).y;
+          wheels.push({
+            node,
+            base: node.quaternion.clone(),
+            axis: new T.Vector3().fromArray(
+              node.userData.spinAxis ?? [1, 0, 0],
+            ),
+            radius: Math.max(0.2, (node.userData.spinRadius ?? 0.35) * scale),
+          });
+        }
+      });
+      drive = hero && reduced.matches ? 1 : 0;
+      driveTarget = drive;
+      manualDrive = false;
+      applyDrive(drive);
       intro = entrance && !reduced.matches;
       fade.value = intro ? 0 : 1;
       resize();
       seedParticles();
+      if (hero) {
+        stage = createDriveStage(scene, model);
+        applyDrive(drive);
+      }
       await renderer.compileAsync(scene, camera);
       if (disposed || token !== request) return;
-      born = performance.now();
+      activeAge = 0;
+      previous = 0;
       settled = false;
       ready = true;
       host.dataset.model = file;
@@ -332,7 +435,9 @@ export function createVehicleEngine(
     }
     const dt = previous ? Math.min((now - previous) / 1000, 0.15) : 1 / 24;
     previous = now;
-    const age = (now - born) / 1000;
+    if (ready) activeAge += dt;
+    const age = activeAge;
+    if (scrollPending) readScroll();
     if (ready && model) {
       if (intro && !settled) {
         const p = T.MathUtils.clamp(age / 3.1, 0, 1);
@@ -348,6 +453,37 @@ export function createVehicleEngine(
           host.dataset.phase = "ready";
         }
         dirty = true;
+      }
+      if (hero) {
+        if (!manualDrive)
+          driveTarget = reduced.matches
+            ? 1
+            : T.MathUtils.clamp((age - ASSEMBLY_SECONDS) / DRIVE_SECONDS, 0, 1);
+        const canDrive = !intro || settled;
+        const next = canDrive
+          ? manualDrive
+            ? T.MathUtils.damp(drive, driveTarget, 9, dt)
+            : driveTarget
+          : 0;
+        const changing = Math.abs(next - drive) > 0.00005;
+        if (changing) {
+          drive = next;
+          applyDrive(drive, true);
+          dirty = true;
+          host.dataset.phase =
+            sweepStrength.value > 0.1 ? "scanning" : "driving";
+        }
+        if (
+          canDrive &&
+          Math.abs(drive - driveTarget) < 0.00005 &&
+          (manualDrive ||
+            age >= ASSEMBLY_SECONDS + DRIVE_SECONDS ||
+            reduced.matches)
+        ) {
+          drive = driveTarget;
+          applyDrive(drive, false);
+          host.dataset.phase = "ready";
+        }
       }
       if (pointerPending) {
         model.updateMatrixWorld(true);
@@ -383,6 +519,12 @@ export function createVehicleEngine(
     }
     if (
       (intro && !settled && ready) ||
+      (hero &&
+        ready &&
+        !reduced.matches &&
+        ((!manualDrive && age < ASSEMBLY_SECONDS + DRIVE_SECONDS) ||
+          Math.abs(drive - driveTarget) > 0.00005)) ||
+      scrollPending ||
       Math.abs(lens.value - (hover ? 1 : 0)) > 0.002 ||
       pointerPending ||
       point.value.distanceToSquared(targetPoint) > 0.000004
@@ -454,6 +596,7 @@ export function createVehicleEngine(
   host.addEventListener("pointerdown", tap);
   host.addEventListener("keydown", keyboard);
   document.addEventListener("visibilitychange", visibility);
+  window.addEventListener("scroll", onScroll, { passive: true });
   const sizes = new ResizeObserver(resize);
   sizes.observe(host);
   const observer = new IntersectionObserver(([e]) => {
@@ -482,6 +625,8 @@ export function createVehicleEngine(
       host.removeEventListener("pointerdown", tap);
       host.removeEventListener("keydown", keyboard);
       document.removeEventListener("visibilitychange", visibility);
+      window.removeEventListener("scroll", onScroll);
+      stage?.dispose();
       release(model);
       release(particles);
       environment.dispose();
