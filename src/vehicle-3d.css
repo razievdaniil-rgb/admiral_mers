@@ -57,3 +57,11 @@
     font-size: 9px;
   }
 }
+
+.vehicle-3d-canvas[data-cutaway="open"] {
+  cursor: grab;
+}
+.vehicle-3d-canvas[data-dragging="true"] {
+  cursor: grabbing;
+  user-select: none;
+}

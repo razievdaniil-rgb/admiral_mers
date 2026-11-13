@@ -13,7 +13,7 @@ import { gsap } from "gsap";
 import { AboutFilm } from "./about-film";
 import { Vehicle3D } from "./vehicle-3d";
 import "./drive-story.css";
-import { vehicles } from "./vehicle-library";
+import { heroVehicle } from "./vehicle-library";
 import { BranchShowcase } from "./branch-showcase";
 import { HeroAtmosphere } from "./hero-atmosphere";
 import { assetUrl, media } from "./assets";
@@ -327,7 +327,7 @@ export function FigmaHome({ onBook }: Props) {
       <div className="hero-drive-story">
         <section className="fhero">
           <HeroAtmosphere />
-          <Vehicle3D vehicle={vehicles[0]} hero />
+          <Vehicle3D vehicle={heroVehicle} hero />
           <div
             className="fhero-background"
             style={{ backgroundImage: `url(${assetUrl(media.atmosphere)})` }}
@@ -363,7 +363,7 @@ export function FigmaHome({ onBook }: Props) {
             </div>
           </div>
           <span className="hero-drive-hint" aria-hidden="true">
-            Листайте — движение продолжается
+            Листайте — движение · Потяните машину — вращение
           </span>
         </section>
       </div>

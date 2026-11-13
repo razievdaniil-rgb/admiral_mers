@@ -22,7 +22,7 @@ export function Vehicle3D({
           if (!disposed && s === "error") setFailed(true);
         });
         engine.current = instance;
-        void instance.load(hero ? "hero-optimized.glb" : vehicle.file, hero);
+        void instance.load(hero ? "hero-slk.glb" : vehicle.file, hero);
       })
       .catch(() => {
         if (!disposed) setFailed(true);
@@ -40,13 +40,15 @@ export function Vehicle3D({
         ref={host}
         tabIndex={0}
         role="img"
-        aria-label="Mercedes-Benz в движении: скан показывает двигатель и салон. Наведите на кузов; на телефоне коснитесь машины, с клавиатуры нажмите Enter."
+        aria-label="Mercedes-Benz в движении: скан показывает двигатель и салон. Зажмите и перетащите автомобиль для вращения. Наведение показывает внутренности. Стрелки клавиатуры вращают модель."
       />
       {failed && (
         <img
           className="vehicle-3d-fallback"
-          src={assetUrl("media/vehicles/s65.webp")}
-          alt="Mercedes-Benz S-Класс"
+          src={assetUrl(
+            hero ? "media/vehicles/slk55.webp" : "media/vehicles/s65.webp",
+          )}
+          alt="Mercedes-Benz SLK 55 AMG"
         />
       )}
       <a
@@ -55,7 +57,7 @@ export function Vehicle3D({
         target="_blank"
         rel="noreferrer"
       >
-        3D: {vehicle.credit.author} · CC BY
+        3D: {vehicle.credit.author} · {hero ? "SLK 55 AMG" : "CC BY"}
       </a>
     </div>
   );

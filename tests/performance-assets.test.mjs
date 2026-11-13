@@ -118,3 +118,53 @@ test("four wheel pivots retain only rolling parts and stay within scene budgets"
     "Count repeated wheel instances as well as unique meshes",
   );
 });
+
+test("textured customer SLK is complete and stays within hero payload and geometry budgets", async () => {
+  const bytes = await readFile("dist/models/hero-slk.glb");
+  assert.ok(
+    bytes.length < 4_000_000,
+    "Do not publish the original 47 MB source",
+  );
+  assert.equal(bytes.readUInt32LE(8), bytes.length);
+  const length = bytes.readUInt32LE(12),
+    gltf = JSON.parse(bytes.subarray(20, 20 + length).toString()),
+    binary = 28 + length;
+  assert.equal(
+    gltf.nodes.filter((n) => n.extras?.scanProxy).length,
+    2,
+    "Keep real engine and cabin scan layers",
+  );
+  assert.equal(
+    gltf.nodes.filter((n) => n.name?.startsWith("Admiral_Wheel_")).length,
+    4,
+  );
+  assert.ok(!gltf.skins?.length, "No permanent skeletal animation cost");
+  let triangles = 0,
+    calls = 0,
+    pixels = 0;
+  for (const m of gltf.meshes)
+    for (const p of m.primitives) {
+      calls++;
+      triangles += gltf.accessors[p.indices].count / 3;
+    }
+  assert.ok(calls <= 130);
+  assert.ok(triangles < 180_000);
+  assert.ok(gltf.images.length > 10, "Retain material textures");
+  for (const image of gltf.images) {
+    assert.equal(image.mimeType, "image/webp");
+    const view = gltf.bufferViews[image.bufferView];
+    assert.ok(view.byteOffset + view.byteLength <= bytes.length - binary);
+    const meta = await sharp(
+      bytes.subarray(
+        binary + view.byteOffset,
+        binary + view.byteOffset + view.byteLength,
+      ),
+    ).metadata();
+    assert.ok(meta.width <= 512 && meta.height <= 512);
+    pixels += meta.width * meta.height;
+  }
+  assert.ok(pixels < 11_000_000, "Keep decoded texture memory bounded");
+  const poster = await sharp("dist/media/vehicles/slk55.webp").metadata();
+  assert.equal(poster.width, 900);
+  assert.equal(poster.height, 500);
+});

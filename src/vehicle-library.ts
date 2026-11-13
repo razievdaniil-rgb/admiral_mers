@@ -32,3 +32,18 @@ export const vehicles = [
 export type VehicleAsset = (typeof vehicles)[number];
 export const vehicleLabel = (vehicle: VehicleAsset) =>
   `${vehicle.name} ${vehicle.generation}`;
+
+export const heroVehicle: VehicleAsset = {
+  id: "slk55",
+  name: "SLK 55 AMG",
+  generation: "R172 · 2012",
+  file: "hero-slk.glb",
+  credit: {
+    author: "geyges",
+    authorUrl: "https://sketchfab.com/geyges",
+    license: "Free Standard",
+    sourceName: "Mercedes-Benz SLK 55 AMG (2012)",
+    sourceUrl:
+      "https://sketchfab.com/3d-models/mercedes-benz-slk-55-amg-2012-03096be29f4d4e5ca3b7291207c002c8",
+  },
+};

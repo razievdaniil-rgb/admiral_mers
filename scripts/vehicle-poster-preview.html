@@ -31,7 +31,7 @@
     ><span id="status"></span>
     <script type="module">
       import { createVehicleEngine } from "/src/vehicle-engine.ts";
-      import { vehicles } from "/src/vehicle-library.ts";
+      import { vehicles, heroVehicle } from "/src/vehicle-library.ts";
       const host = document.querySelector("#render"),
         select = document.querySelector("#models"),
         status = document.querySelector("#status");
@@ -39,7 +39,7 @@
         status.textContent = s;
         host.dataset.status = s;
       });
-      for (const v of vehicles) {
+      for (const v of [heroVehicle, ...vehicles]) {
         const option = document.createElement("option");
         option.value = v.file;
         option.textContent = v.id + " · " + v.name;

@@ -5,6 +5,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { assetUrl } from "./assets";
 import { ASSEMBLY_SECONDS, DRIVE_SECONDS, drivePose } from "./drive-motion";
 import { createDriveStage } from "./drive-stage";
+import { createXrayLayers } from "./vehicle-xray";
 export type VehicleEngine = ReturnType<typeof createVehicleEngine>;
 export function createVehicleEngine(
   host: HTMLElement,
@@ -73,12 +74,21 @@ export function createVehicleEngine(
     radius: number;
   }[] = [];
   let stage: ReturnType<typeof createDriveStage> | null = null;
+  let xrayMeshes: T.Mesh[] = [];
   let drive = 0,
     driveTarget = 0,
     manualDrive = false,
     scrollAnchor = 0,
     scrollOrigin = 0,
     scrollPending = false;
+  let orbitAngle = 0,
+    orbitTarget = 0,
+    userOrbit = false;
+  let dragPointer: number | null = null,
+    dragX = 0,
+    dragStartX = 0,
+    dragStartY = 0,
+    didDrag = false;
   const wheelRotation = new T.Quaternion();
   const story = host.closest(".hero-drive-story") as HTMLElement | null;
   const sticky = host.closest(".fhero") as HTMLElement | null;
@@ -86,7 +96,8 @@ export function createVehicleEngine(
     if (!model || !hero) return;
     const pose = drivePose(progress);
     model.position.x = pose.x;
-    model.rotation.y = pose.yaw;
+    model.rotation.y = pose.yaw + orbitAngle;
+    host.dataset.rotation = orbitAngle.toFixed(3);
     for (const wheel of wheels)
       wheel.node.quaternion
         .copy(wheel.base)
@@ -160,13 +171,17 @@ export function createVehicleEngine(
     textures.forEach((t) => t.dispose());
     root.removeFromParent();
   }
-  function surface(original: T.Material) {
+  function surface(original: T.Material, xray = false) {
     const s = original as T.MeshStandardMaterial;
     const m = new T.MeshStandardMaterial({
       name: original.name,
       color: s.color ?? 0xbac3ce,
       map: s.map ?? null,
       normalMap: s.normalMap ?? null,
+      roughnessMap: s.roughnessMap ?? null,
+      metalnessMap: s.metalnessMap ?? null,
+      aoMap: s.aoMap ?? null,
+      normalScale: s.normalScale,
       roughness: Math.max(0.24, s.roughness ?? 0.5),
       metalness: Math.min(0.8, s.metalness ?? 0.2),
       opacity: original.opacity,
@@ -178,17 +193,29 @@ export function createVehicleEngine(
       vertexColors: original.vertexColors,
     });
     if (/paint/i.test(m.name)) {
-      m.color.set("#9ea9b7");
-      m.metalness = 0.65;
-      m.roughness = 0.34;
+      m.color.set("#343e4b");
+      m.metalness = 0.82;
+      m.roughness = 0.33;
+      m.normalScale.set(0.12, 0.12);
     }
     if (/glass/i.test(m.name)) {
-      m.color.set("#576474");
+      m.color.set("#8c9cae");
+      if (!/Engine|Cabin/.test(m.name)) {
+        m.transparent = true;
+        m.opacity = /windshield|shared 50|shared 51/.test(m.name) ? 0.28 : 0.45;
+        m.depthWrite = false;
+      }
       m.roughness = 0.18;
     }
     if (m.name === "Scene_-_Root") {
       m.color.set("#657384");
       m.metalness = 0.4;
+    }
+    if (
+      /interior|leather|alcantara|texture28|texture30|texture17/.test(m.name)
+    ) {
+      m.color.set("#303943");
+      m.roughness = 0.68;
     }
     m.forceSinglePass = true;
     // Cut only the outer shell, preserving the actual engine, seats and chassis.
@@ -196,6 +223,11 @@ export function createVehicleEngine(
       /paint|glass|mirror|mblogo|headlight|foglight|signal|vehiclelights|taillight|runninglight|sw222_main_alt/i.test(
         m.name,
       );
+    if (xray) {
+      m.transparent = true;
+      m.depthWrite = false;
+      m.depthTest = false;
+    }
     m.onBeforeCompile = (shader) => {
       Object.assign(shader.uniforms, {
         uBody: fade,
@@ -220,13 +252,30 @@ export function createVehicleEngine(
           "#include <common>\nvarying vec3 vCutWorld;uniform float uBody;uniform float uLens;uniform vec3 uPoint;uniform float uSweepX;uniform float uSweepStrength;uniform mat4 uCarInverse;",
         )
         .replace(
+          "#include <opaque_fragment>",
+          `
+          float scanX=(uCarInverse*vec4(vCutWorld,1.)).x;
+          float band=(1.-smoothstep(.32,1.05,abs(scanX-uSweepX)))*uSweepStrength;
+          float opening=(1.-smoothstep(.45,1.0,distance(vCutWorld,uPoint)))*uLens;
+          float scan=max(band,opening);
+          float edge=pow(1.-abs(dot(normal,normalize(vViewPosition))),2.);
+          ${xray ? "diffuseColor.a = scan*(.12+edge*.34)*uBody; if(diffuseColor.a<.002)discard; outgoingLight=outgoingLight*.55+vec3(.045,.16,.21);" : shell ? "outgoingLight=mix(outgoingLight,vec3(.32,.62,.78)*( .45+edge*.65),scan*.18);" : "outgoingLight=mix(outgoingLight,outgoingLight*.7+vec3(.11,.23,.29),scan*.55);"}
+          #include <opaque_fragment>
+        `,
+        )
+        .replace(
           "#include <dithering_fragment>",
-          `#include <dithering_fragment>\nfloat grain=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(grain>uBody)discard;${shell ? "float opening=(1.-smoothstep(.9,1.18,distance(vCutWorld,uPoint)))*uLens;float scanX=(uCarInverse*vec4(vCutWorld,1.)).x;float band=(1.-smoothstep(.34,.68,abs(scanX-uSweepX)))*uSweepStrength;if(grain<max(opening,band))discard;" : ""}`,
+          "#include <dithering_fragment>\nfloat grain=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(grain>uBody)discard;",
         );
     };
     m.userData.outerShell = shell;
+    m.userData.scanPart = /^(Engine|Cabin) \|/.test(m.name);
     m.customProgramCacheKey = () =>
-      shell ? "admiral-open-shell" : "admiral-solid-interior";
+      xray
+        ? "admiral-xray-interior"
+        : shell
+          ? "admiral-lit-shell"
+          : "admiral-solid-interior";
     return m;
   }
   function normalize(root: T.Group, file: string) {
@@ -269,6 +318,12 @@ export function createVehicleEngine(
           : map(o.material);
       }
     });
+    root.traverse((node) => {
+      if (node.userData.scanProxy)
+        node.traverse((child) => {
+          if (child instanceof T.Mesh) child.visible = false;
+        });
+    });
     return group;
   }
   function seedParticles() {
@@ -276,7 +331,7 @@ export function createVehicleEngine(
     model.updateMatrixWorld(true);
     const meshes: T.Mesh[] = [];
     model.traverse((o) => {
-      if (o instanceof T.Mesh) meshes.push(o);
+      if (o instanceof T.Mesh && o.visible) meshes.push(o);
     });
     const counts = meshes.map((m) => m.geometry.getAttribute("position").count),
       total = counts.reduce((a, b) => a + b, 0),
@@ -342,11 +397,11 @@ export function createVehicleEngine(
       : height > 2.1
         ? 25
         : 22;
-    if (portrait) camera.position.set(8.8, 4.4, 8.8);
+    if (portrait) camera.position.set(11.6, 5.1, 11.6);
     else
       camera.position.set(
         hero ? (w < 900 ? 6.8 : 5.4) : 6.2,
-        hero ? 2.6 : 2.2,
+        hero ? 2.05 : 2.2,
         hero ? (w < 900 ? 6.8 : 5.4) : 6.2,
       );
     camera.lookAt(0, hero ? 0.85 : Math.max(0.8, height * 0.43), 0);
@@ -407,6 +462,18 @@ export function createVehicleEngine(
       fade.value = intro ? 0 : 1;
       resize();
       seedParticles();
+      if (hero)
+        xrayMeshes = createXrayLayers(model, () =>
+          surface(
+            new T.MeshStandardMaterial({
+              name: "Xray internal parts",
+              color: 0x8599aa,
+              roughness: 0.65,
+              metalness: 0.15,
+            }),
+            true,
+          ),
+        );
       if (hero) {
         stage = createDriveStage(scene, model);
         applyDrive(drive);
@@ -435,7 +502,7 @@ export function createVehicleEngine(
     }
     const dt = previous ? Math.min((now - previous) / 1000, 0.15) : 1 / 24;
     previous = now;
-    if (ready) activeAge += dt;
+    if (ready && dragPointer === null && !userOrbit) activeAge += dt;
     const age = activeAge;
     if (scrollPending) readScroll();
     if (ready && model) {
@@ -455,7 +522,7 @@ export function createVehicleEngine(
         dirty = true;
       }
       if (hero) {
-        if (!manualDrive)
+        if (!manualDrive && !userOrbit)
           driveTarget = reduced.matches
             ? 1
             : T.MathUtils.clamp((age - ASSEMBLY_SECONDS) / DRIVE_SECONDS, 0, 1);
@@ -485,7 +552,12 @@ export function createVehicleEngine(
           host.dataset.phase = "ready";
         }
       }
-      if (pointerPending) {
+      if (Math.abs(orbitAngle - orbitTarget) > 0.0002) {
+        orbitAngle = T.MathUtils.damp(orbitAngle, orbitTarget, 14, dt);
+        applyDrive(drive);
+        dirty = true;
+      }
+      if (pointerPending && dragPointer === null) {
         model.updateMatrixWorld(true);
         bounds.setFromObject(model);
         ray.setFromCamera(pointer, camera);
@@ -511,6 +583,12 @@ export function createVehicleEngine(
       host.dataset.cutaway = hover ? "open" : "closed";
     }
     if (dirty) {
+      xrayMeshes.forEach(
+        (m) =>
+          (m.visible =
+            fade.value > 0.98 &&
+            (sweepStrength.value > 0.005 || lens.value > 0.005)),
+      );
       renderer.render(scene, camera);
       host.dataset.frames = String(++frames);
       host.dataset.drawCalls = String(renderer.info.render.calls);
@@ -522,8 +600,11 @@ export function createVehicleEngine(
       (hero &&
         ready &&
         !reduced.matches &&
-        ((!manualDrive && age < ASSEMBLY_SECONDS + DRIVE_SECONDS) ||
+        ((!manualDrive &&
+          !userOrbit &&
+          age < ASSEMBLY_SECONDS + DRIVE_SECONDS) ||
           Math.abs(drive - driveTarget) > 0.00005)) ||
+      Math.abs(orbitAngle - orbitTarget) > 0.0002 ||
       scrollPending ||
       Math.abs(lens.value - (hover ? 1 : 0)) > 0.002 ||
       pointerPending ||
@@ -537,6 +618,21 @@ export function createVehicleEngine(
       frame = requestAnimationFrame(render);
   }
   function move(e: PointerEvent) {
+    if (dragPointer === e.pointerId) {
+      if (
+        Math.abs(e.clientX - dragStartX) + Math.abs(e.clientY - dragStartY) >
+        4
+      )
+        didDrag = true;
+      orbitTarget += (e.clientX - dragX) * 0.008;
+      dragX = e.clientX;
+      hover = false;
+      pointerPending = false;
+      userOrbit = true;
+      host.dataset.dragging = "true";
+      wake();
+      return;
+    }
     if (
       !hero ||
       !ready ||
@@ -554,26 +650,52 @@ export function createVehicleEngine(
     wake();
   }
   function leave() {
+    if (dragPointer !== null) return;
     hover = false;
     pointerPending = false;
     wake();
   }
   function tap(e: PointerEvent) {
-    if (e.pointerType !== "touch" || !ready || !model) return;
+    if (!ready || !model || (intro && !settled) || e.button !== 0) return;
     const r = host.getBoundingClientRect();
     pointer.set(
       ((e.clientX - r.left) / r.width) * 2 - 1,
-      (-(e.clientY - r.top) / r.height) * 2 + 1,
+      -((e.clientY - r.top) / r.height) * 2 + 1,
     );
     ray.setFromCamera(pointer, camera);
     const intersection = ray.intersectObjects(pickMeshes, false)[0];
-    if (intersection) {
-      targetPoint.copy(intersection.point);
-      hover = !hover;
-    } else hover = false;
+    if (!intersection) return;
+    dragPointer = e.pointerId;
+    dragX = dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    didDrag = false;
+    targetPoint.copy(intersection.point);
+    if (e.pointerType !== "touch") {
+      host.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    }
+    wake();
+  }
+  function endDrag(e: PointerEvent) {
+    if (dragPointer !== e.pointerId) return;
+    dragPointer = null;
+    host.dataset.dragging = "false";
+    if (host.hasPointerCapture(e.pointerId))
+      host.releasePointerCapture(e.pointerId);
+    hover = e.pointerType === "touch" && !didDrag ? !hover : false;
+    dirty = true;
     wake();
   }
   function keyboard(e: KeyboardEvent) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      if (!ready || (intro && !settled)) return;
+      e.preventDefault();
+      userOrbit = true;
+      hover = false;
+      orbitTarget += ((e.key === "ArrowLeft" ? -1 : 1) * Math.PI) / 12;
+      wake();
+      return;
+    }
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       hover = !hover;
@@ -594,6 +716,9 @@ export function createVehicleEngine(
   host.addEventListener("pointermove", move, { passive: true });
   host.addEventListener("pointerleave", leave);
   host.addEventListener("pointerdown", tap);
+  host.addEventListener("pointerup", endDrag);
+  host.addEventListener("pointercancel", endDrag);
+  host.addEventListener("lostpointercapture", endDrag);
   host.addEventListener("keydown", keyboard);
   document.addEventListener("visibilitychange", visibility);
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -623,6 +748,9 @@ export function createVehicleEngine(
       host.removeEventListener("pointermove", move);
       host.removeEventListener("pointerleave", leave);
       host.removeEventListener("pointerdown", tap);
+      host.removeEventListener("pointerup", endDrag);
+      host.removeEventListener("pointercancel", endDrag);
+      host.removeEventListener("lostpointercapture", endDrag);
       host.removeEventListener("keydown", keyboard);
       document.removeEventListener("visibilitychange", visibility);
       window.removeEventListener("scroll", onScroll);

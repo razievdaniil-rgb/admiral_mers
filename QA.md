@@ -172,3 +172,17 @@ Canvas сборки вынесен из ограниченного блока м
 ## 13.11.2026 — проезд и сканирование по мотивам Nolith
 
 Проверена последовательность: сборка → проезд с вращением колёс → световой срез вдоль кузова. При прокрутке drive и wheelRoll меняются, показываются реальные внутренние объекты; после завершения счётчик кадров останавливается. В консоли локальной сцены ошибок нет. Полная сцена: 59–60 вызовов отрисовки, 122 095–122 097 треугольников. Для колёс добавлены проверки центров вращения, состава узлов и бюджета повторяющихся экземпляров.
+
+## Smooth scan and drag rotation — 13 November 2026
+
+- Replaced shell discards with a softly blended real engine/cabin overlay; no scan grain or rectangular frame. Exterior remains intact.
+- Mouse drag verified through front, profile and rear views; release settles without continuing to spin. Arrow keys also rotate. Background drag does not capture the model.
+- Paint normals smoothed offline while preserving hard edges and the existing triangle budget.
+- Mobile 390×844: offer fits; native vertical scrolling and no horizontal overflow.
+- Runtime idle: 59 calls / 122,095 triangles; during scan: up to 68 calls / 148,443 triangles. X-ray meshes are hidden outside scans; rendering stops at rest.
+
+## Integrated customer SLK — 13 November 2026
+
+- Selected textured SLK 55 AMG R172; S65 archive matches the earlier model. Hero uses hero-slk.glb (3.483 MB), four rolling axles, real engine/cabin scan proxies and two batched x-ray layers.
+- Desktop visual check: intact body, no rectangular scanner frame or scan noise; camera movement, scan and drag rotation work together. Idle scene: 123 calls / 141,388 triangles; scanning: 126 calls / 169,735 triangles.
+- Author geyges / Free Standard verified against Sketchfab API. Catalogue remains 2D; SLK fallback poster is local WebP.

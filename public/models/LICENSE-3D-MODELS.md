@@ -129,3 +129,7 @@ Se você é autor de um modelo listado em [CREDITS.md](./CREDITS.md) e:
 
 abra uma issue em <https://github.com/pedrosoandre/carros/issues> ou envie um
 email. O modelo será atualizado ou removido conforme o pedido.
+
+## Hero added from customer archive
+
+hero-slk.glb and media/vehicles/slk55.webp derive from Mercedes-Benz SLK 55 AMG (2012) by geyges: https://sketchfab.com/3d-models/mercedes-benz-slk-55-amg-2012-03096be29f4d4e5ca3b7291207c002c8 . Sketchfab API identifies this model as Free Standard; it is separate from the CC BY catalogue above. Modified for the site: geometry batching and simplification, WebP textures, paint shading, four rolling pivots, scan layers, lighting and static fallback render. Original 47 MB source archive is not redistributed here.
