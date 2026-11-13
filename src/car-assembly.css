@@ -1,5 +1,7 @@
 .car-assembly {
   position: relative;
+  display: grid;
+  place-items: center;
   width: 100%;
   height: 100%;
 }
