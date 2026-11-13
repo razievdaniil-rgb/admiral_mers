@@ -37,7 +37,8 @@
   height: clamp(300px, 35vw, 430px);
   position: relative;
   overflow: hidden;
-  background: #0b0e13;
+  background:
+    radial-gradient(ellipse at 50% 72%, #27313e55, transparent 65%), #0b0e13;
   touch-action: pan-y;
   isolation: isolate;
   outline-offset: 4px;
@@ -123,17 +124,25 @@
     font-size: 12px;
   }
   .catalog-stage {
-    height: 280px;
+    height: 240px;
   }
   .catalog-car {
-    padding: 0 10px;
+    padding: 0 10px 22px;
   }
   .catalog-arrow {
     width: 36px;
     height: 36px;
+    top: auto;
+    bottom: 1px;
+  }
+  .catalog-arrow-prev {
+    left: calc(50% - 84px);
+  }
+  .catalog-arrow-next {
+    right: calc(50% - 84px);
   }
   .catalog-counter {
-    bottom: 9px;
+    bottom: 10px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -143,4 +152,10 @@
   .catalog-car-in {
     animation: none;
   }
+}
+
+.catalog-stage:focus-visible {
+  outline: 1px solid #8495ad;
+  outline-offset: 2px;
+  border-radius: 12px;
 }

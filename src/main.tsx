@@ -286,7 +286,7 @@ function Footer() {
           target="_blank"
           rel="noreferrer"
         >
-          Авторы 3D-моделей
+          Изображения и 3D-модели
         </a>
       </div>
     </footer>

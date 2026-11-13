@@ -30,8 +30,9 @@ export const vehicles = [
   credit: credits.find((c) => c.file === file)!.credit,
 }));
 export type VehicleAsset = (typeof vehicles)[number];
-export const vehicleLabel = (vehicle: VehicleAsset) =>
-  `${vehicle.name} ${vehicle.generation}`;
+export const vehicleLabel = (
+  vehicle: Pick<VehicleAsset, "name" | "generation">,
+) => `${vehicle.name} ${vehicle.generation}`;
 
 export const heroVehicle: VehicleAsset = {
   id: "slk55",

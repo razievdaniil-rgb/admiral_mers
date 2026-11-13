@@ -4,34 +4,49 @@ import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import sharp from "sharp";
 
-test("twelve distinct catalogue posters stay within the static image budget", async () => {
-  const ids = [
-    "s65",
-    "e212",
-    "c202",
-    "cls",
-    "gls",
-    "g",
-    "amg",
-    "sl65",
-    "300sl",
-    "sprinter",
-    "190",
-    "scoupe",
-  ];
+test("all fifteen catalogue cars are distinct transparent local images with matching sources", async () => {
+  const vehicles = JSON.parse(
+    await readFile("src/catalog-vehicles.json", "utf8"),
+  );
+  const sources = JSON.parse(
+    await readFile("dist/media/catalog-v2/sources.json", "utf8"),
+  );
+  assert.equal(vehicles.length, 15);
+  assert.equal(new Set(vehicles.map((v) => v.id)).size, 15);
   let bytes = 0;
   const hashes = new Set();
-  for (const id of ids) {
-    const image = await readFile("dist/media/vehicles/" + id + ".webp");
+  for (const vehicle of vehicles) {
+    assert.ok(
+      vehicle.image.startsWith("media/catalog-v2/"),
+      "Never return unfinished legacy 3D captures",
+    );
+    const image = await readFile("dist/" + vehicle.image);
     bytes += image.length;
     const metadata = await sharp(image).metadata();
     assert.equal(metadata.format, "webp");
     assert.equal(metadata.width, 900);
     assert.equal(metadata.height, 500);
+    assert.ok(metadata.hasAlpha, "Keep cutout backgrounds transparent");
     hashes.add(createHash("sha256").update(image).digest("hex"));
+    const source = sources.find((s) => s.id === vehicle.id);
+    assert.ok(source);
+    assert.equal(source.name, vehicle.name);
+    assert.equal(source.generation, vehicle.generation);
+    assert.equal(source.image, vehicle.image);
+    assert.equal(
+      new URL(source.sourceImage).hostname,
+      "media.oneweb.mercedes-benz.com",
+    );
+    assert.equal(
+      source.manufacturerCode,
+      new URL(source.sourceImage).pathname.split("/")[5],
+    );
   }
-  assert.equal(hashes.size, 12, "Do not accidentally publish repeated frames");
-  assert.ok(bytes < 512_000, "The whole 2D catalogue must remain below 500 KB");
+  assert.equal(hashes.size, 15, "Every model must have its own picture");
+  assert.ok(
+    bytes < 750_000,
+    "The whole fifteen-car catalogue must stay below 750 KB",
+  );
 });
 
 test("hero keeps its geometry and download budgets", async () => {

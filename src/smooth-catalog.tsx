@@ -1,14 +1,15 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { models, services } from "./data";
-import { vehicles, vehicleLabel } from "./vehicle-library";
+import { vehicleLabel } from "./vehicle-library";
+import vehicles from "./catalog-vehicles.json";
 import { assetUrl } from "./assets";
 import "./catalog-2d.css";
 export function SmoothCatalog({
   onBook,
   renderServices,
 }: {
-  onBook: (b: { model: string }) => void;
+  onBook: (b: { model: string; service?: string }) => void;
   renderServices: (model: string) => ReactNode;
 }) {
   const pickerId = useId();
@@ -39,9 +40,7 @@ export function SmoothCatalog({
     for (const offset of [-1, 1]) {
       const image = new Image();
       image.src = assetUrl(
-        "media/vehicles/" +
-          vehicles[(index + offset + vehicles.length) % vehicles.length].id +
-          ".webp",
+        vehicles[(index + offset + vehicles.length) % vehicles.length].image,
       );
     }
   }, [index]);
@@ -52,7 +51,7 @@ export function SmoothCatalog({
     if (next === index) return;
     setBusy(true);
     const image = new Image();
-    image.src = assetUrl("media/vehicles/" + vehicles[next].id + ".webp");
+    image.src = assetUrl(vehicles[next].image);
     try {
       await image.decode();
     } catch {
@@ -88,6 +87,7 @@ export function SmoothCatalog({
             <span>Выбрать модель</span>
             <select
               id={pickerId + "-showcase"}
+              aria-label="Выбрать модель"
               value={index}
               disabled={busy}
               onChange={(e) => void select(Number(e.target.value))}
@@ -134,9 +134,7 @@ export function SmoothCatalog({
             <img
               key={"out-" + previous}
               className="catalog-car catalog-car-out"
-              src={assetUrl(
-                "media/vehicles/" + vehicles[previous].id + ".webp",
-              )}
+              src={assetUrl(vehicles[previous].image)}
               alt=""
               aria-hidden="true"
               width="900"
@@ -148,8 +146,12 @@ export function SmoothCatalog({
             className={
               "catalog-car " + (previous !== null ? "catalog-car-in" : "")
             }
-            src={assetUrl("media/vehicles/" + selected.id + ".webp")}
-            alt={"Mercedes-Benz " + label}
+            src={assetUrl(selected.image)}
+            alt={
+              selected.name.startsWith("Mercedes")
+                ? label
+                : "Mercedes-Benz " + label
+            }
             width="900"
             height="500"
             fetchPriority="high"
@@ -179,7 +181,7 @@ export function SmoothCatalog({
           <div
             className="garage-work-options"
             role="group"
-            aria-label="Узлы автомобиля"
+            aria-label="Направления работ"
           >
             {[
               ["diagnostics", "Диагностика"],
@@ -218,7 +220,12 @@ export function SmoothCatalog({
                 : "Выберите направление работ выше"}
               <span>{label}</span>
             </p>
-            <button className="button" onClick={() => onBook({ model: label })}>
+            <button
+              className="button"
+              onClick={() =>
+                onBook({ model: label, service: activeNode || undefined })
+              }
+            >
               Записаться
               <ArrowUpRight size={18} />
             </button>
@@ -266,7 +273,10 @@ export function SmoothCatalog({
             <button
               className="button"
               onClick={() =>
-                onBook({ model: `${other.name} ${otherGeneration}` })
+                onBook({
+                  model: `${other.name} ${otherGeneration}`,
+                  service: activeNode || undefined,
+                })
               }
             >
               Записаться: {other.name}

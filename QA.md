@@ -186,3 +186,11 @@ Canvas сборки вынесен из ограниченного блока м
 - Selected textured SLK 55 AMG R172; S65 archive matches the earlier model. Hero uses hero-slk.glb (3.483 MB), four rolling axles, real engine/cabin scan proxies and two batched x-ray layers.
 - Desktop visual check: intact body, no rectangular scanner frame or scan noise; camera movement, scan and drag rotation work together. Idle scene: 123 calls / 141,388 triangles; scanning: 126 calls / 169,735 triangles.
 - Author geyges / Free Standard verified against Sketchfab API. Catalogue remains 2D; SLK fallback poster is local WebP.
+
+## Catalogue image replacement — 13 November 2026
+
+- Replaced the unfinished 3D capture catalogue with 15 distinct Mercedes-Benz manufacturer cutouts. Source URLs, manufacturer model codes and displayed labels are recorded in media/catalog-v2/sources.json. All files are local transparent WebP, 900×500; total 702,124 bytes.
+- Browser checked every one of 15 select options: complete=true, naturalWidth=900, correct distinct image/label. Catalogue has zero canvas elements. Last→first and first→last arrows work; keyboard switching works.
+- Booking checked with C-Класс W206 + engine: modal receives model=C-Класс W206 and service=engine. Escape closes it.
+- Mobile 390×844: no horizontal overflow; navigation buttons sit below the car. Header background is opaque so text cannot show through it. Console error/warning log empty.
+- Build and all seven asset/site checks pass.

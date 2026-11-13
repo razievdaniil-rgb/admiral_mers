@@ -1,0 +1,92 @@
+[
+  {
+    "id": "s-class",
+    "name": "S-Класс",
+    "generation": "V223",
+    "image": "media/catalog-v2/s-class.webp"
+  },
+  {
+    "id": "e-class",
+    "name": "E-Класс",
+    "generation": "W214",
+    "image": "media/catalog-v2/e-class.webp"
+  },
+  {
+    "id": "c-class",
+    "name": "C-Класс",
+    "generation": "W206",
+    "image": "media/catalog-v2/c-class.webp"
+  },
+  {
+    "id": "a-class",
+    "name": "A-Класс",
+    "generation": "W177",
+    "image": "media/catalog-v2/a-class.webp"
+  },
+  {
+    "id": "b-class",
+    "name": "B-Класс",
+    "generation": "W247",
+    "image": "media/catalog-v2/b-class.webp"
+  },
+  {
+    "id": "cla",
+    "name": "CLA",
+    "generation": "C118",
+    "image": "media/catalog-v2/cla.webp"
+  },
+  {
+    "id": "gla",
+    "name": "GLA",
+    "generation": "H247",
+    "image": "media/catalog-v2/gla.webp"
+  },
+  {
+    "id": "glb",
+    "name": "GLB",
+    "generation": "Кроссовер",
+    "image": "media/catalog-v2/glb.webp"
+  },
+  {
+    "id": "glc",
+    "name": "GLC",
+    "generation": "X254",
+    "image": "media/catalog-v2/glc.webp"
+  },
+  {
+    "id": "gle",
+    "name": "GLE",
+    "generation": "V167",
+    "image": "media/catalog-v2/gle.webp"
+  },
+  {
+    "id": "gls",
+    "name": "GLS",
+    "generation": "X167",
+    "image": "media/catalog-v2/gls.webp"
+  },
+  {
+    "id": "g-class",
+    "name": "G-Класс",
+    "generation": "W465",
+    "image": "media/catalog-v2/g-class.webp"
+  },
+  {
+    "id": "v-class",
+    "name": "V-Класс",
+    "generation": "W447",
+    "image": "media/catalog-v2/v-class.webp"
+  },
+  {
+    "id": "amg-gt",
+    "name": "Mercedes-AMG GT",
+    "generation": "C192",
+    "image": "media/catalog-v2/amg-gt.webp"
+  },
+  {
+    "id": "sl",
+    "name": "Mercedes-AMG SL",
+    "generation": "R232",
+    "image": "media/catalog-v2/sl.webp"
+  }
+]
