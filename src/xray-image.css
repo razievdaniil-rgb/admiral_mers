@@ -12,7 +12,7 @@
   display: block;
   user-select: none;
 }
-.xray-ready > .xray-surface {
+.xray-ready[data-lens="open"] > .xray-surface {
   -webkit-mask-image: radial-gradient(
     circle var(--xr-radius) at var(--xr-x) var(--xr-y),
     transparent 0%,
@@ -44,7 +44,7 @@
     #0000 100%
   );
 }
-.xray-ready > .xray-reveal {
+.xray-ready[data-lens="open"] > .xray-reveal {
   opacity: 1;
 }
 .xray-reveal > img {

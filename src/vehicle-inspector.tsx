@@ -126,6 +126,7 @@ export function VehicleInspector({
           }}
         >
           <XrayImage
+            priority
             src={src}
             alt={`Mercedes-Benz ${model}`}
             cutaway={`media/xray/${src.includes("Rectangle17") ? "s" : src.includes("Rectangle18") ? "gle" : "e"}.webp`}

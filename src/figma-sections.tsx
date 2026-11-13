@@ -13,6 +13,7 @@ import { gsap } from "gsap";
 import { XrayImage } from "./xray-image";
 import { AboutFilm } from "./about-film";
 import { HeroAtmosphere } from "./hero-atmosphere";
+import { CarAssembly } from "./car-assembly";
 import { assetUrl, media } from "./assets";
 import { branches, branchStatus, history, mapLink, services } from "./data";
 type Booking = { service?: string; branch?: string; model?: string };
@@ -293,17 +294,6 @@ export function FigmaHome({ onBook }: Props) {
             { yPercent: 35, autoAlpha: 0, duration: 0.9, ease: "power3.out" },
             0.15,
           )
-          .from(
-            ".fhero-car",
-            {
-              autoAlpha: 0,
-              y: 35,
-              scale: 0.94,
-              duration: 1.2,
-              ease: "power3.out",
-            },
-            0.35,
-          )
           .from(".fhero-actions", { autoAlpha: 0, y: 15, duration: 0.6 }, 0.85);
         gsap.to(".fhero-emblem-right", {
           rotation: 12,
@@ -392,34 +382,36 @@ export function FigmaHome({ onBook }: Props) {
           <p className="fhero-subtitle">Ремонт и обслуживание только</p>
           <h1 className="fhero-title">MERCEDES-BENZ</h1>
           <div className="fhero-car-area" ref={car}>
-            <XrayImage
-              className="fhero-car"
-              src={media.hero}
-              alt="Серебристый Mercedes-Benz — ТехЦентр Адмирал"
-              priority
-              cutaway="media/xray/hero-v2.webp"
-            >
-              <a
-                href="#/services"
-                className="hero-node hero-node-engine"
-                aria-label="Посмотреть диагностику и услуги"
+            <CarAssembly>
+              <XrayImage
+                className="fhero-car"
+                src={media.hero}
+                alt="Серебристый Mercedes-Benz — ТехЦентр Адмирал"
+                priority
+                cutaway="media/xray/hero-v2.webp"
               >
-                <span>
-                  <Plus size={14} />
-                </span>
-                <em>Диагностика и ремонт</em>
-              </a>
-              <a
-                href="#/services/suspension"
-                className="hero-node hero-node-wheel"
-                aria-label="Услуги по ходовой и тормозам"
-              >
-                <span>
-                  <Plus size={14} />
-                </span>
-                <em>Ходовая и тормоза</em>
-              </a>
-            </XrayImage>
+                <a
+                  href="#/services"
+                  className="hero-node hero-node-engine"
+                  aria-label="Посмотреть диагностику и услуги"
+                >
+                  <span>
+                    <Plus size={14} />
+                  </span>
+                  <em>Диагностика и ремонт</em>
+                </a>
+                <a
+                  href="#/services/suspension"
+                  className="hero-node hero-node-wheel"
+                  aria-label="Услуги по ходовой и тормозам"
+                >
+                  <span>
+                    <Plus size={14} />
+                  </span>
+                  <em>Ходовая и тормоза</em>
+                </a>
+              </XrayImage>
+            </CarAssembly>
           </div>
           <div className="fhero-actions">
             <button className="button" onClick={() => onBook()}>

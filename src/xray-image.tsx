@@ -54,6 +54,11 @@ export function XrayImage({
       )
         frame.current = requestAnimationFrame(step);
       else {
+        if (m.tr === 0) {
+          m.r = 0;
+          el.style.setProperty("--xr-radius", "0px");
+          el.dataset.lens = "closed";
+        }
         frame.current = null;
         m.last = 0;
       }
@@ -65,6 +70,7 @@ export function XrayImage({
     m.tx = x;
     m.ty = y;
     m.tr = r;
+    if (r > 0 && root.current) root.current.dataset.lens = "open";
     if (reduced()) {
       if (frame.current !== null) cancelAnimationFrame(frame.current);
       frame.current = null;
@@ -74,6 +80,7 @@ export function XrayImage({
       root.current?.style.setProperty("--xr-x", `${x}px`);
       root.current?.style.setProperty("--xr-y", `${y}px`);
       root.current?.style.setProperty("--xr-radius", `${r}px`);
+      if (root.current) root.current.dataset.lens = r > 0 ? "open" : "closed";
     } else update();
   };
   useEffect(() => {
@@ -132,6 +139,7 @@ export function XrayImage({
     <div
       ref={root}
       className={`xray-image ${className} ${pinned ? "xray-pinned" : ""} ${ready ? "xray-ready" : ""}`}
+      data-lens="closed"
       aria-describedby={description}
       onPointerEnter={move}
       onPointerMove={move}
@@ -180,6 +188,7 @@ export function XrayImage({
           draggable={false}
           loading={priority ? "eager" : "lazy"}
           onLoad={() => setReady(true)}
+          onError={() => setReady(false)}
         />
       </div>
       <div className="xray-lens" aria-hidden="true" />

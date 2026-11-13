@@ -33,48 +33,67 @@ export function SmoothCatalog({
     [activeNode, setActiveNode] = useState<string | null>(null),
     [otherId, setOtherId] = useState("b"),
     [otherGeneration, setOtherGeneration] = useState("W247");
+  const [imageError, setImageError] = useState("");
+  const alive = useRef(true);
+  const imageLoads = useRef(new Map<number, Promise<boolean>>());
+  const loadImage = (next: number) => {
+    let pending = imageLoads.current.get(next);
+    if (!pending) {
+      const image = new Image();
+      image.src = assetUrl(showcase[next].image);
+      pending = image.decode().then(
+        () => true,
+        () => {
+          imageLoads.current.delete(next);
+          return false;
+        },
+      );
+      imageLoads.current.set(next, pending);
+    }
+    return pending;
+  };
   const stage = useRef<HTMLDivElement>(null),
     slides = useRef<(HTMLDivElement | null)[]>([]),
     previous = useRef(0),
     watchdog = useRef<ReturnType<typeof setTimeout> | null>(null),
     motion = useRef<gsap.core.Timeline | null>(null),
     direction = useRef(1),
-    initialized = useRef(false),
     locked = useRef(false),
     touch = useRef<{ x: number; y: number } | null>(null);
   const selectedService = services.find((s) => s.id === activeNode);
   const selected = showcase[index],
     other = models.find((m) => m.id === otherId)!;
   const label = `${selected.name} ${selected.generation.replace(/\s*\([^)]*\)/g, "")}`;
-  const select = (next: number) => {
+  const select = async (next: number) => {
     next = (next + showcase.length) % showcase.length;
     if (next === index || locked.current) return;
-    direction.current = next === (index + 1) % showcase.length ? 1 : -1;
-    previous.current = index;
     locked.current = true;
     setBusy(true);
+    setImageError("");
+    const ready = await loadImage(next);
+    if (!alive.current) return;
+    if (!ready) {
+      locked.current = false;
+      setBusy(false);
+      setImageError(
+        "Не удалось загрузить изображение. Попробуйте выбрать автомобиль ещё раз.",
+      );
+      return;
+    }
+    direction.current = next === (index + 1) % showcase.length ? 1 : -1;
+    previous.current = index;
     setIndex(next);
   };
   useLayoutEffect(() => {
     const panels = slides.current;
-    if (!initialized.current) {
-      initialized.current = true;
-      panels.forEach((panel, i) =>
-        gsap.set(panel, {
-          xPercent: i === index ? 0 : 110,
-          autoAlpha: i === index ? 1 : 0,
-        }),
-      );
-      return;
-    }
     if (previous.current === index) return;
     motion.current?.kill();
     const incoming = panels[index],
       outgoing = panels[previous.current];
     const finish = () => {
       if (watchdog.current) clearTimeout(watchdog.current);
-      gsap.set(outgoing, { autoAlpha: 0 });
-      gsap.set(incoming, { xPercent: 0, scale: 1, rotationY: 0, autoAlpha: 1 });
+      gsap.set(incoming, { xPercent: 0, scale: 1 });
+      previous.current = index;
       locked.current = false;
       setBusy(false);
     };
@@ -87,8 +106,6 @@ export function SmoothCatalog({
     gsap.set(incoming, {
       xPercent: d * 110,
       scale: 0.9,
-      rotationY: d * -7,
-      autoAlpha: 1,
       zIndex: 2,
     });
     gsap.set(outgoing, { zIndex: 1 });
@@ -105,7 +122,6 @@ export function SmoothCatalog({
         {
           xPercent: d * -110,
           scale: 0.9,
-          rotationY: d * 7,
           duration: 1.15,
           ease: "power3.inOut",
         },
@@ -116,7 +132,6 @@ export function SmoothCatalog({
         {
           xPercent: 0,
           scale: 1,
-          rotationY: 0,
           duration: 1.15,
           ease: "power3.inOut",
         },
@@ -124,11 +139,12 @@ export function SmoothCatalog({
       );
   }, [index]);
   useEffect(() => {
-    showcase.forEach((x) => {
-      const image = new Image();
-      image.src = assetUrl(x.image);
+    alive.current = true;
+    showcase.forEach((_, i) => {
+      void loadImage(i);
     });
     return () => {
+      alive.current = false;
       motion.current?.kill();
       if (watchdog.current) clearTimeout(watchdog.current);
     };
@@ -215,6 +231,7 @@ export function SmoothCatalog({
                   slides.current[i] = el;
                 }}
                 aria-hidden={i !== index}
+                data-visible={i === index || (busy && i === previous.current)}
                 inert={i !== index || busy}
               >
                 <div className="garage-model-title">
@@ -251,6 +268,7 @@ export function SmoothCatalog({
             <ChevronRight />
           </button>
         </div>
+        {imageError && <p role="status">{imageError}</p>}
         <div className="garage-work-panel">
           <div
             className="garage-work-options"
