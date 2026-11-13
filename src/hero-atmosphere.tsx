@@ -1,9 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, ScanLine } from "lucide-react";
+import { assetUrl, media } from "./assets";
 import "./hero-atmosphere.css";
 
-/** A live silver-light studio, drawn behind the original Figma car. */
-export function HeroAtmosphere() {
+/** Cinematic macro shots use the client-owned car photograph. */
+export function HeroAtmosphere({
+  interactive,
+  onToggleView,
+  onUnavailable,
+}: {
+  interactive: boolean;
+  onToggleView: () => void;
+  onUnavailable: () => void;
+}) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const clock = useRef(0);
   const pose = useRef([0, 0]);
@@ -13,7 +22,10 @@ export function HeroAtmosphere() {
     const surface = canvas.current;
     const host = surface?.closest<HTMLElement>(".fhero");
     const context = surface?.getContext("2d", { alpha: true });
-    if (!surface || !host || !context) return;
+    if (!surface || !host || !context) {
+      onUnavailable();
+      return;
+    }
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
     let width = 0,
@@ -28,135 +40,112 @@ export function HeroAtmosphere() {
       pointerX = pose.current[0],
       pointerY = pose.current[1];
 
+    const photograph = new Image();
+    photograph.src = assetUrl(media.hero);
+    photograph.onload = () => {
+      if (!disposed) draw(elapsed);
+    };
+    photograph.onerror = () => {
+      if (!disposed) onUnavailable();
+    };
+    const shots = [
+      {
+        name: "grille",
+        x: 0.76,
+        y: 0.45,
+        zoom: 2.65,
+        dx: 0.055,
+        dy: 0.015,
+        dz: 0.3,
+      },
+      {
+        name: "headlight",
+        x: 0.53,
+        y: 0.4,
+        zoom: 2.8,
+        dx: 0.06,
+        dy: 0.025,
+        dz: 0.25,
+      },
+      {
+        name: "wheel",
+        x: 0.41,
+        y: 0.61,
+        zoom: 3.1,
+        dx: -0.02,
+        dy: -0.025,
+        dz: -0.2,
+      },
+      {
+        name: "wide",
+        x: 0.52,
+        y: 0.44,
+        zoom: 1.05,
+        dx: -0.015,
+        dy: 0.015,
+        dz: 0.07,
+      },
+    ];
+    const duration = 6800;
+    const dissolve = 1500;
+    const ease = (value: number) => value * value * (3 - 2 * value);
+    function drawShot(index: number, progress: number, opacity: number) {
+      if (!context || !photograph.complete || !photograph.naturalWidth) return;
+      const shot = shots[index];
+      const camera = ease(Math.max(0, Math.min(1, progress)));
+      const wide = shot.name === "wide";
+      const imageWidth = wide
+        ? width * (width < 768 ? 1.38 : 1.03) * (1 + camera * 0.06)
+        : Math.max(width * (shot.zoom + shot.dz * camera), height * 1.9);
+      const imageHeight =
+        (imageWidth * photograph.naturalHeight) / photograph.naturalWidth;
+      const x =
+        width * 0.5 - imageWidth * (shot.x + shot.dx * camera) + pointerX * 8;
+      const y =
+        height * (wide ? 0.54 : 0.53) -
+        imageHeight * (shot.y + shot.dy * camera) +
+        pointerY * 5;
+      context.globalAlpha = opacity * (wide ? 0.92 : 0.72);
+      context.drawImage(photograph, x, y, imageWidth, imageHeight);
+      context.globalAlpha = 1;
+    }
     function draw(time: number) {
-      if (!context) return;
+      if (!context || !surface) return;
       context.clearRect(0, 0, width, height);
-      const t = time * 0.00016;
-      const driftX = pointerX * width * 0.022;
-      const driftY = pointerY * height * 0.018;
-      context.save();
-      context.translate(driftX, driftY);
-
-      // Broad reflected light gives the ribbons volume without flashing.
-      const glowX = width * (0.5 + Math.sin(t * 0.7) * 0.16);
       const glow = context.createRadialGradient(
-        glowX,
-        height * 0.5,
+        width * 0.5,
+        height * 0.52,
         0,
-        glowX,
-        height * 0.5,
-        width * 0.62,
+        width * 0.5,
+        height * 0.52,
+        width * 0.7,
       );
-      glow.addColorStop(0, "rgba(137,158,186,.17)");
-      glow.addColorStop(0.45, "rgba(78,96,123,.07)");
+      glow.addColorStop(0, "rgba(102,119,145,.15)");
       glow.addColorStop(1, "rgba(0,0,0,0)");
       context.fillStyle = glow;
-      context.fillRect(
-        -width * 0.05,
-        -height * 0.05,
-        width * 1.1,
-        height * 1.1,
-      );
-
-      // Large side reflectors frame the car and keep the centre clear.
-      for (const side of [-1, 1]) {
-        context.save();
-        context.translate(width * 0.5, 0);
-        context.scale(side, 1);
-        const shift = Math.sin(t * 0.8) * width * 0.035;
-        context.beginPath();
-        context.moveTo(width * 0.68, height * 1.08);
-        context.bezierCurveTo(
-          width * 0.24 + shift,
-          height * 0.75,
-          width * 0.72,
-          height * 0.08,
-          width * 0.05,
-          -height * 0.22,
-        );
-        context.bezierCurveTo(
-          width * 0.8,
-          height * 0.04,
-          width * 0.32 + shift,
-          height * 0.73,
-          width * 0.78,
-          height * 1.12,
-        );
-        context.closePath();
-        const reflector = context.createLinearGradient(
-          width * 0.1,
-          0,
-          width * 0.66,
-          height * 0.6,
-        );
-        reflector.addColorStop(0, "rgba(112,134,162,0)");
-        reflector.addColorStop(0.45, "rgba(158,182,210,.06)");
-        reflector.addColorStop(0.7, "rgba(206,222,239,.25)");
-        reflector.addColorStop(0.9, "rgba(96,119,151,.05)");
-        reflector.addColorStop(1, "rgba(112,134,162,0)");
-        context.fillStyle = reflector;
-        context.fill();
-        context.restore();
+      context.fillRect(0, 0, width, height);
+      if (interactive) {
+        surface.dataset.shot = "interactive";
+        return;
       }
-
-      // Sweeping studio reflectors: each has a dark face and a silver edge.
-      for (let i = 0; i < 7; i++) {
-        const p = i / 6;
-        const breath = Math.sin(t + i * 0.53);
-        const y = height * (0.12 + p * 0.125) + breath * height * 0.035;
-        const spread = height * (0.19 + p * 0.1);
-        context.beginPath();
-        context.moveTo(-width * 0.18, y + spread);
-        context.bezierCurveTo(
-          width * 0.17,
-          y - spread * 0.8,
-          width * 0.58,
-          y + spread * 0.9,
-          width * 1.18,
-          y - spread,
-        );
-        const silver = context.createLinearGradient(0, 0, width, height * 0.3);
-        const gleam = 0.43 + Math.sin(t * 0.8 + i * 0.7) * 0.14;
-        silver.addColorStop(0, "rgba(136,155,181,0)");
-        silver.addColorStop(
-          Math.max(0.05, gleam - 0.25),
-          "rgba(87,106,132,.04)",
-        );
-        silver.addColorStop(gleam, `rgba(200,217,237,${i % 2 ? 0.4 : 0.65})`);
-        silver.addColorStop(
-          Math.min(0.95, gleam + 0.25),
-          "rgba(87,106,132,.05)",
-        );
-        silver.addColorStop(1, "rgba(136,155,181,0)");
-        context.strokeStyle = silver;
-        context.lineWidth = Math.max(12, height * (0.025 + p * 0.02));
-        context.globalAlpha = 0.45;
-        context.stroke();
-        context.lineWidth = Math.max(1, height * 0.0015);
-        context.globalAlpha = 0.85;
-        context.stroke();
+      if (motion.matches) {
+        drawShot(3, 0.5, 1);
+        surface.dataset.shot = "wide";
+        return;
       }
-
-      // Elliptical pool of light anchors the car to a studio floor.
-      context.globalAlpha = 1;
-      context.translate(width * 0.5, height * 0.79);
-      context.scale(1, 0.13);
-      const pool = context.createRadialGradient(
-        0,
-        0,
-        width * 0.08,
-        0,
-        0,
-        width * 0.54,
-      );
-      pool.addColorStop(0, "rgba(166,186,210,.02)");
-      pool.addColorStop(0.62 + Math.sin(t) * 0.025, "rgba(166,186,210,.13)");
-      pool.addColorStop(0.7, "rgba(192,208,227,.2)");
-      pool.addColorStop(0.74, "rgba(111,132,160,.05)");
-      pool.addColorStop(1, "rgba(0,0,0,0)");
-      context.fillStyle = pool;
-      context.fillRect(-width * 0.6, -width * 0.6, width * 1.2, width * 1.2);
-      context.restore();
+      const shotIndex = Math.floor(time / duration) % shots.length;
+      const localTime = time % duration;
+      if (surface.dataset.shot !== shots[shotIndex].name)
+        surface.dataset.shot = shots[shotIndex].name;
+      const blend =
+        localTime > duration - dissolve
+          ? ease((localTime - duration + dissolve) / dissolve)
+          : 0;
+      drawShot(shotIndex, localTime / duration, 1 - blend);
+      if (blend > 0) {
+        // The next shot enters at its own start, so the dissolve ends without a jump.
+        drawShot((shotIndex + 1) % shots.length, 0, blend);
+      }
     }
 
     function tick(now: number) {
@@ -175,7 +164,12 @@ export function HeroAtmosphere() {
     function sync() {
       cancelAnimationFrame(frame);
       previous = 0;
-      const active = !paused && !motion.matches && visible && !document.hidden;
+      const active =
+        !paused &&
+        !interactive &&
+        !motion.matches &&
+        visible &&
+        !document.hidden;
       surface!.dataset.sceneState = motion.matches
         ? "reduced"
         : paused
@@ -194,6 +188,7 @@ export function HeroAtmosphere() {
       surface!.width = Math.round(width * ratio);
       surface!.height = Math.round(height * ratio);
       context!.setTransform(ratio, 0, 0, ratio, 0, 0);
+      context!.imageSmoothingQuality = "high";
       draw(elapsed);
     }
     function move(event: PointerEvent) {
@@ -228,8 +223,10 @@ export function HeroAtmosphere() {
       host.removeEventListener("pointerleave", leave);
       document.removeEventListener("visibilitychange", sync);
       motion.removeEventListener("change", sync);
+      photograph.onload = null;
+      photograph.onerror = null;
     };
-  }, [paused]);
+  }, [paused, interactive]);
 
   return (
     <>
@@ -237,16 +234,26 @@ export function HeroAtmosphere() {
         <canvas ref={canvas} />
         <div className="hero-atmosphere-shade" />
       </div>
+      {!interactive && (
+        <button
+          className="hero-motion-toggle"
+          onClick={() => setPaused(!paused)}
+          aria-label={
+            paused ? "Включить анимацию фона" : "Приостановить анимацию фона"
+          }
+          aria-pressed={paused}
+        >
+          {paused ? <Play size={13} /> : <Pause size={13} />}
+          <span>{paused ? "Продолжить" : "Пауза"}</span>
+        </button>
+      )}
       <button
-        className="hero-motion-toggle"
-        onClick={() => setPaused(!paused)}
-        aria-label={
-          paused ? "Включить анимацию фона" : "Приостановить анимацию фона"
-        }
-        aria-pressed={paused}
+        className="hero-view-toggle"
+        onClick={onToggleView}
+        aria-pressed={interactive}
       >
-        {paused ? <Play size={13} /> : <Pause size={13} />}
-        <span>{paused ? "Включить фон" : "Пауза фона"}</span>
+        {interactive ? <Play size={15} /> : <ScanLine size={15} />}
+        {interactive ? "Вернуться к анимации" : "Рассмотреть автомобиль"}
       </button>
     </>
   );
