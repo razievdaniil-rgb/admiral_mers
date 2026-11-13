@@ -19,22 +19,64 @@
 .hero-dust {
   position: absolute;
   inset: -8%;
-  opacity: 0.16;
+  opacity: 0.32;
   background-image:
     radial-gradient(circle at 18% 24%, #d6e4fb 0 1px, transparent 1.6px),
     radial-gradient(circle at 76% 38%, #839ab9 0 1px, transparent 1.5px),
-    radial-gradient(circle at 34% 72%, #d0d7df 0 0.7px, transparent 1.3px);
+    radial-gradient(circle at 34% 72%, #d0d7df 0 0.7px, transparent 1.3px),
+    radial-gradient(circle at 61% 16%, #e1e7ef 0 0.8px, transparent 1.4px),
+    radial-gradient(circle at 87% 81%, #a6b8cd 0 0.6px, transparent 1.2px);
   background-size:
-    151px 131px,
-    213px 183px,
-    277px 237px;
-  animation: ambient-dust 22s ease-in-out infinite alternate;
+    139px 151px,
+    181px 163px,
+    223px 199px,
+    257px 229px,
+    307px 263px;
+  animation: ambient-dust 28s ease-in-out infinite alternate;
   will-change: transform;
 }
 .hero-dust-far {
-  opacity: 0.12;
-  animation-duration: 31s;
+  opacity: 0.2;
+  background-size:
+    89px 103px,
+    113px 127px,
+    151px 139px,
+    179px 167px,
+    211px 193px;
+  background-position:
+    31px 47px,
+    67px 13px,
+    -29px 81px,
+    43px -57px,
+    97px 29px;
+  animation-duration: 43s;
   animation-direction: alternate-reverse;
+}
+.hero-dust-glints {
+  opacity: 0.28;
+  background-image:
+    radial-gradient(circle at 23% 39%, #e6edf7 0 1.2px, transparent 2px),
+    radial-gradient(circle at 72% 64%, #c6d6e9 0 1px, transparent 1.8px);
+  background-size:
+    379px 317px,
+    457px 389px;
+  animation-duration: 34s;
+  animation-delay: -11s;
+}
+.hero-atmosphere[data-active="false"] .hero-dust {
+  animation-play-state: paused;
+  will-change: auto;
+}
+@media (max-width: 700px) {
+  .hero-dust {
+    opacity: 0.26;
+  }
+  .hero-dust-far {
+    opacity: 0.16;
+  }
+  .hero-dust-glints {
+    opacity: 0.22;
+  }
 }
 @keyframes ambient-dust {
   to {
