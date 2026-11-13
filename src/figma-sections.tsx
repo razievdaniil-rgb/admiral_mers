@@ -336,7 +336,10 @@ export function FigmaHome({ onBook }: Props) {
                   <span>
                     <Plus size={14} />
                   </span>
-                  <em>Диагностика и ремонт</em>
+                  <em>
+                    <span className="hero-node-full">Диагностика и ремонт</span>
+                    <span className="hero-node-short">Диагностика</span>
+                  </em>
                 </a>
                 <a
                   href="#/services/suspension"
@@ -346,7 +349,10 @@ export function FigmaHome({ onBook }: Props) {
                   <span>
                     <Plus size={14} />
                   </span>
-                  <em>Ходовая и тормоза</em>
+                  <em>
+                    <span className="hero-node-full">Ходовая и тормоза</span>
+                    <span className="hero-node-short">Ходовая</span>
+                  </em>
                 </a>
               </XrayImage>
             </CarAssembly>

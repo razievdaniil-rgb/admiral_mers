@@ -67,6 +67,9 @@ body {
 .fhero .hero-node em {
   font-size: 12px;
 }
+.hero-node-short {
+  display: none;
+}
 .fhero .hero-node > span {
   background: #14181dd9;
   border-color: #ffffff50;
@@ -442,14 +445,21 @@ dialog[open].is-closing::backdrop {
   }
 }
 @media (max-width: 700px) {
+  .figma-home {
+    --mobile-offer-space: clamp(104px, 18svh, 152px);
+    --mobile-hero-height: min(
+      410px,
+      calc(100svh - var(--site-header-height) - 1px - var(--mobile-offer-space))
+    );
+  }
   .figma-home > .fhero {
-    height: calc(100svh - var(--site-header-height) - 1px);
+    height: var(--mobile-hero-height);
     min-height: 0;
   }
   .fhero-content {
     height: 100%;
-    padding-block: clamp(12px, 2.5svh, 24px)
-      max(14px, env(safe-area-inset-bottom));
+    padding-block: clamp(8px, 1.5svh, 16px)
+      max(10px, env(safe-area-inset-bottom));
     grid-template-rows: auto auto minmax(0, 1fr) auto;
     grid-template-columns: minmax(0, 1fr);
   }
@@ -467,7 +477,7 @@ dialog[open].is-closing::backdrop {
   .fhero .fhero-car {
     width: min(
       calc(100% + 48px),
-      calc((100svh - var(--site-header-height) - 220px) * 1.904)
+      calc((var(--mobile-hero-height) - 200px) * 1.904)
     );
     max-width: none;
     height: auto;
@@ -487,7 +497,30 @@ dialog[open].is-closing::backdrop {
     bottom: -14px;
   }
   .fhero-actions {
-    padding-top: 12px;
+    padding-top: 8px;
+    min-height: 0;
+    gap: 10px;
+  }
+  .fhero-title {
+    margin-top: 4px;
+  }
+  .hero-node-full {
+    display: none;
+  }
+  .hero-node-short {
+    display: inline;
+  }
+  .figma-offers {
+    padding-top: 8px;
+    padding-bottom: 28px;
+  }
+  .figma-home .figma-offers h2 {
+    font-size: clamp(22px, 6vw, 26px);
+    line-height: 1.1;
+    margin: 0;
+  }
+  .figma-offers .offer-carousel {
+    margin-top: 12px;
   }
   .logo .logo-since {
     font-size: 10px;
@@ -593,17 +626,6 @@ dialog[open].is-closing::backdrop {
     min-height: 26px;
     padding: 3px;
     font-size: 10px;
-  }
-}
-@media (max-width: 360px) and (orientation: portrait) {
-  .fhero .hero-node-wheel {
-    top: 70%;
-  }
-  .fhero .hero-node-engine {
-    top: 89%;
-  }
-  .fhero .xray-toggle {
-    bottom: -50px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
