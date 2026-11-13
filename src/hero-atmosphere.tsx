@@ -1,31 +1,31 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, ScanLine } from "lucide-react";
-import { assetUrl, media } from "./assets";
+import { Pause, Play } from "lucide-react";
 import "./hero-atmosphere.css";
 
-/** Cinematic macro shots use the client-owned car photograph. */
-export function HeroAtmosphere({
-  interactive,
-  onToggleView,
-  onUnavailable,
-}: {
-  interactive: boolean;
-  onToggleView: () => void;
-  onUnavailable: () => void;
-}) {
+type Particle = {
+  u: number;
+  v: number;
+  band: number;
+  phase: number;
+  size: number;
+  brightness: number;
+  pushX: number;
+  pushY: number;
+};
+
+/** Original silver point-cloud scene; the foreground car stays interactive. */
+export function HeroAtmosphere() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const clock = useRef(0);
   const pose = useRef([0, 0]);
+  const cloud = useRef<Particle[]>([]);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const surface = canvas.current;
     const host = surface?.closest<HTMLElement>(".fhero");
     const context = surface?.getContext("2d", { alpha: true });
-    if (!surface || !host || !context) {
-      onUnavailable();
-      return;
-    }
+    if (!surface || !host || !context) return;
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
     let width = 0,
@@ -35,117 +35,126 @@ export function HeroAtmosphere({
       elapsed = clock.current;
     let visible = true,
       disposed = false;
+    let pointerInside = false;
     let targetX = 0,
       targetY = 0,
       pointerX = pose.current[0],
       pointerY = pose.current[1];
 
-    const photograph = new Image();
-    photograph.src = assetUrl(media.hero);
-    photograph.onload = () => {
-      if (!disposed) draw(elapsed);
+    let randomSeed = 2741;
+    const random = () => {
+      randomSeed = (Math.imul(randomSeed, 1664525) + 1013904223) >>> 0;
+      return randomSeed / 4294967296;
     };
-    photograph.onerror = () => {
-      if (!disposed) onUnavailable();
-    };
-    const shots = [
-      {
-        name: "grille",
-        x: 0.76,
-        y: 0.45,
-        zoom: 2.65,
-        dx: 0.055,
-        dy: 0.015,
-        dz: 0.3,
-      },
-      {
-        name: "headlight",
-        x: 0.53,
-        y: 0.4,
-        zoom: 2.8,
-        dx: 0.06,
-        dy: 0.025,
-        dz: 0.25,
-      },
-      {
-        name: "wheel",
-        x: 0.41,
-        y: 0.61,
-        zoom: 3.1,
-        dx: -0.02,
-        dy: -0.025,
-        dz: -0.2,
-      },
-      {
-        name: "wide",
-        x: 0.52,
-        y: 0.44,
-        zoom: 1.05,
-        dx: -0.015,
-        dy: 0.015,
-        dz: 0.07,
-      },
-    ];
-    const duration = 6800;
-    const dissolve = 1500;
-    const ease = (value: number) => value * value * (3 - 2 * value);
-    function drawShot(index: number, progress: number, opacity: number) {
-      if (!context || !photograph.complete || !photograph.naturalWidth) return;
-      const shot = shots[index];
-      const camera = ease(Math.max(0, Math.min(1, progress)));
-      const wide = shot.name === "wide";
-      const imageWidth = wide
-        ? width * (width < 768 ? 1.38 : 1.03) * (1 + camera * 0.06)
-        : Math.max(width * (shot.zoom + shot.dz * camera), height * 1.9);
-      const imageHeight =
-        (imageWidth * photograph.naturalHeight) / photograph.naturalWidth;
-      const x =
-        width * 0.5 - imageWidth * (shot.x + shot.dx * camera) + pointerX * 8;
-      const y =
-        height * (wide ? 0.54 : 0.53) -
-        imageHeight * (shot.y + shot.dy * camera) +
-        pointerY * 5;
-      context.globalAlpha = opacity * (wide ? 0.92 : 0.72);
-      context.drawImage(photograph, x, y, imageWidth, imageHeight);
-      context.globalAlpha = 1;
+    const particles = cloud.current.length
+      ? cloud.current
+      : Array.from({ length: 6000 }, () => ({
+          u: random() * Math.PI * 2,
+          v: random() * Math.PI * 2,
+          band: Math.sqrt(random()),
+          phase: random() * Math.PI * 2,
+          size: 0.8 + random() * 1.2,
+          brightness: 0.2 + random() * 0.8,
+          pushX: 0,
+          pushY: 0,
+        }));
+    cloud.current = particles;
+    const smooth = (value: number) => value * value * (3 - 2 * value);
+    function shape(
+      mode: number,
+      u: number,
+      v: number,
+      band: number,
+      time: number,
+    ) {
+      const tube = band * 0.16;
+      if (mode === 0)
+        return [
+          Math.cos(u) * (0.84 + Math.cos(v) * tube),
+          Math.sin(u) * (0.66 + Math.cos(v) * tube),
+          Math.sin(v) * tube + Math.sin(u) * 0.12,
+        ];
+      if (mode === 1) {
+        const x = u / Math.PI - 1;
+        return [
+          x * 1.12,
+          Math.sin(x * 3.4 + time * 0.14) * 0.44 + Math.cos(v) * tube,
+          Math.sin(v) * tube + Math.cos(x * 3) * 0.15,
+        ];
+      }
+      return [
+        Math.cos(u) * (0.85 + Math.cos(v) * tube),
+        Math.sin(u * 2) * 0.47 + Math.cos(v) * tube,
+        Math.sin(v) * tube + Math.sin(u) * 0.22,
+      ];
     }
+    let lastDraw = 0;
     function draw(time: number) {
       if (!context || !surface) return;
+      const t = time * 0.001;
+      const delta = Math.min(Math.max(time - lastDraw, 0), 80);
+      lastDraw = time;
       context.clearRect(0, 0, width, height);
       const glow = context.createRadialGradient(
         width * 0.5,
-        height * 0.52,
+        height * 0.55,
         0,
         width * 0.5,
-        height * 0.52,
-        width * 0.7,
+        height * 0.55,
+        width * 0.64,
       );
-      glow.addColorStop(0, "rgba(102,119,145,.15)");
+      glow.addColorStop(0, "rgba(100,126,158,.11)");
       glow.addColorStop(1, "rgba(0,0,0,0)");
       context.fillStyle = glow;
       context.fillRect(0, 0, width, height);
-      if (interactive) {
-        surface.dataset.shot = "interactive";
-        return;
+      const cycle = motion.matches ? 0 : (t / 15) % 3;
+      const mode = Math.floor(cycle);
+      const mix = smooth(cycle - mode);
+      const count = width < 600 ? 1800 : width < 1100 ? 3800 : 6000;
+      if (surface.dataset.scene !== "particles")
+        surface.dataset.scene = "particles";
+      const recover = 1 - Math.exp(-delta / 450);
+      const intro = motion.matches ? 1 : smooth(Math.min(1, t / 2.3));
+      for (let i = 0; i < count; i++) {
+        const point = particles[i];
+        const u = (point.u + (motion.matches ? 0 : t * 0.045)) % (Math.PI * 2);
+        const a = shape(mode, u, point.v, point.band, t);
+        const b = shape((mode + 1) % 3, u, point.v, point.band, t);
+        const z = a[2] + (b[2] - a[2]) * mix;
+        const perspective = 1 / (1 - z * 0.42);
+        let x =
+          width * 0.5 +
+          (a[0] + (b[0] - a[0]) * mix) * width * 0.61 * perspective;
+        let y =
+          height * 0.54 +
+          (a[1] + (b[1] - a[1]) * mix) * height * 0.65 * perspective;
+        x += Math.cos(point.phase) * width * 0.22 * (1 - intro);
+        y += Math.sin(point.phase) * height * 0.22 * (1 - intro);
+        if (!motion.matches && !paused) {
+          const dx = x - (width * 0.5 + pointerX * width * 0.5);
+          const dy = y - (height * 0.5 + pointerY * height * 0.5);
+          const distance = Math.hypot(dx, dy);
+          const radius = Math.min(150, width * 0.18);
+          const force =
+            finePointer.matches && pointerInside && distance < radius
+              ? Math.pow(1 - distance / radius, 2) * 48
+              : 0;
+          const safeDistance = Math.max(1, distance);
+          point.pushX += ((dx / safeDistance) * force - point.pushX) * recover;
+          point.pushY += ((dy / safeDistance) * force - point.pushY) * recover;
+        }
+        const size = point.size * perspective * (width < 600 ? 0.85 : 1);
+        const shimmer = motion.matches
+          ? 1
+          : 0.82 + Math.sin(t * 0.65 + point.phase) * 0.18;
+        context.globalAlpha = Math.min(
+          0.85,
+          (0.4 + point.brightness * 0.58) * shimmer * intro,
+        );
+        context.fillStyle = i % 7 === 0 ? "#9cb5d2" : "#d4dde8";
+        context.fillRect(x + point.pushX, y + point.pushY, size, size);
       }
-      if (motion.matches) {
-        drawShot(3, 0.5, 1);
-        surface.dataset.shot = "wide";
-        return;
-      }
-      const shotIndex = Math.floor(time / duration) % shots.length;
-      const localTime = time % duration;
-      if (surface.dataset.shot !== shots[shotIndex].name)
-        surface.dataset.shot = shots[shotIndex].name;
-      const blend =
-        localTime > duration - dissolve
-          ? ease((localTime - duration + dissolve) / dissolve)
-          : 0;
-      drawShot(shotIndex, localTime / duration, 1 - blend);
-      if (blend > 0) {
-        // The next shot enters at its own start, so the dissolve ends without a jump.
-        drawShot((shotIndex + 1) % shots.length, 0, blend);
-      }
+      context.globalAlpha = 1;
     }
 
     function tick(now: number) {
@@ -164,12 +173,7 @@ export function HeroAtmosphere({
     function sync() {
       cancelAnimationFrame(frame);
       previous = 0;
-      const active =
-        !paused &&
-        !interactive &&
-        !motion.matches &&
-        visible &&
-        !document.hidden;
+      const active = !paused && !motion.matches && visible && !document.hidden;
       surface!.dataset.sceneState = motion.matches
         ? "reduced"
         : paused
@@ -193,11 +197,13 @@ export function HeroAtmosphere({
     }
     function move(event: PointerEvent) {
       if (!finePointer.matches || motion.matches || paused) return;
+      pointerInside = true;
       const bounds = host!.getBoundingClientRect();
       targetX = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
       targetY = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
     }
     function leave() {
+      pointerInside = false;
       targetX = 0;
       targetY = 0;
     }
@@ -223,10 +229,8 @@ export function HeroAtmosphere({
       host.removeEventListener("pointerleave", leave);
       document.removeEventListener("visibilitychange", sync);
       motion.removeEventListener("change", sync);
-      photograph.onload = null;
-      photograph.onerror = null;
     };
-  }, [paused, interactive]);
+  }, [paused]);
 
   return (
     <>
@@ -234,26 +238,16 @@ export function HeroAtmosphere({
         <canvas ref={canvas} />
         <div className="hero-atmosphere-shade" />
       </div>
-      {!interactive && (
-        <button
-          className="hero-motion-toggle"
-          onClick={() => setPaused(!paused)}
-          aria-label={
-            paused ? "Включить анимацию фона" : "Приостановить анимацию фона"
-          }
-          aria-pressed={paused}
-        >
-          {paused ? <Play size={13} /> : <Pause size={13} />}
-          <span>{paused ? "Продолжить" : "Пауза"}</span>
-        </button>
-      )}
       <button
-        className="hero-view-toggle"
-        onClick={onToggleView}
-        aria-pressed={interactive}
+        className="hero-motion-toggle"
+        onClick={() => setPaused(!paused)}
+        aria-label={
+          paused ? "Включить анимацию фона" : "Приостановить анимацию фона"
+        }
+        aria-pressed={paused}
       >
-        {interactive ? <Play size={15} /> : <ScanLine size={15} />}
-        {interactive ? "Вернуться к анимации" : "Рассмотреть автомобиль"}
+        {paused ? <Play size={13} /> : <Pause size={13} />}
+        <span>{paused ? "Продолжить" : "Пауза"}</span>
       </button>
     </>
   );

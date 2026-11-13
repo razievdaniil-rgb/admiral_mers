@@ -281,17 +281,6 @@ export function FigmaHome({ onBook }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const car = useRef<HTMLDivElement>(null);
   const [branch, setBranch] = useState(0);
-  const [interactiveHero, setInteractiveHero] = useState(
-    () => matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
-  useEffect(() => {
-    const preference = matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => {
-      if (preference.matches) setInteractiveHero(true);
-    };
-    preference.addEventListener("change", update);
-    return () => preference.removeEventListener("change", update);
-  }, []);
   useLayoutEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion:no-preference)", () => {
@@ -378,15 +367,8 @@ export function FigmaHome({ onBook }: Props) {
   const b = branches[branch];
   return (
     <div className="figma-home" ref={root}>
-      <section
-        className="fhero"
-        data-view={interactiveHero ? "interactive" : "cinematic"}
-      >
-        <HeroAtmosphere
-          interactive={interactiveHero}
-          onToggleView={() => setInteractiveHero(!interactiveHero)}
-          onUnavailable={() => setInteractiveHero(true)}
-        />
+      <section className="fhero">
+        <HeroAtmosphere />
         <div
           className="fhero-background"
           style={{ backgroundImage: `url(${assetUrl(media.atmosphere)})` }}
@@ -409,12 +391,7 @@ export function FigmaHome({ onBook }: Props) {
         <div className="container fhero-content">
           <p className="fhero-subtitle">Ремонт и обслуживание только</p>
           <h1 className="fhero-title">MERCEDES-BENZ</h1>
-          <div
-            className="fhero-car-area"
-            ref={car}
-            inert={!interactiveHero}
-            aria-hidden={!interactiveHero}
-          >
+          <div className="fhero-car-area" ref={car}>
             <XrayImage
               className="fhero-car"
               src={media.hero}

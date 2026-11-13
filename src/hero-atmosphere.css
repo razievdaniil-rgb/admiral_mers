@@ -3,7 +3,10 @@
   background: #08090b;
 }
 .fhero .fhero-background {
-  opacity: 0.3;
+  opacity: 0.12;
+}
+.fhero .fhero-emblem {
+  display: none;
 }
 .hero-atmosphere {
   position: absolute;
@@ -23,57 +26,13 @@
   inset: 0;
   background:
     linear-gradient(
-      #08090be6,
-      #08090b66 28%,
-      #08090b05 48%,
-      #08090b44 68%,
-      #08090bf5 100%
+      #08090ba6,
+      #08090b22 28%,
+      transparent 48%,
+      #08090b11 68%,
+      #08090bc5 100%
     ),
-    radial-gradient(ellipse at center, transparent 25%, #08090b55 100%);
-}
-.fhero[data-view="cinematic"] .fhero-car-area {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-.fhero .fhero-car-area {
-  transition:
-    opacity 0.7s ease,
-    transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.fhero[data-view="cinematic"] .fhero-emblem,
-.fhero[data-view="cinematic"] .fhero-background {
-  opacity: 0;
-}
-.hero-view-toggle {
-  position: absolute;
-  right: max(24px, calc((100vw - 1280px) / 2));
-  bottom: 25px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 40px;
-  padding: 10px 12px;
-  border: 1px solid #ffffff26;
-  border-radius: 5px;
-  background: #08090b99;
-  color: #c7ccd3;
-  font-size: 12px;
-  transition:
-    color 0.25s,
-    background 0.25s;
-}
-.hero-view-toggle:hover,
-.hero-view-toggle:focus-visible {
-  color: #fff;
-  background: #252b34;
-}
-@media (max-width: 1100px) {
-  .hero-view-toggle {
-    bottom: 110px;
-    right: 20px;
-  }
+    radial-gradient(ellipse at center, transparent 35%, #08090b44 100%);
 }
 .fhero .fhero-emblem-left {
   opacity: 0.18;
@@ -109,13 +68,6 @@
   background: #171a1f;
 }
 @media (max-width: 767px) {
-  .hero-view-toggle {
-    bottom: 130px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    white-space: nowrap;
-  }
   .hero-motion-toggle {
     left: 8px;
     top: 8px;
