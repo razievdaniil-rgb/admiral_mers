@@ -131,6 +131,8 @@ export type Service = {
   intro: string;
   works: string[];
   icon: string;
+  image: string;
+  imageAlt: string;
   faq: [string, string][];
 };
 const commonFaq: [string, string][] = [
@@ -150,6 +152,9 @@ const commonFaq: [string, string][] = [
 export const services: Service[] = [
   {
     id: "diagnostics",
+    image: "media/280-imgRectangle11.webp",
+    imageAlt:
+      "Специалисты проверяют автомобиль с диагностическим оборудованием",
     title: "Компьютерная диагностика",
     short: "Диагностика",
     icon: "scan",
@@ -171,6 +176,8 @@ export const services: Service[] = [
   },
   {
     id: "maintenance",
+    image: "media/services/maintenance.webp",
+    imageAlt: "Замена масла и фильтра в двигателе Mercedes-Benz",
     title: "Техническое обслуживание",
     short: "Техническое обслуживание",
     icon: "wrench",
@@ -186,6 +193,8 @@ export const services: Service[] = [
   },
   {
     id: "engine",
+    image: "media/services/engine.webp",
+    imageAlt: "Работа с разобранной головкой блока и механизмом двигателя",
     title: "Двигатель и трансмиссия",
     short: "Двигатель и трансмиссия",
     icon: "engine",
@@ -201,6 +210,8 @@ export const services: Service[] = [
   },
   {
     id: "suspension",
+    image: "media/services/suspension.webp",
+    imageAlt: "Обслуживание тормозного диска и элементов подвески",
     title: "Ходовая и тормозная система",
     short: "Ходовая и тормоза",
     icon: "disc",
@@ -216,6 +227,8 @@ export const services: Service[] = [
   },
   {
     id: "electrics",
+    image: "media/services/electrics.webp",
+    imageAlt: "Проверка проводки автомобиля мультиметром",
     title: "Электрика и электроника",
     short: "Электрика",
     icon: "bolt",
@@ -231,6 +244,8 @@ export const services: Service[] = [
   },
   {
     id: "body",
+    image: "media/services/body.webp",
+    imageAlt: "Восстановление металлической кузовной панели",
     title: "Кузов и климат",
     short: "Кузов и климат",
     icon: "car",
@@ -246,6 +261,8 @@ export const services: Service[] = [
   },
   {
     id: "retrofit",
+    image: "media/services/retrofit.webp",
+    imageAlt: "Установка электронного оборудования в салоне автомобиля",
     title: "Дооснащение Mercedes-Benz",
     short: "Дооснащение",
     icon: "settings",
@@ -261,6 +278,8 @@ export const services: Service[] = [
   },
   {
     id: "detailing",
+    image: "media/services/detailing.webp",
+    imageAlt: "Машинная полировка лакокрасочного покрытия",
     title: "Детейлинг",
     short: "Детейлинг",
     icon: "sparkles",
@@ -277,6 +296,8 @@ export const services: Service[] = [
 ];
 export const transmission: Service = {
   id: "transmission",
+  image: "media/services/transmission.webp",
+  imageAlt: "Ремонт автоматической коробки передач на рабочем столе",
   title: "Ремонт трансмиссии",
   short: "Трансмиссия",
   icon: "settings",

@@ -465,14 +465,10 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
       />
       <section className="service-detail container">
         <div className="service-photo" data-reveal>
-          <Image
-            src={media.service}
-            alt="Специалисты проводят диагностику автомобиля Mercedes-Benz"
-            eager
-          />
+          <Image src={service.image} alt={service.imageAlt} eager />
           <span>
             <Icon size={26} />
-            ТехЦентр Адмирал
+            {service.short}
           </span>
         </div>
         <div className="service-detail-copy" data-reveal>
