@@ -60,7 +60,7 @@ export function CarAssembly({ children }: { children: ReactNode }) {
       elapsed += previous ? Math.min(now - previous, 80) : 0;
       previous = now;
       const t = elapsed / 1000;
-      const body = ease((t - 2.5) / 1.1);
+      const body = ease((t - 1.7) / 0.9);
       host.style.setProperty("--car-body-opacity", String(body));
       context.clearRect(0, 0, width, height);
       const bounds = host.getBoundingClientRect();
@@ -75,7 +75,7 @@ export function CarAssembly({ children }: { children: ReactNode }) {
           bounds.left - sceneBounds.left + (bounds.width - imageWidth) / 2,
         top = bounds.top - sceneBounds.top + (bounds.height - imageHeight) / 2;
       for (const point of points) {
-        const p = Math.max(0, Math.min(1, (t - point.seed * 0.4) / 2.5));
+        const p = Math.max(0, Math.min(1, (t - point.seed * 0.4) / 2));
         const progress = p * p * (3 - 2 * p);
         const tx = left + point.x * imageWidth,
           ty = top + point.y * imageHeight;
@@ -83,7 +83,7 @@ export function CarAssembly({ children }: { children: ReactNode }) {
         const y = point.sy * height + (ty - point.sy * height) * progress;
         const swirl = Math.sin(progress * Math.PI) * (1 - progress);
         context.globalAlpha =
-          Math.min(1, t * 2) * (1 - body) * (0.55 + progress * 0.45);
+          Math.min(1, t * 2) * (1 - body) * (0.45 + progress * 0.3);
         context.fillStyle = point.color;
         const size = (width < 600 ? 1.2 : 1.65) + (1 - progress) * 0.7;
         context.fillRect(
@@ -94,7 +94,7 @@ export function CarAssembly({ children }: { children: ReactNode }) {
         );
       }
       context.globalAlpha = 1;
-      if (t >= 3.65) finish();
+      if (t >= 2.65) finish();
       else frame = requestAnimationFrame(tick);
     };
     image.onload = () => {
@@ -121,8 +121,9 @@ export function CarAssembly({ children }: { children: ReactNode }) {
           sampler.width,
           sampler.height,
         ).data;
-        for (let y = 0; y < sampler.height; y += 2)
-          for (let x = 0; x < sampler.width; x += 2) {
+        const step = scene.clientWidth < 700 ? 4 : 3;
+        for (let y = 0; y < sampler.height; y += step)
+          for (let x = 0; x < sampler.width; x += step) {
             const i = (y * sampler.width + x) * 4;
             const light = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
             if (
@@ -134,14 +135,6 @@ export function CarAssembly({ children }: { children: ReactNode }) {
             const seed = ((x * 73 + y * 137) % 997) / 997;
             let sx = 0.02 + (((x * 269 + y * 83) % 1009) / 1009) * 0.96;
             let sy = 0.02 + (((x * 97 + y * 251) % 1013) / 1013) * 0.96;
-            // Reserve samples for every edge and corner as well as the centre.
-            const region = (x * 17 + y * 37) % 10;
-            if (region < 2) sx = region === 0 ? 0.015 : 0.985;
-            if (region === 2 || region === 3) sy = region === 2 ? 0.015 : 0.985;
-            if (region === 4) {
-              sx = seed < 0.5 ? 0.02 : 0.98;
-              sy = seed % 0.5 < 0.25 ? 0.02 : 0.98;
-            }
             points.push({
               x: x / sampler.width,
               y: y / sampler.height,

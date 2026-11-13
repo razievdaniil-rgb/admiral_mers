@@ -9,7 +9,7 @@ const chapters = [
     text: "Адмирала Макарова, 26. Здесь мы работали 25 лет — с командой, увлечённой Mercedes-Benz.",
     image: media.history,
     alt: "Прежний техцентр Адмирал на Адмирала Макарова",
-    duration: 6000,
+    duration: 8500,
   },
   {
     label: "Киевская, 14",
@@ -17,7 +17,7 @@ const chapters = [
     text: "Сегодня наш основной техцентр находится на Киевской. Та же специализация — только Mercedes-Benz.",
     image: media.workshop,
     alt: "Ремонтная зона техцентра на Киевской",
-    duration: 6000,
+    duration: 8500,
   },
   {
     label: "Два адреса",
@@ -25,7 +25,7 @@ const chapters = [
     text: "15 ноября открывается вторая точка — Гостиничный проезд, 10А, строение 1.",
     image: media.workshop,
     alt: "Ремонтная зона Адмирала",
-    duration: 6000,
+    duration: 8500,
   },
 ];
 
@@ -35,10 +35,43 @@ export function AboutFilm() {
   const [current, setCurrent] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [reading, setReading] = useState(false);
+  const cameras = useRef<Animation[]>([]);
   const [reduced, setReduced] = useState(
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
-  const running = playing && visible && !reduced;
+  const running = playing && visible && !reduced && !reading;
+  useEffect(() => {
+    const images = root.current?.querySelectorAll<HTMLImageElement>(
+      ".about-film-shot > img",
+    );
+    cameras.current = Array.from(images || [], (image, i) => {
+      const animation = image.animate(
+        [
+          {
+            transform: i === 1 ? "scale(1.07) translateX(-1%)" : "scale(1.025)",
+          },
+          {
+            transform: i === 1 ? "scale(1.025) translateX(1%)" : "scale(1.085)",
+          },
+        ],
+        { duration: 11000, fill: "both", easing: "cubic-bezier(.2,.35,.45,1)" },
+      );
+      animation.pause();
+      return animation;
+    });
+    return () => cameras.current.forEach((a) => a.cancel());
+  }, []);
+  useEffect(() => {
+    cameras.current.forEach((a) => a.pause());
+    const camera = cameras.current[current];
+    if (camera) camera.currentTime = 0;
+  }, [current]);
+  useEffect(() => {
+    const camera = cameras.current[current];
+    if (running) camera?.play();
+    else camera?.pause();
+  }, [current, running]);
   useEffect(() => {
     const query = matchMedia("(prefers-reduced-motion: reduce)");
     const change = () => setReduced(query.matches);
@@ -74,6 +107,14 @@ export function AboutFilm() {
     <section
       className={`about-film ${running ? "is-playing" : "is-paused"}`}
       ref={root}
+      onPointerEnter={(e) => {
+        if (e.pointerType === "mouse") setReading(true);
+      }}
+      onPointerLeave={() => setReading(false)}
+      onFocus={() => setReading(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setReading(false);
+      }}
       aria-label="История техцентра в фотографиях"
     >
       <div className="about-film-screen">

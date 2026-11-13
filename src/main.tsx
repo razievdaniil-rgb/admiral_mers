@@ -1,3 +1,4 @@
+import { useDialogMotion } from "./dialog-motion";
 import React, {
   createContext,
   useContext,
@@ -53,6 +54,7 @@ import { CategoryModal } from "./category-modal";
 import { serviceContent } from "./service-content";
 import "./service-content.css";
 import "./form-polish.css";
+import "./premium-motion.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -75,21 +77,28 @@ const nav = [
   ["/contacts", "Контакты"],
 ];
 
-function Logo() {
+function Logo({ since = false }: { since?: boolean }) {
   return (
     <a href="#/" className="logo" aria-label="Адмирал — на главную">
       {media.logo ? (
-        <img
-          src={assetUrl(media.logo)}
-          width="223"
-          height="42"
-          alt="Адмирал. Ремонт и обслуживание Mercedes-Benz с 1999 года"
-        />
+        <span className={since ? "logo-art" : "logo-art-full"}>
+          <img
+            src={assetUrl(since ? "media/admiral-wordmark.svg" : media.logo)}
+            width="223"
+            height="42"
+            alt="Адмирал. Ремонт и обслуживание Mercedes-Benz с 1999 года"
+          />
+        </span>
       ) : (
         <>
           <strong>АДМИРАЛ</strong>
           <span>ТЕХЦЕНТР · MERCEDES-BENZ ONLY</span>
         </>
+      )}
+      {since && (
+        <span className="logo-since" aria-hidden="true">
+          С 1999 года
+        </span>
       )}
     </a>
   );
@@ -189,7 +198,7 @@ function Header({ route }: { route: string }) {
   return (
     <header className="header">
       <div className="header-inner container">
-        <Logo />
+        <Logo since />
         <nav className="desktop-nav" aria-label="Основная навигация">
           {nav.map(([path, label]) => (
             <a
@@ -420,7 +429,7 @@ function ServicesPage() {
     <>
       <Intro
         eyebrow="Услуги"
-        title="Услуги для вашего Mercedes"
+        title="Услуги для Вашего Mercedes"
         description="Обслуживаем весь модельный ряд. Выберите автомобиль или укажите другую модель."
       />
       <Catalog />
@@ -495,7 +504,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
           </ul>
           <p>
             Стоимость, сроки и объём работ согласуем после диагностики. Без
-            ремонта, о котором вы не договаривались.
+            ремонта, о котором Вы не договаривались.
           </p>
           <BookButton booking={{ service: service.id, model }}>
             Обсудить {service.id === "maintenance" ? "обслуживание" : "работы"}
@@ -541,7 +550,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
             [
               "01",
               "Обсуждаем задачу",
-              "Уточняем модель, историю и ваши наблюдения.",
+              "Уточняем модель, историю и Ваши наблюдения.",
             ],
             [
               "02",
@@ -693,7 +702,7 @@ function Privacy() {
       <section className="container legal-copy">
         <p>
           На этой версии сайта форма записи не отправляет и не сохраняет
-          введённые данные. Проверка заполнения выполняется в вашем браузере.
+          введённые данные. Проверка заполнения выполняется в Вашем браузере.
           После закрытия формы данные очищаются.
         </p>
         <p>
@@ -719,6 +728,7 @@ function BookingModal({
   booking: Booking;
   onClose: () => void;
 }) {
+  const { closing, dismiss } = useDialogMotion(onClose);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef(document.activeElement as HTMLElement | null);
   const [result, setResult] = useState(false);
@@ -738,26 +748,26 @@ function BookingModal({
   return (
     <dialog
       ref={dialog}
-      className="booking-dialog"
+      className={`booking-dialog ${closing ? "is-closing" : ""}`}
       aria-labelledby="booking-title"
       onCancel={(e) => {
         e.preventDefault();
-        onClose();
+        dismiss();
       }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) dismiss();
       }}
     >
       <div className="booking-layout">
         <button
           className="icon-button modal-close"
           aria-label="Закрыть форму"
-          onClick={onClose}
+          onClick={() => dismiss()}
         >
           <X />
         </button>
         <div className="booking-main">
-          <Eyebrow>Начнём с вашего Mercedes</Eyebrow>
+          <Eyebrow>Начнём с Вашего Mercedes</Eyebrow>
           <h2 id="booking-title">Запись в техцентр</h2>
           <p className="demo-note">
             Демонстрация формы. Отправка заявок пока не подключена. Для записи
@@ -781,7 +791,7 @@ function BookingModal({
                 required
                 minLength={2}
                 maxLength={80}
-                placeholder="Как к вам обращаться"
+                placeholder="Как к Вам обращаться"
                 onChange={() => setResult(false)}
               />
             </label>
@@ -876,7 +886,7 @@ function BookingModal({
             </span>
             <p>
               С 1999 года.
-              <br />С вниманием к вашему автомобилю.
+              <br />С вниманием к Вашему автомобилю.
             </p>
           </div>
         </div>

@@ -1,0 +1,167 @@
+[
+  {
+    "id": "s-class",
+    "name": "S-Класс",
+    "generation": "V223",
+    "image": "media/catalog-v2/s-class.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/223164/807_057/iris.png?q=COSY-EU-100-1713d0VXqrh7ng9jfZobxEnlqHI5QqqrQCPPnU2GOpJxm7skt0uBuibB2rQC6ApnkhS5uomUtC3Mt4HzNTcNX7j6XW7KVSJdMvqtOHULRcbC%25axXIzwH1JQ8v8wOkDLiZbmWi4FIhCog9Q%25ABPDknzieWmo7esdhMKnUf%25TfJGEy6xc0lYS1TB2rt4vApncgO5uoX%25bC3MJymzNTO7A7j6pPiKVSueCvqt3qvLRcNEPaxXjlQH1JV3Z8wOqNXiZbRjh4FIxe4g9Q1aMPDkwe7eWmZC5sdhu1XUf%253BlGEyN870lYjiTB2rVmvApnqhG5uoRCaC3MxzBzNT17o7j6wxqKVSZ1yvqtFUxLRcKESaxXvsmH1JE0%258wOlpyiZb2va4FIpdrg9QRCSPDkxDneWm1Wfsdhw0MUf%25ZITGEyFQO0lY9kHB2rDevApnWsn5uodUrC3MfzHzNTE7A7j6lK7KVS2vSvqtpLhLRcuaGaxX3HhH1JN9s8wOjDFiZbVWJ4FIqBOg9QOC8PDkbzPeWmI7fsdhQKXUf%25kflGEymAe0lYhiSB2rN2BApnjgL5uoV4gC750OIJ5nPDkE7KeUPMbdsGeEv3Uf%25qwPGEyRZG0lYxFYB2r14tApnwgA5uoZ%250C3MFygzNT90A7j6dUmKVSNdIvqtjfgLRcVp%25axXqinH1JR5H8wOxSOiZb1t54FIwgHg9QZ7DPDkFloeWmt75sdhcuJUf%25EfTGEylEa0lY21sB2rpwJApnuZ35uo3F4C3MNdIzNTjYO7j6VK5KVfmDM5HbXkvmRPkR1DSevt6oxoCIClbNVEJ2bWydcHADjP&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/saloon/s-class/overview.html",
+    "manufacturerCode": "223164",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "e-class",
+    "name": "E-Класс",
+    "generation": "W214",
+    "image": "media/catalog-v2/e-class.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/214023/807_057/iris.png?q=COSY-EU-100-1713d0VXq0WFqtyO67PobzIr3eWsrrCsdRRzwQZgk4ZbMw3SGtGyRtsd1v9cUfwOuXGEuGYJ0l30NOB2Ng2bApjPwI5uVeMQC3qhQkzNRJ9m7jxhfhKV1HV%25vqw6TyLRDL2YaxWa9rH1dBln8wfQcoiZEqpM4FlTrTg92Uk6PD8kbSeWieStsd4vQcUfg80XGEPbXJ0leIlOB2sW%25bApUdpI5uGcZQC30kTkzNHTnm7j87mhKViKw%25vq4UcyLRgA2YaxP5qrH1eItn8wsofoiZUMNM4FGQPTg9ozZ6PDC7uSeWzyStsd7oTcUfKm6XGE4ywJ0lg0VOB2PQqbApeTyI5usfxQC3UEWkzNGlum7j0OohKVBbN%25vqAyTyLR5YmYaxCrErH1znOn8w7PcoiZKegM4FvsjTg9LbZ6PDZkoSeWFmUtsdBYQcUfAyYXOc6VRjcdrH1gObnMrEqioTngIAM4Fzm3Tg9igV6PD47bSeWgKhtsdPHQcUfe8fXGEsiRJ0lUIZOB2GWEbAp0IXI5uBTTQC3A6xkzN5S%25m7jCSwhKVz8d%25vqEDkzeO6Wm7hmidhK%25hqf%25vycYEyLYXxlYarIa2rHn30pn8oKUuoQAOaEVUPB3AT2r9p8iZ348L6LlGlmUrokehUbzIgVfOnw&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/saloon/e-class/overview.html",
+    "manufacturerCode": "214023",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "c-class",
+    "name": "C-Класс",
+    "generation": "W206",
+    "image": "media/catalog-v2/c-class.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/206006/806_056/iris.png?q=COSY-EU-100-1713d0VXqaWFqtyO67PobzIr3eWsrrCsdRRzwQZ6ZHZbMw3SGtGyUtsd2HdcUfp8qXGEubmJ0l3ItOB2NMcbApjtwI5uVQDQC31MjkzNwzwm7jZ7fhKVFsM%25vq9UdyLRDO6YaxW4JrH1KJtn8wv8noiZL6ZM4FaRFTg90Q26PDBkbSeWAe2tsd5vDcUfC8WXGEzJjJ0l7OZOB2XW%25bApHixI5u8cJQC3UM7kzNGzwm7j0yZhKVBpN%25vqAyTyLR5YmYaxCrJrH1zgtn8w7PwoiZKegM4FvsjTg9LbZ6PDGmhSc6o3ju69%25vq8cXyr%25WNaYny8JGrH1CJ1n8w5QpoiZH5IM4F8KJTg9ih36PDV8jSeWsKUtsdUv%25cUfG8fXGE0bRJ08xLdSQjuROxAfJnRrlYO2EW5WtVt4jU0i3gjaZHpQ6LGy&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/saloon/c-class/overview.html",
+    "manufacturerCode": "206006",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "a-class",
+    "name": "A-Класс",
+    "generation": "W177",
+    "image": "media/catalog-v2/a-class.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/177012/807_057/iris.png?q=COSY-EU-100-1713d0VXqNxFqtyO67PobzIr3eWsrrCsdRRzwQZxkIZbMw3SGtGyRtsd2HdcUfp8qXGEubmJ0l3IJOB2NMcbApjTlI5uVcZQC31SrkzNBTwm7jA7mhKV5Yh%25vqCJjyLRz3yYaxPXWrH1eJtn8wsOwoiZUidM4FGKwTg906O6PDM7FSeWTXItsd7HNcUfKM6XGEvhXJ0lgYZOB2PQqbApeTbI5uscIQC3UXWkzNGm6m7j0afhKVBTN%25vqNJ9yLRiXJYnymdEWyqOB2znobQOxf5IkbzMiQC3sh3kzNetDm7jCyShKVzXW%25vq7iUyLRlWm7s35dhK%25t9f%25vycYEyLYXKlYarZ12rHn7fpnIBJLfjsg0uBIPbF1v8wuiHvTvEUEksYnQPmsOCb4jdJr1&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/hatchback/a-class/overview.html",
+    "manufacturerCode": "177012",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "b-class",
+    "name": "B-Класс",
+    "generation": "W247",
+    "image": "media/catalog-v2/b-class.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/247087/806_056/iris.png?q=COSY-EU-100-1713d0VXqNEFqtyO67PobzIr3eWsrrCsdRRzwQZxkIZbMw3SGtGyUtsd2HdcUfp8qXGEubmJ0l3IJOB2NMcbApjTlI5uVcZQC31C1kzNwtnm7jA7mhKV5Yh%25vqCJjyLRz3yYaxPXWrH1eJtn8ws8noiZUidM4FGTJTg90k26PDM7FSeWTXItsd7HNcUfKM6XGEvhEJ0lgYAOB2PQqbApeTbI5uscIQC3UXWkzNGm6m7j0aZhKVBHE%25vqA6jyLRjnmYaxVbWrH1gObnMr%25E2frxI5uKMTQmIwlzkhQK6gm7jGyjhKVUXd%25vq7JdyLRlSjYaxHaJrH18B%25n8wiA4oiZ451M4FgSuTg9Phk6PDe1oSevjzFoJpENtjUqK%25WsWmtdDZGZMuMapgeLlHp7RKfJnzPk&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/hatchback/b-class/overview.html",
+    "manufacturerCode": "247087",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "cla",
+    "name": "CLA",
+    "generation": "C118",
+    "image": "media/catalog-v2/cla.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/118314/806_056/iris.png?q=COSY-EU-100-1713d0VXqNEFqtyO67PobzIr3eWsrrCsdRRzwQZxkIZbMw3SGtGyUtsd2HdcUfp8qXGEubmJ0l3IJOB2NMcbApjTlI5uVcZQC3qkWkzNwzwm7jZcohKV5SF%25vqCv%25yLRznyYax7bqrH1Kjrn8wsOfoiZUbXM4FG4MTg90gE6PDBSbSeWTK9tsd6JQcUfK8jXGEvTSJ0lL%25JOB2Pr5bApeARI5usmxQC3UXQkzNGJdm7j0hShKVBHE%25vqA6jyLRjODYax4JOroYfV8nMr4bBoiZ76ZM4Fzm3Tg9ih36PDVIZSeWsKMtsdUvGcUfGLWXGE0nYJ0lBDtOBi1aftkV3xb1iXseYa2rbpldCdcqcgVGB4NPVHF8ukSa0Y&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/coupe/cla/overview.html",
+    "manufacturerCode": "118314",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "gla",
+    "name": "GLA",
+    "generation": "H247",
+    "image": "media/catalog-v2/gla.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/247715/807_057/iris.png?q=COSY-EU-100-1713d0VXqNxFqtyO67PobzIr3eWsrrCsdRRzwQZgkfZbMw3SGtGyRtsd2HdcUfp8qXGEuiYJ0l3IhOB2NQObApjTXI5uVcZQC31C1kzNwtnm7jA7mhKV5Yh%25vqCJjyLRzOXYax7NYrH1eJdn8wsOcoiZUioM4FG4fTg90vZ6PDBSbSeWTK9tsd6JQcUfKLNXGEviVJ0lL6tOB2ay2bApen9I5usmxQC3USQkzNGJkm7j0OfhKVB%25t%25vqA89yLR5i2YaxCtqrH1qM%25n8wRQfoiZeioM4FsQkTSMrp32MZm7jaSthym9uv%25YhacsyLRAnRYaxBblrH1LIln8waeAoiZ3lYaBmr2rHnOfpn8obMuoiMIF3M4TW9NTg6apj6hzQipxBUCVztKmu9MPDVeg8c8uAuyBM6%25GYBkvmsx2QT9&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/suv/gla/overview.html",
+    "manufacturerCode": "247715",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "glb",
+    "name": "GLB",
+    "generation": "Кроссовер",
+    "image": "media/catalog-v2/glb.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/248647/807_057/iris.png?q=COSY-EU-100-1713d0VXqNqFng9jfZobxEnlqHI5QqqrQCPPnU2Geplxm7skt0uBuibB2rQN%25Apn6pi5uoSUbC3MtqMzNTcRP7j6bWkKVSIG4vqtQohLRckMraxXjGmH1JV1Z8wOqNXiZbRPi4FIEg6g9QlPzPDk27deWmpKKsdhP0CUf%25V4PGEyqKy0lY9abB2rD2tApnWzc5uod7kC3MfyJzNTEYo7j6lK5KVS2vsvqtpwQLRcuZPaxX3FnH1JNUc8wOcgOiZbXP54FIJ7Yg9QOKWPDkE7KeUPiM6oPQvqtwUGLHvmTxa8Lw0EH1Jp5r8wOxwMiZb1P54FIw7og9QZ7sPDkFlKeWmtM4FN8DTg9Pze6PDecNSeWs0jtsLV79MOuljcVGR49EUdhcfWF0FT3THuPsa28uKxvEOo7em&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/suv/glb/overview.html",
+    "manufacturerCode": "248647",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "glc",
+    "name": "GLC",
+    "generation": "X254",
+    "image": "media/catalog-v2/glc.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/254607/807/iris.png?q=COSY-EU-100-1713d0VXqaWFqtyO67PobzIr3eWsrrCsdRRzwQZUVvZbMw3SGtxX2tsd1ZpcUfwMuXGEuiEJ0l34xOB2NQ%25bApjkXI5uVmIQC3qSOkzNRtum7jxODhKV1%25E%25vq9txyLRDLDYaxWaprH1dHOn8wfAcoiZE5pM4FlCfTg92t36PDp%25bSeWuyjtsd3ZVcUfNF1XGEjJSJ0lVCrOB2sr%25bApUAbI5uG4YQC30sRkzNB%25km7jAyjhKV5pV%25vqCIdyLRzYHYaxPXWrH1eJtn8ws8noiZUidM4FGCwTg90vV6PDBLFSeWAyItsd5c3cUfCX1XGEzYYJ0lcHfOB2XW%25bApHnxI5u84xQC3igQkzN4PZm7jgOIhKVPbL%25vqe8DyLRsSmYaxCXprH1zHdn8w7TfoiZK6gM4FvmJTg9LxZ6PDarsSeWHtMtsd8c%25cUfiANXGE45mJ0lgCJOB2Pz2bApe7CI5usKDQC3UnpkzNpTwm7ju6ohKV3YQ%25vq8tTyLRiO6Yax4bJrH1gjrn8wPbIoTnylpEn1QC3vT6khQZ27m%25kvSPhKV0SV%25vqGJfyLRKL2Yaxv0JrH1LCtn8waz2oiZH6NM4F8SQTg9ih36PD4SoSeWg%25XtsdP%25ucUfe5RXGE1ymJ0lwevOB2Ar%25bAp5ARI5uC5MQC3zg7kzN7P6m7jKGjhKVv0W%25vqLr9yLRanfYaBEUVmMDZfrE81vVfHxXr1RjijhWh5DvaAFCDGp0wMkULc&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/suv/glc/overview.html",
+    "manufacturerCode": "254607",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "gle",
+    "name": "GLE",
+    "generation": "V167",
+    "image": "media/catalog-v2/gle.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/167125/807_057/iris.png?q=COSY-EU-100-1713d0VXqrWFng9jfZobxEnlqHI5QqqrQCPPnU2G2BTxm7skt0uBuibB2rTCvApn6gG5uoSUbC3MtqMzNTcPQ7j6bjiKVSIVyvqtQwULRcNUPaxXjxaH1JV3Z8wOqgOiZbR454FIxC0g9QlCrPDk2DYeWmpGesdhubXUf%253GzGEyN0O0lYjHpB2rxwBApn1ZX5uowWbC3MZGBzNTEgh7j6ljbKVS2aIvqtpHxLRcu8raxX3zXH1JN7Z8wOjiAiZbVWy4FIqd6g9QRAbPDkbzieWmILosdh2vLU0sg6tTsmaxXF0BHia%25Sw84HFA2iZbjjG4FIN7Mg9QZNBPDkFJkeWmtM4FNZgTg9Pze6PDeLFSeWsXutsdUcTcUaqKDTb32VXqa8L0tef%25XEd9B96N683eUHpi3v1LlbMKsh&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/suv/gle/overview.html",
+    "manufacturerCode": "167125",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "gls",
+    "name": "GLS",
+    "generation": "X167",
+    "image": "media/catalog-v2/gls.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/167925/807_057/iris.png?q=COSY-EU-100-1713d0VXq0YFng9jfZobxEnlqHI5QqqrQCPPnU2GOpJxm7skt0uBuibB2rTwuApn6zL5uoSP0C3MtGIzNTcRT7j6XekKVSIV4vqtQqYLRckZGaxXjGeH1JV1H8wOqNFiZbRPb4FIxgCg9Q1zBPDk2zneWmpWrsdhu0sUf%253GzGEyN0O0lYjHpB2rxwBApn1ZX5uowWbC3MZGBzNTEgh7j6ljbKVS2aIvqtpHhLRcu81axX3zKH1JN7J8wOjKFiZbV454FIqdYg9QRfSPDkx5IeWmI74sdhQaMUf%25pLaGBUPSc6UhH1J9BA84HytZig895p4FIVV0g9QjKTPDkFjAeWm9OmsdhcTg9jXg6PDekmSeWsKUtsdUcTcUaqKDTb32VXqa8LCtef%25XEd9B96N683eUHpi3v1LlbMKsh&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/suv/gls/overview.html",
+    "manufacturerCode": "167925",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "g-class",
+    "name": "G-Класс",
+    "generation": "W465",
+    "image": "media/catalog-v2/g-class.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/465211/X26/iris.png?q=COSY-EU-100-1713d0VXqbWFqtyO67PobzIr3eWsrrCsdRRzwQZg9pZbMw3SGtlaWtsd2H%25cUfgUfXGEzymJ0l74fOB2KyEbApeARI5usmxQC3UnpkzNL6Sm%25kbFDZk3tsdB%25ycJtj9GXOcBY2J0lK0hOB2vo2bApfbwI5uEOxQC3ll1kzN%25cwm7jseFhKVU0F%25vq7t%25yLRKn2YaxvoqrH1Lmin8wcQ2oiZ3ilM4FNUMTg9jrV6PDVwbSeWj%25ItsdVbGcUfJL0XGHRvW6INpqJRMiK8%25NEyJlfDADSjSiNsG8u4NLwa2ITvU%25&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/suv/g-class/overview.html",
+    "manufacturerCode": "465211",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "v-class",
+    "name": "V-Класс",
+    "generation": "W447",
+    "image": "media/catalog-v2/v-class.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/447813/807_057/iris.png?q=COSY-EU-100-1713d0VXq77LqtyO67PobzIr3eWsrrCsdRRzwQZUkRPGE1UHFm9mjP9QCc3eDkzX1gWm7YSPdhKrRdf%25vnRxE2fDeUPfK1J0Q2pwF1LsbZ9wIB0FI5hGl9QCrGGDkzn1zWm7oZCdhKMD3f%25vTWfEyL6AWlYaSQV2rHtRHpn8an8uoiHmi3M4PMDNTgeTlj6PsHzVSeUp4qtsG0CRcU0gjxXGBPx1J0Ag0wOB5HHZbAC8QFI5GUk9QC0GNDkzBWzWm7Aq%25dhK5q9f%25vCRvEyLzqPlYa7R12rHK2opn8vfMuoiLEz3M4aa5NTgHCwj6P8zuVSecxVqtsrdCRcUncvxXGoXO1J0MrKwOBTwBZbA6QgFI5Et19QCdQiDkzfqgWm7EqUdhKlRqf%25v2RvEyLpxrlYaule2rH322pn8NfauoibDx3M4IR7NTgmTBj6PhRzVSe%25f3qtsy2sRcUYpvxXGruO1J0n3iwOBoNGZbAMrZFI5Tp59QC6ECDkzwz5Wm7Z3CdhKF74f%25vmsgEyL0DjlYaBfl2rHlZqpn82FEuoip9T3M4ub4NTg3ICj6PNcZVSejX3qtsVq9RcUqRjxXGRxs1J0xVawOB1IIZbAxbAFI51I39QCwV4DkzZqhWm7Fw7dhK%25k3f%25vyCsEyLYzrlYar7A2rH0Q2pn8BkMuoiAji3M45L2NTgCXDj6PzjZVSe7N3qtsKBPRcUscJxXGUX81J0Gr2wOB0eBZbABs0FI5ARa9QCWqADkzdU8Wm7fGUdhKxlKf%25v1rfEyLCpWlYOGcKW3PiU2G9BJuRLax2HL7o7dedIP%25Yb4QPXAJ83DcyR&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/van/v-class/overview.html",
+    "manufacturerCode": "447813",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "amg-gt",
+    "name": "Mercedes-AMG GT",
+    "generation": "C192",
+    "image": "media/catalog-v2/amg-gt.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/192388/807/iris.png?q=COSY-EU-100-1713d0VXqrWFqtyO67PobzIr3eWsrrCsdRRzwQZgk4ZbMw3SGtlaWtsd2oVcUfNrkXGEPymJ0le0AOB2sgEbApUkbI5uGr2QC3aMrkzNHUum7j8ymhKViXW%25vq4udyLRgYVYaxPt8rH1yHDn8w0AEoiZB%25oM4FAOwTg9LQV6PDaPpSeWHXutsd8odcUfiAkXGE4hdJ0ldItOB2zrFbAp7iCI5uK42QC3vT6khQOZ9wQuSeW0h%25tXSNFUcJt0yrXGEiTXJ0l8DdOB2GgqbAp0MrI5u9LaQC3zhFkzN7LNm7sDgubYwR9hDs%25wBjij6hVNpLpIZIGwC7Ux0wPfeqYOgzT&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/coupe/amg-gt-2-door/overview.html",
+    "manufacturerCode": "192388",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  },
+  {
+    "id": "sl",
+    "name": "Mercedes-AMG SL",
+    "generation": "R232",
+    "image": "media/catalog-v2/sl.webp",
+    "sourceImage": "https://media.oneweb.mercedes-benz.com/images/dynamic/europe/GB/232481/807/iris.png?q=COSY-EU-100-1713d0VXqrWFqtyO67PobzIr3eWsrrCsdRRzwQZUVvZbMw3SGtlaWtsd2J%25cUfpMqXGEjyYJ0lV0ZOB2qM%25bApUnyI5uGoIQC30spkzNB%25km7jA2jhKViSM%25vq4BjyLRgYVYaxPtprH1yHDn8w0AEoiZB6EM4FvIjTg9Lg26PDa1FSeWHnWtsd8cQcUfiXyXGE45mJ0lgCZOB2PyEbApEkXI5uKMTQmIJwF1Ip6PDGmhSc63ZstXSG%250cUf8McXGEH9ZJ0lUDVOB2GoYbApFvqI5uCmZQC3zETkzN7mum7sDgubYwR9hDvtwrjwj6hVNpLpIZIGwC7Ux0wPfeqYOgzT&cp=8mhxDZy3qhkDFW2gqQWvpQ&imgt=P27&bkgnd=9&pov=BE040%2CDZO&uni=m&cp=8mhxDZy3qhkDFW2gqQWvpQ&im=Resize%2Cwidth%3D880",
+    "sourcePage": "https://www.mercedes-benz.co.uk/passengercars/models/cabriolet-roadster/sl/overview.html",
+    "manufacturerCode": "232481",
+    "copyright": "Mercedes-Benz AG",
+    "verifiedOn": "2026-11-13"
+  }
+]

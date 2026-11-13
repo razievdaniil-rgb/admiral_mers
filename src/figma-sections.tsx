@@ -15,7 +15,9 @@ import { AboutFilm } from "./about-film";
 import { HeroAtmosphere } from "./hero-atmosphere";
 import { CarAssembly } from "./car-assembly";
 import { assetUrl, media } from "./assets";
-import { branches, branchStatus, history, mapLink, services } from "./data";
+import { history, services } from "./data";
+import { BranchShowcase } from "./branch-showcase";
+import { CrossfadeImage } from "./crossfade-image";
 type Booking = { service?: string; branch?: string; model?: string };
 type Props = { onBook: (booking?: Booking) => void };
 const picture = (path: string, alt: string, className = "") => (
@@ -27,37 +29,13 @@ const picture = (path: string, alt: string, className = "") => (
     decoding="async"
   />
 );
-function tilt(e: React.PointerEvent<HTMLElement>) {
-  if (
-    !matchMedia("(pointer:fine) and (prefers-reduced-motion:no-preference)")
-      .matches
-  )
-    return;
-  const r = e.currentTarget.getBoundingClientRect();
-  e.currentTarget.style.setProperty(
-    "--tilt-x",
-    `${(-(e.clientY - r.top - r.height / 2) / r.height) * 7}deg`,
-  );
-  e.currentTarget.style.setProperty(
-    "--tilt-y",
-    `${((e.clientX - r.left - r.width / 2) / r.width) * 8}deg`,
-  );
-  e.currentTarget.style.setProperty(
-    "--light-x",
-    `${((e.clientX - r.left) / r.width) * 100}%`,
-  );
-}
-function resetTilt(e: React.PointerEvent<HTMLElement>) {
-  e.currentTarget.style.setProperty("--tilt-x", "0deg");
-  e.currentTarget.style.setProperty("--tilt-y", "0deg");
-}
 export function PromotionCarousel({ onBook }: Props) {
   const [active, setActive] = useState(0);
   const touch = useRef<number | null>(null);
   const offers = [
     {
       title: "Первое знакомство",
-      text: "Познакомьтесь с техцентром и обсудите ваш автомобиль.",
+      text: "Познакомьтесь с техцентром и обсудите Ваш автомобиль.",
       image: media.promotions[0],
       service: "",
     },
@@ -111,8 +89,6 @@ export function PromotionCarousel({ onBook }: Props) {
             <button
               key={offer.title}
               className={`sculpture-card offer-card ${i === active ? "selected" : ""}`}
-              onPointerMove={tilt}
-              onPointerLeave={resetTilt}
               onClick={() => {
                 setActive(i);
                 onBook({ service: offer.service || undefined });
@@ -195,22 +171,23 @@ export function FigmaTimeline() {
         role="tabpanel"
         id={`history-panel-${active}`}
         aria-labelledby={`history-tab-${active}`}
-        key={active}
       >
         <figure>
-          {picture(
-            active === 0 ? media.history : media.workshop,
-            active === 0
-              ? "ТехЦентр Адмирал: фотография из истории сервиса"
-              : "Ремонтная зона техцентра Адмирал",
-          )}
+          <CrossfadeImage
+            src={assetUrl(active === 0 ? media.history : media.workshop)}
+            alt={
+              active === 0
+                ? "Прежний техцентр Адмирал"
+                : "Ремонтная зона Адмирала"
+            }
+          />
           <figcaption>
             {active === 2
               ? "Ремзона на Киевской. Вторая точка — с 15 ноября."
               : history[active].year}
           </figcaption>
         </figure>
-        <div className="history-scene-copy">
+        <div className="history-scene-copy" key={active}>
           <span className="history-large-year">{history[active].year}</span>
           <h3>{history[active].title}</h3>
           <p>{history[active].body}</p>
@@ -249,7 +226,7 @@ export function ApproachCards() {
     ["Опыт мастеров", "Занимаемся автомобилями Mercedes-Benz с 1999 года."],
     [
       "Индивидуальный подход",
-      "Учитываем историю, состояние автомобиля и ваши задачи.",
+      "Учитываем историю, состояние автомобиля и Ваши задачи.",
     ],
     ["Подбор запчастей", "Варианты и стоимость согласуем перед началом работ."],
     [
@@ -260,12 +237,7 @@ export function ApproachCards() {
   return (
     <div className="approach-sculptures">
       {items.map(([title, text], i) => (
-        <details
-          className="sculpture-card approach-sculpture"
-          key={title}
-          onPointerMove={tilt}
-          onPointerLeave={resetTilt}
-        >
+        <details className="sculpture-card approach-sculpture" key={title}>
           <summary>
             <div className="sculpture-base" />
             {picture(media.approachIllustrations[i], "", "sculpture-image")}
@@ -281,52 +253,19 @@ export function ApproachCards() {
 export function FigmaHome({ onBook }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const car = useRef<HTMLDivElement>(null);
-  const [branch, setBranch] = useState(0);
   useLayoutEffect(() => {
     const mm = gsap.matchMedia();
     mm.add("(prefers-reduced-motion:no-preference)", () => {
       const ctx = gsap.context(() => {
         gsap
           .timeline()
-          .from(".fhero-subtitle", { autoAlpha: 0, y: 20, duration: 0.7 })
+          .from(".fhero-subtitle", { autoAlpha: 0, y: 8, duration: 0.8 })
           .from(
             ".fhero-title",
-            { yPercent: 35, autoAlpha: 0, duration: 0.9, ease: "power3.out" },
+            { y: 14, autoAlpha: 0, duration: 1.1, ease: "power3.out" },
             0.15,
           )
-          .from(".fhero-actions", { autoAlpha: 0, y: 15, duration: 0.6 }, 0.85);
-        gsap.to(".fhero-emblem-right", {
-          rotation: 12,
-          y: 45,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".fhero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-        gsap.to(".fhero-car", {
-          y: 12,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".fhero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-        gsap.utils
-          .toArray<HTMLElement>(".figma-photo-pair figure")
-          .forEach((el) =>
-            gsap.from(el, {
-              opacity: 0,
-              y: 18,
-              duration: 1.3,
-              ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 92%", once: true },
-            }),
-          );
+          .from(".fhero-actions", { autoAlpha: 0, y: 8, duration: 0.8 }, 0.85);
       }, root);
       return () => ctx.revert();
     });
@@ -354,7 +293,6 @@ export function FigmaHome({ onBook }: Props) {
     el.addEventListener("pointermove", move);
     return () => el.removeEventListener("pointermove", move);
   }, []);
-  const b = branches[branch];
   return (
     <div className="figma-home" ref={root}>
       <section className="fhero">
@@ -453,53 +391,14 @@ export function FigmaHome({ onBook }: Props) {
           <ArrowUpRight size={17} />
         </a>
       </section>
-      <section className="figma-map-band">
-        <div className="container">
-          <div className="figma-map-copy">
-            <h2>
-              КАК ДО НАС
-              <br />
-              ДОБРАТЬСЯ
-            </h2>
-            <div className="branch-tabs" aria-label="Выбор техцентра">
-              {branches.map((x, i) => (
-                <button
-                  key={x.id}
-                  aria-pressed={branch === i}
-                  onClick={() => setBranch(i)}
-                >
-                  {x.name}
-                </button>
-              ))}
-            </div>
-            <p>{b.address}</p>
-            <span className="branch-status">{branchStatus(b.new)}</span>
-            <a
-              className="button"
-              href={mapLink(b.address)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Маршрут в Яндексе
-              <ArrowUpRight size={16} />
-            </a>
-          </div>
-          <div className="figma-mini-map" key={b.id}>
-            <iframe
-              title={`Карта: ${b.name}`}
-              src={`https://yandex.ru/map-widget/v1/?ll=${b.coords.join("%2C")}&z=16&pt=${b.coords.join("%2C")},pm2wtm`}
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </section>
+      <BranchShowcase onBook={(branch) => onBook({ branch })} />
       <section className="figma-service-section container section">
         <div className="figma-centered-heading" data-reveal>
           <h2>ВСЁ ДЛЯ ВАШЕГО MERCEDES</h2>
           <p>
             Техника, кузов, электрика, дооснащение и детейлинг.
             <br />
-            Выберите направление — обсудим работы для вашего автомобиля.
+            Выберите направление — обсудим работы для Вашего автомобиля.
           </p>
         </div>
         <div className="figma-service-links">
@@ -508,8 +407,6 @@ export function FigmaHome({ onBook }: Props) {
               href={`#/services/${s.id}`}
               className="sculpture-card"
               key={s.id}
-              onPointerMove={tilt}
-              onPointerLeave={resetTilt}
             >
               <div className="sculpture-base" />
               {picture(media.serviceIllustrations[i], "", "sculpture-image")}
