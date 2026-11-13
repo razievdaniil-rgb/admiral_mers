@@ -1,0 +1,172 @@
+/* Rounded controls and a contained, readable booking sheet. */
+.booking-dialog {
+  border-radius: 24px;
+  width: min(1000px, calc(100% - 40px));
+  max-height: calc(100dvh - 40px);
+  overflow: hidden;
+  box-shadow: 0 24px 100px #0009;
+}
+.booking-dialog .booking-layout {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  max-height: calc(100dvh - 42px);
+}
+.booking-dialog .booking-main {
+  min-width: 0;
+  min-height: 0;
+  max-height: calc(100dvh - 42px);
+  padding: 30px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #515963 transparent;
+}
+.booking-dialog .modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  float: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ffffff30;
+  background: #161b23e6;
+  z-index: 4;
+}
+.booking-main h2 {
+  font-size: clamp(26px, 2.4vw, 32px);
+  margin-block: 10px 16px;
+}
+.booking-main .demo-note {
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+.booking-main > .booking-call {
+  border-radius: 14px;
+  margin: 16px 0 22px;
+  min-height: 48px;
+  font-size: 14px;
+}
+.booking-main form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.booking-main form > :nth-child(n + 3) {
+  grid-column: 1 / -1;
+}
+.booking-main label {
+  font-size: 13px;
+  gap: 8px;
+  color: #b7c0cd;
+  min-width: 0;
+}
+.booking-main .form-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.booking-main input,
+.booking-main select,
+.garage .all-models-picker select {
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  border-radius: 14px;
+  padding: 13px 16px;
+  border: 1px solid #ffffff26;
+  background-color: #12161c;
+  color: #f4f5f7;
+  font-size: 16px;
+  line-height: 1.4;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.booking-main select,
+.garage .all-models-picker select {
+  padding-right: 34px;
+  text-overflow: ellipsis;
+}
+.booking-main input::placeholder {
+  color: #7f8997;
+  opacity: 1;
+}
+.booking-main input:hover,
+.booking-main select:hover,
+.garage .all-models-picker select:hover {
+  border-color: #ffffff50;
+}
+.booking-main input:focus,
+.booking-main select:focus,
+.garage .all-models-picker select:focus {
+  border-color: #c7ccd3;
+  outline: 2px solid #c7ccd333;
+  outline-offset: 2px;
+  background-color: #171c24;
+}
+.booking-main form > .button,
+.garage .all-models-picker .button {
+  border-radius: 14px;
+  min-height: 50px;
+}
+.booking-main .form-result {
+  border-radius: 12px;
+  font-size: 13px;
+}
+.booking-main .form-privacy {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.booking-main form > div[aria-live]:empty {
+  display: none;
+}
+.booking-aside > img {
+  position: absolute;
+  inset: 0;
+}
+.booking-aside > div {
+  left: 28px;
+  right: 24px;
+  bottom: 30px;
+}
+.booking-aside p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+@media (max-width: 700px) {
+  .booking-dialog {
+    border-radius: 20px;
+    width: calc(100% - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+  .booking-dialog .booking-layout {
+    grid-template-columns: minmax(0, 1fr);
+    max-height: calc(100dvh - 26px);
+  }
+  .booking-dialog .booking-main {
+    padding: 28px 20px 24px;
+    max-height: calc(100dvh - 26px);
+  }
+  .booking-main h2 {
+    padding-right: 32px;
+    font-size: 27px;
+  }
+  .booking-main .eyebrow {
+    padding-right: 42px;
+  }
+  .booking-main form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+  .booking-main form > :nth-child(n + 3) {
+    grid-column: auto;
+  }
+  .booking-main .form-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+  .booking-dialog .booking-aside {
+    display: none;
+  }
+}

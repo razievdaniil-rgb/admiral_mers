@@ -52,6 +52,7 @@ import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
 import { serviceContent } from "./service-content";
 import "./service-content.css";
+import "./form-polish.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -748,14 +749,14 @@ function BookingModal({
       }}
     >
       <div className="booking-layout">
+        <button
+          className="icon-button modal-close"
+          aria-label="Закрыть форму"
+          onClick={onClose}
+        >
+          <X />
+        </button>
         <div className="booking-main">
-          <button
-            className="icon-button modal-close"
-            aria-label="Закрыть форму"
-            onClick={onClose}
-          >
-            <X />
-          </button>
           <Eyebrow>Начнём с вашего Mercedes</Eyebrow>
           <h2 id="booking-title">Запись в техцентр</h2>
           <p className="demo-note">
