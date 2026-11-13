@@ -1,4 +1,3 @@
-import { useDialogMotion } from "./dialog-motion";
 import { useEffect, useRef } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 import type { Service } from "./data";
@@ -13,7 +12,6 @@ export function CategoryModal({
   onClose: () => void;
   onBook: () => void;
 }) {
-  const { closing, dismiss } = useDialogMotion(onClose);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef(document.activeElement as HTMLElement | null);
   useEffect(() => {
@@ -31,20 +29,20 @@ export function CategoryModal({
   return (
     <dialog
       ref={dialog}
-      className={`category-dialog ${closing ? "is-closing" : ""}`}
+      className="category-dialog"
       aria-labelledby="category-title"
       onCancel={(e) => {
         e.preventDefault();
-        dismiss();
+        onClose();
       }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) dismiss();
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <button
         className="icon-button modal-close"
         aria-label="Закрыть список работ"
-        onClick={() => dismiss()}
+        onClick={onClose}
       >
         <X size={20} />
       </button>
@@ -81,7 +79,8 @@ export function CategoryModal({
         <button
           className="button"
           onClick={() => {
-            dismiss(onBook);
+            onClose();
+            requestAnimationFrame(onBook);
           }}
         >
           Обсудить работы

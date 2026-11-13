@@ -18,7 +18,3 @@
 Координаты Гостиничного проезда, 10А, стр. 1: https://www.mos.ru/upload/documents/files/1430/5_Prilojenie5.pdf (55.846965, 37.576763). Киевская, 14: https://www.auto2.info/moskva/roketservis-496585/ (55.7427, 37.5586). Это ориентиры зданий, не подтверждённые координаты въезда в ремзону. Ссылки маршрутов передают полный адрес Яндексу.
 
 Референсы анимации: предоставленные архивы Nolith Freight Intelligence и Apex Roadster; интерактивные узлы обсуждены по https://horizonx.so/explore/aegis-skyforge. Их исходники не публикуются.
-
-3D-модели и лицензии: см. `3D-MODELS.md` и публичную страницу `models/credits.html`. Все исходные лицензии проверены через Sketchfab API 13.11.2026.
-
-Оптимизация геометрии: https://gltf-transform.dev/modules/functions/functions/simplify и https://gltf-transform.dev/modules/functions/functions/join.

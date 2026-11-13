@@ -1,4 +1,3 @@
-import { useDialogMotion } from "./dialog-motion";
 import React, {
   createContext,
   useContext,
@@ -47,12 +46,13 @@ import { FigmaHome, FigmaTimeline, ApproachCards } from "./figma-sections";
 import "./figma.css";
 import "./motion-polish.css";
 import "./ux-refinement.css";
+import "./xray-image.css";
+import { SmoothScroll } from "./smooth-scroll";
 import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
 import { serviceContent } from "./service-content";
 import "./service-content.css";
 import "./form-polish.css";
-import "./premium-motion.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -283,13 +283,6 @@ function Footer() {
         <span>© {new Date().getFullYear()} ТехЦентр Адмирал</span>
         <span>Независимый специализированный сервис Mercedes-Benz</span>
         <a href="#/privacy">О персональных данных</a>
-        <a
-          href={assetUrl("models/credits.html")}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Изображения и 3D-модели
-        </a>
       </div>
     </footer>
   );
@@ -427,7 +420,7 @@ function ServicesPage() {
     <>
       <Intro
         eyebrow="Услуги"
-        title="Услуги для Вашего Mercedes"
+        title="Услуги для вашего Mercedes"
         description="Обслуживаем весь модельный ряд. Выберите автомобиль или укажите другую модель."
       />
       <Catalog />
@@ -502,7 +495,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
           </ul>
           <p>
             Стоимость, сроки и объём работ согласуем после диагностики. Без
-            ремонта, о котором Вы не договаривались.
+            ремонта, о котором вы не договаривались.
           </p>
           <BookButton booking={{ service: service.id, model }}>
             Обсудить {service.id === "maintenance" ? "обслуживание" : "работы"}
@@ -548,7 +541,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
             [
               "01",
               "Обсуждаем задачу",
-              "Уточняем модель, историю и Ваши наблюдения.",
+              "Уточняем модель, историю и ваши наблюдения.",
             ],
             [
               "02",
@@ -700,7 +693,7 @@ function Privacy() {
       <section className="container legal-copy">
         <p>
           На этой версии сайта форма записи не отправляет и не сохраняет
-          введённые данные. Проверка заполнения выполняется в Вашем браузере.
+          введённые данные. Проверка заполнения выполняется в вашем браузере.
           После закрытия формы данные очищаются.
         </p>
         <p>
@@ -726,7 +719,6 @@ function BookingModal({
   booking: Booking;
   onClose: () => void;
 }) {
-  const { closing, dismiss } = useDialogMotion(onClose);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef(document.activeElement as HTMLElement | null);
   const [result, setResult] = useState(false);
@@ -746,26 +738,26 @@ function BookingModal({
   return (
     <dialog
       ref={dialog}
-      className={`booking-dialog ${closing ? "is-closing" : ""}`}
+      className="booking-dialog"
       aria-labelledby="booking-title"
       onCancel={(e) => {
         e.preventDefault();
-        dismiss();
+        onClose();
       }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) dismiss();
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className="booking-layout">
         <button
           className="icon-button modal-close"
           aria-label="Закрыть форму"
-          onClick={() => dismiss()}
+          onClick={onClose}
         >
           <X />
         </button>
         <div className="booking-main">
-          <Eyebrow>Начнём с Вашего Mercedes</Eyebrow>
+          <Eyebrow>Начнём с вашего Mercedes</Eyebrow>
           <h2 id="booking-title">Запись в техцентр</h2>
           <p className="demo-note">
             Демонстрация формы. Отправка заявок пока не подключена. Для записи
@@ -789,7 +781,7 @@ function BookingModal({
                 required
                 minLength={2}
                 maxLength={80}
-                placeholder="Как к Вам обращаться"
+                placeholder="Как к вам обращаться"
                 onChange={() => setResult(false)}
               />
             </label>
@@ -884,7 +876,7 @@ function BookingModal({
             </span>
             <p>
               С 1999 года.
-              <br />С вниманием к Вашему автомобилю.
+              <br />С вниманием к вашему автомобилю.
             </p>
           </div>
         </div>
@@ -947,6 +939,7 @@ function App() {
   }, [path]);
   return (
     <BookContext.Provider value={(b) => setBooking(b || {})}>
+      <SmoothScroll />
       <a
         className="skip-link"
         href="#main"
@@ -994,7 +987,6 @@ function App() {
     </BookContext.Provider>
   );
 }
-if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 const root =
   import.meta.hot?.data.root ?? createRoot(document.getElementById("root")!);
 if (import.meta.hot) import.meta.hot.data.root = root;

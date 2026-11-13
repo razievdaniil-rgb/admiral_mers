@@ -4,8 +4,8 @@
   top: 0;
   z-index: 40;
   border-bottom: 1px solid #ffffff12;
-  background: #08090b;
-  backdrop-filter: none;
+  background: #08090bf5;
+  backdrop-filter: blur(18px);
 }
 .mobile-call {
   display: none;
