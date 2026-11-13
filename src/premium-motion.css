@@ -452,6 +452,7 @@ dialog[open].is-closing::backdrop {
   .fhero-car-area {
     width: calc(100% + 48px);
     max-width: none;
+    margin-inline: -24px;
   }
   .fhero .hero-node-engine {
     right: 8%;
