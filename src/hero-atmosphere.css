@@ -1,0 +1,78 @@
+.figma-home > .fhero {
+  max-height: none;
+  background: #08090b;
+}
+.fhero .fhero-background {
+  opacity: 0.3;
+}
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 58%, #19212d44, transparent 70%);
+}
+.hero-atmosphere canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.hero-atmosphere-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(#08090b88, transparent 37%, transparent 72%, #08090b),
+    radial-gradient(ellipse at center, transparent 35%, #08090b77 100%);
+}
+.fhero .fhero-emblem-left {
+  opacity: 0.18;
+}
+.fhero .fhero-emblem-small {
+  opacity: 0.22;
+}
+.fhero .fhero-emblem-right {
+  opacity: 0.24;
+}
+.hero-motion-toggle {
+  position: absolute;
+  bottom: 22px;
+  left: max(24px, calc((100vw - 1280px) / 2));
+  z-index: 3;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: #939ba6;
+  font-size: 12px;
+  transition:
+    color 0.25s,
+    background 0.25s;
+}
+.hero-motion-toggle:hover,
+.hero-motion-toggle:focus-visible {
+  color: #f4f5f7;
+  background: #171a1f;
+}
+@media (max-width: 767px) {
+  .hero-motion-toggle {
+    left: 8px;
+    top: 8px;
+    bottom: auto;
+  }
+  .hero-motion-toggle span {
+    display: none;
+  }
+  .hero-atmosphere {
+    opacity: 0.8;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-motion-toggle {
+    display: none;
+  }
+}

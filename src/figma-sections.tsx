@@ -12,6 +12,7 @@ import {
 import { gsap } from "gsap";
 import { XrayImage } from "./xray-image";
 import { AboutFilm } from "./about-film";
+import { HeroAtmosphere } from "./hero-atmosphere";
 import { assetUrl, media } from "./assets";
 import { branches, branchStatus, history, mapLink, services } from "./data";
 type Booking = { service?: string; branch?: string; model?: string };
@@ -367,6 +368,7 @@ export function FigmaHome({ onBook }: Props) {
   return (
     <div className="figma-home" ref={root}>
       <section className="fhero">
+        <HeroAtmosphere />
         <div
           className="fhero-background"
           style={{ backgroundImage: `url(${assetUrl(media.atmosphere)})` }}
