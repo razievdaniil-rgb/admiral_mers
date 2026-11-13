@@ -14,10 +14,14 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 3;
+  z-index: 0;
 }
-.car-assembly[data-assembly="ready"] > .car-assembly-particles {
+.car-assembly-particles[data-assembly="ready"] {
   visibility: hidden;
+}
+.fhero > .fhero-content {
+  position: relative;
+  z-index: 1;
 }
 @media (prefers-reduced-motion: reduce) {
   .car-assembly > .fhero-car {

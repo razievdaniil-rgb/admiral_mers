@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { assetUrl, media } from "./assets";
 import "./car-assembly.css";
 
@@ -6,10 +7,14 @@ import "./car-assembly.css";
 export function CarAssembly({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const [scene, setScene] = useState<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    setScene(root.current?.closest<HTMLElement>(".fhero") ?? null);
+  }, []);
   useLayoutEffect(() => {
     const host = root.current,
       surface = canvas.current;
-    if (!host || !surface) return;
+    if (!host || !surface || !scene) return;
     const context = surface.getContext("2d");
     const preference = matchMedia("(prefers-reduced-motion: reduce)");
     if (!context || preference.matches) return;
@@ -35,6 +40,7 @@ export function CarAssembly({ children }: { children: ReactNode }) {
       clearTimeout(fallback);
       cancelAnimationFrame(frame);
       host.dataset.assembly = "ready";
+      surface.dataset.assembly = "ready";
       host.style.setProperty("--car-body-opacity", "1");
       host.inert = false;
       context.clearRect(0, 0, width, height);
@@ -42,8 +48,8 @@ export function CarAssembly({ children }: { children: ReactNode }) {
     const ease = (p: number) =>
       1 - Math.pow(1 - Math.max(0, Math.min(1, p)), 3);
     const resize = () => {
-      width = host.clientWidth;
-      height = host.clientHeight;
+      width = scene.clientWidth;
+      height = scene.clientHeight;
       const density = Math.min(devicePixelRatio || 1, 1.5);
       surface.width = Math.round(width * density);
       surface.height = Math.round(height * density);
@@ -54,23 +60,27 @@ export function CarAssembly({ children }: { children: ReactNode }) {
       elapsed += previous ? Math.min(now - previous, 80) : 0;
       previous = now;
       const t = elapsed / 1000;
-      const body = ease((t - 2.05) / 1.25);
+      const body = ease((t - 2.5) / 1.1);
       host.style.setProperty("--car-body-opacity", String(body));
       context.clearRect(0, 0, width, height);
+      const bounds = host.getBoundingClientRect();
+      const sceneBounds = scene.getBoundingClientRect();
       const fit = Math.min(
-        width / image.naturalWidth,
-        height / image.naturalHeight,
+        bounds.width / image.naturalWidth,
+        bounds.height / image.naturalHeight,
       );
       const imageWidth = image.naturalWidth * fit,
         imageHeight = image.naturalHeight * fit;
-      const left = (width - imageWidth) / 2,
-        top = (height - imageHeight) / 2;
+      const left =
+          bounds.left - sceneBounds.left + (bounds.width - imageWidth) / 2,
+        top = bounds.top - sceneBounds.top + (bounds.height - imageHeight) / 2;
       for (const point of points) {
-        const progress = ease((t - point.seed * 0.4) / 2.1);
+        const p = Math.max(0, Math.min(1, (t - point.seed * 0.4) / 2.5));
+        const progress = p * p * (3 - 2 * p);
         const tx = left + point.x * imageWidth,
           ty = top + point.y * imageHeight;
-        const x = tx + point.sx * width * (1 - progress);
-        const y = ty + point.sy * height * (1 - progress);
+        const x = point.sx * width + (tx - point.sx * width) * progress;
+        const y = point.sy * height + (ty - point.sy * height) * progress;
         const swirl = Math.sin(progress * Math.PI) * (1 - progress);
         context.globalAlpha =
           Math.min(1, t * 2) * (1 - body) * (0.55 + progress * 0.45);
@@ -84,7 +94,7 @@ export function CarAssembly({ children }: { children: ReactNode }) {
         );
       }
       context.globalAlpha = 1;
-      if (t >= 3.35) finish();
+      if (t >= 3.65) finish();
       else frame = requestAnimationFrame(tick);
     };
     image.onload = () => {
@@ -122,12 +132,21 @@ export function CarAssembly({ children }: { children: ReactNode }) {
             )
               continue;
             const seed = ((x * 73 + y * 137) % 997) / 997;
-            const angle = seed * Math.PI * 2;
+            let sx = 0.02 + (((x * 269 + y * 83) % 1009) / 1009) * 0.96;
+            let sy = 0.02 + (((x * 97 + y * 251) % 1013) / 1013) * 0.96;
+            // Reserve samples for every edge and corner as well as the centre.
+            const region = (x * 17 + y * 37) % 10;
+            if (region < 2) sx = region === 0 ? 0.015 : 0.985;
+            if (region === 2 || region === 3) sy = region === 2 ? 0.015 : 0.985;
+            if (region === 4) {
+              sx = seed < 0.5 ? 0.02 : 0.98;
+              sy = seed % 0.5 < 0.25 ? 0.02 : 0.98;
+            }
             points.push({
               x: x / sampler.width,
               y: y / sampler.height,
-              sx: Math.cos(angle) * (0.3 + seed * 0.7),
-              sy: Math.sin(angle) * (0.35 + seed * 0.65),
+              sx,
+              sy,
               color: `rgb(${Math.min(255, pixels[i] + 30)},${Math.min(255, pixels[i + 1] + 30)},${Math.min(255, pixels[i + 2] + 35)})`,
               seed,
             });
@@ -138,6 +157,7 @@ export function CarAssembly({ children }: { children: ReactNode }) {
         }
         resize();
         host.dataset.assembly = "assembling";
+        surface.dataset.assembly = "assembling";
         host.style.setProperty("--car-body-opacity", "0");
         host.inert = true;
         frame = requestAnimationFrame(tick);
@@ -147,12 +167,14 @@ export function CarAssembly({ children }: { children: ReactNode }) {
     };
     image.onerror = finish;
     host.dataset.assembly = "assembling";
+    surface.dataset.assembly = "assembling";
     host.style.setProperty("--car-body-opacity", "0");
     host.inert = true;
     fallback = setTimeout(finish, 7000);
     image.src = assetUrl(media.hero);
     const observer = new ResizeObserver(resize);
     observer.observe(host);
+    observer.observe(scene);
     const onPreference = () => {
       if (preference.matches) finish();
     };
@@ -172,15 +194,19 @@ export function CarAssembly({ children }: { children: ReactNode }) {
       finish();
       points = [];
     };
-  }, []);
+  }, [scene]);
   return (
     <div className="car-assembly" ref={root} data-assembly="ready">
       {children}
-      <canvas
-        ref={canvas}
-        className="car-assembly-particles"
-        aria-hidden="true"
-      />
+      {scene &&
+        createPortal(
+          <canvas
+            ref={canvas}
+            className="car-assembly-particles"
+            aria-hidden="true"
+          />,
+          scene,
+        )}
     </div>
   );
 }
