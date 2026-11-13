@@ -50,6 +50,8 @@ import "./xray-image.css";
 import { SmoothScroll } from "./smooth-scroll";
 import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
+import { serviceContent } from "./service-content";
+import "./service-content.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -456,6 +458,7 @@ function FAQ({ items }: { items: [string, string][] }) {
 }
 function ServicePage({ service, model }: { service: Service; model: string }) {
   const Icon = icons[service.icon as keyof typeof icons];
+  const content = serviceContent[service.id];
   return (
     <>
       <Intro
@@ -501,13 +504,54 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
           </a>
         </div>
       </section>
+      {content && (
+        <section
+          className="service-guidance container section"
+          aria-label="Подробнее об услуге"
+        >
+          <div data-reveal>
+            <Eyebrow>Когда обратиться</Eyebrow>
+            <h2>Знакомая ситуация?</h2>
+            <ul className="service-symptoms">
+              {content.symptoms.map((symptom, index) => (
+                <li key={symptom}>
+                  <span aria-hidden="true">0{index + 1}</span>
+                  {symptom}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="service-guidance-copy" data-reveal>
+            <Eyebrow>От обращения к решению</Eyebrow>
+            <h2>Сначала разбираемся в задаче</h2>
+            <p>{content.explanation}</p>
+            <h3>Перед визитом</h3>
+            <p>{content.preparation}</p>
+            <a className="text-link" href={telephone}>
+              Обсудить с техцентром <ArrowUpRight size={18} />
+            </a>
+          </div>
+        </section>
+      )}
       <section className="process container section">
         <Eyebrow>Понятный порядок</Eyebrow>
         <div>
           {[
-            ["01", "Знакомимся", "Вы рассказываете о машине и задаче."],
-            ["02", "Проверяем", "Находим причину и обсуждаем решение."],
-            ["03", "Согласовываем", "Фиксируем перечень, стоимость и сроки."],
+            [
+              "01",
+              "Обсуждаем задачу",
+              "Уточняем модель, историю и ваши наблюдения.",
+            ],
+            [
+              "02",
+              "Проверяем и согласуем",
+              "Определяем объём работ, обсуждаем стоимость и сроки.",
+            ],
+            [
+              "03",
+              "Выполняем работы",
+              "Работаем по согласованному перечню и проверяем результат.",
+            ],
           ].map(([n, t, d]) => (
             <article key={n} data-reveal>
               <span>{n}</span>

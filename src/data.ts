@@ -1,3 +1,5 @@
+import { serviceContent } from "./service-content";
+
 export const phone = "+7 (495) 885-65-80";
 export const telephone = "tel:+74958856580";
 export const opening = new Date("2026-11-15T00:00:00+03:00");
@@ -149,7 +151,18 @@ const commonFaq: [string, string][] = [
     "Подготовьте документы на автомобиль и, если сохранились, историю обслуживания. VIN поможет точнее определить комплектацию.",
   ],
 ];
-export const services: Service[] = [
+function enrichService(service: Service): Service {
+  const content = serviceContent[service.id];
+  return content
+    ? {
+        ...service,
+        intro: content.intro,
+        works: content.works,
+        faq: [...content.faq, ...service.faq],
+      }
+    : service;
+}
+const baseServices: Service[] = [
   {
     id: "diagnostics",
     image: "media/280-imgRectangle11.webp",
@@ -294,7 +307,8 @@ export const services: Service[] = [
     faq: commonFaq,
   },
 ];
-export const transmission: Service = {
+export const services = baseServices.map(enrichService);
+export const transmission: Service = enrichService({
   id: "transmission",
   image: "media/services/transmission.webp",
   imageAlt: "Ремонт автоматической коробки передач на рабочем столе",
@@ -310,7 +324,7 @@ export const transmission: Service = {
     "Согласование ремонта после диагностики",
   ],
   faq: commonFaq,
-};
+});
 export const allServices = [...services, transmission];
 export const history = [
   {
