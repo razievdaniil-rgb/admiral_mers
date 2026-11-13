@@ -13,6 +13,7 @@ import { gsap } from "gsap";
 import { AboutFilm } from "./about-film";
 import { Vehicle3D } from "./vehicle-3d";
 import "./drive-story.css";
+import { CrossfadeImage } from "./crossfade-image";
 import { heroVehicle } from "./vehicle-library";
 import { BranchShowcase } from "./branch-showcase";
 import { HeroAtmosphere } from "./hero-atmosphere";
@@ -29,30 +30,7 @@ const picture = (path: string, alt: string, className = "") => (
     decoding="async"
   />
 );
-function tilt(e: React.PointerEvent<HTMLElement>) {
-  if (
-    !matchMedia("(pointer:fine) and (prefers-reduced-motion:no-preference)")
-      .matches
-  )
-    return;
-  const r = e.currentTarget.getBoundingClientRect();
-  e.currentTarget.style.setProperty(
-    "--tilt-x",
-    `${(-(e.clientY - r.top - r.height / 2) / r.height) * 7}deg`,
-  );
-  e.currentTarget.style.setProperty(
-    "--tilt-y",
-    `${((e.clientX - r.left - r.width / 2) / r.width) * 8}deg`,
-  );
-  e.currentTarget.style.setProperty(
-    "--light-x",
-    `${((e.clientX - r.left) / r.width) * 100}%`,
-  );
-}
-function resetTilt(e: React.PointerEvent<HTMLElement>) {
-  e.currentTarget.style.setProperty("--tilt-x", "0deg");
-  e.currentTarget.style.setProperty("--tilt-y", "0deg");
-}
+
 export function PromotionCarousel({ onBook }: Props) {
   const [active, setActive] = useState(0);
   const touch = useRef<number | null>(null);
@@ -113,8 +91,6 @@ export function PromotionCarousel({ onBook }: Props) {
             <button
               key={offer.title}
               className={`sculpture-card offer-card ${i === active ? "selected" : ""}`}
-              onPointerMove={tilt}
-              onPointerLeave={resetTilt}
               onClick={() => {
                 setActive(i);
                 onBook({ service: offer.service || undefined });
@@ -197,22 +173,23 @@ export function FigmaTimeline() {
         role="tabpanel"
         id={`history-panel-${active}`}
         aria-labelledby={`history-tab-${active}`}
-        key={active}
       >
         <figure>
-          {picture(
-            active === 0 ? media.history : media.workshop,
-            active === 0
-              ? "ТехЦентр Адмирал: фотография из истории сервиса"
-              : "Ремонтная зона техцентра Адмирал",
-          )}
+          <CrossfadeImage
+            src={assetUrl(active === 0 ? media.history : media.workshop)}
+            alt={
+              active === 0
+                ? "ТехЦентр Адмирал: фотография из истории сервиса"
+                : "Ремонтная зона техцентра Адмирал"
+            }
+          />
           <figcaption>
             {active === 2
               ? "Ремзона на Киевской. Вторая точка — с 15 ноября."
               : history[active].year}
           </figcaption>
         </figure>
-        <div className="history-scene-copy">
+        <div className="history-scene-copy" key={active}>
           <span className="history-large-year">{history[active].year}</span>
           <h3>{history[active].title}</h3>
           <p>{history[active].body}</p>
@@ -262,12 +239,7 @@ export function ApproachCards() {
   return (
     <div className="approach-sculptures">
       {items.map(([title, text], i) => (
-        <details
-          className="sculpture-card approach-sculpture"
-          key={title}
-          onPointerMove={tilt}
-          onPointerLeave={resetTilt}
-        >
+        <details className="sculpture-card approach-sculpture" key={title}>
           <summary>
             <div className="sculpture-base" />
             {picture(media.approachIllustrations[i], "", "sculpture-image")}
@@ -288,34 +260,21 @@ export function FigmaHome({ onBook }: Props) {
       const ctx = gsap.context(() => {
         gsap
           .timeline()
-          .from(".fhero-subtitle", { y: 20, duration: 0.7 })
+          .from(".fhero-subtitle", {
+            opacity: 0,
+            y: 8,
+            duration: 0.8,
+            ease: "power2.out",
+          })
           .from(
             ".fhero-title",
-            { yPercent: 15, duration: 0.9, ease: "power3.out" },
+            { opacity: 0, y: 14, duration: 1.1, ease: "power3.out" },
             0.15,
           )
-          .from(".fhero-actions", { y: 15, duration: 0.6 }, 0.85);
-        gsap.to(".fhero-emblem-right", {
-          rotation: 12,
-          y: 45,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".fhero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-        gsap.utils
-          .toArray<HTMLElement>(".figma-photo-pair figure")
-          .forEach((el) =>
-            gsap.from(el, {
-              opacity: 0,
-              y: 18,
-              duration: 1.3,
-              ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 92%", once: true },
-            }),
+          .from(
+            ".fhero-actions",
+            { opacity: 0, y: 8, duration: 0.8, ease: "power2.out" },
+            0.6,
           );
       }, root);
       return () => ctx.revert();
@@ -411,8 +370,6 @@ export function FigmaHome({ onBook }: Props) {
               href={`#/services/${s.id}`}
               className="sculpture-card"
               key={s.id}
-              onPointerMove={tilt}
-              onPointerLeave={resetTilt}
             >
               <div className="sculpture-base" />
               {picture(media.serviceIllustrations[i], "", "sculpture-image")}

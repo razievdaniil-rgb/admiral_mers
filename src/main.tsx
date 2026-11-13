@@ -1,3 +1,4 @@
+import { useDialogMotion } from "./dialog-motion";
 import React, {
   createContext,
   useContext,
@@ -51,6 +52,7 @@ import { CategoryModal } from "./category-modal";
 import { serviceContent } from "./service-content";
 import "./service-content.css";
 import "./form-polish.css";
+import "./premium-motion.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -724,6 +726,7 @@ function BookingModal({
   booking: Booking;
   onClose: () => void;
 }) {
+  const { closing, dismiss } = useDialogMotion(onClose);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef(document.activeElement as HTMLElement | null);
   const [result, setResult] = useState(false);
@@ -743,21 +746,21 @@ function BookingModal({
   return (
     <dialog
       ref={dialog}
-      className="booking-dialog"
+      className={`booking-dialog ${closing ? "is-closing" : ""}`}
       aria-labelledby="booking-title"
       onCancel={(e) => {
         e.preventDefault();
-        onClose();
+        dismiss();
       }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) dismiss();
       }}
     >
       <div className="booking-layout">
         <button
           className="icon-button modal-close"
           aria-label="Закрыть форму"
-          onClick={onClose}
+          onClick={() => dismiss()}
         >
           <X />
         </button>

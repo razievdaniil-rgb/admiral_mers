@@ -1,11 +1,11 @@
 .hero-drive-story {
   position: relative;
-  height: calc(180svh - var(--site-header-height));
+  height: calc(142svh - var(--site-header-height));
 }
 .hero-drive-story > .fhero {
   position: sticky;
-  max-height:none;
-  background:#08090b;
+  max-height: none;
+  background: #08090b;
   top: var(--site-header-height);
   height: calc(100svh - var(--site-header-height));
 }

@@ -29,6 +29,9 @@ export function SmoothCatalog({
     undefined,
   );
   const mounted = useRef(true);
+  const locked = useRef(false);
+  const queued = useRef<{ next: number; direction: number } | null>(null);
+  const desired = useRef(0);
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -44,17 +47,30 @@ export function SmoothCatalog({
       );
     }
   }, [index]);
-  const select = async (next: number) => {
-    if (busy) return;
-    const direction = next < index ? -1 : 1;
-    next = (next + vehicles.length) % vehicles.length;
+  useEffect(() => {
+    if (!busy && queued.current !== null) {
+      const next = queued.current;
+      queued.current = null;
+      void select(next.next, next.direction);
+    }
+  }, [busy]);
+  const select = async (next: number, requestedDirection?: number) => {
+    const direction = requestedDirection ?? (next < desired.current ? -1 : 1);
+    desired.current = next;
+    if (locked.current) {
+      queued.current = { next, direction };
+      return;
+    }
+    next = ((next % vehicles.length) + vehicles.length) % vehicles.length;
     if (next === index) return;
+    locked.current = true;
     setBusy(true);
     const image = new Image();
     image.src = assetUrl(vehicles[next].image);
     try {
       await image.decode();
     } catch {
+      locked.current = false;
       if (mounted.current) setBusy(false);
       return;
     }
@@ -66,9 +82,10 @@ export function SmoothCatalog({
     transition.current = setTimeout(
       () => {
         setPrevious(null);
+        locked.current = false;
         setBusy(false);
       },
-      matchMedia("(prefers-reduced-motion:reduce)").matches ? 0 : 720,
+      matchMedia("(prefers-reduced-motion:reduce)").matches ? 0 : 860,
     );
     setActiveNode(null);
   };
@@ -89,7 +106,6 @@ export function SmoothCatalog({
               id={pickerId + "-showcase"}
               aria-label="Выбрать модель"
               value={index}
-              disabled={busy}
               onChange={(e) => void select(Number(e.target.value))}
             >
               {vehicles.map((v, i) => (
@@ -111,7 +127,7 @@ export function SmoothCatalog({
             if (e.target !== e.currentTarget) return;
             if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
               e.preventDefault();
-              void select(index + (e.key === "ArrowRight" ? 1 : -1));
+              void select(desired.current + (e.key === "ArrowRight" ? 1 : -1));
             }
           }}
           onTouchStart={(e) => {
@@ -126,7 +142,7 @@ export function SmoothCatalog({
             const dx = e.changedTouches[0].clientX - touch.current.x,
               dy = e.changedTouches[0].clientY - touch.current.y;
             if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy))
-              void select(index + (dx < 0 ? 1 : -1));
+              void select(desired.current + (dx < 0 ? 1 : -1));
             touch.current = null;
           }}
         >
@@ -160,16 +176,14 @@ export function SmoothCatalog({
           <button
             className="catalog-arrow catalog-arrow-prev"
             aria-label="Предыдущий автомобиль"
-            disabled={busy}
-            onClick={() => void select(index - 1)}
+            onClick={() => void select(desired.current - 1)}
           >
             <ChevronLeft size={24} />
           </button>
           <button
             className="catalog-arrow catalog-arrow-next"
             aria-label="Следующий автомобиль"
-            disabled={busy}
-            onClick={() => void select(index + 1)}
+            onClick={() => void select(desired.current + 1)}
           >
             <ChevronRight size={24} />
           </button>

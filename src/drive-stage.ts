@@ -13,7 +13,7 @@ export function createDriveStage(scene: T.Scene, car: T.Group) {
     void main(){vec2 cell=abs(fract(vec2(vRoad.x+uTravel,vRoad.z)*.5)-.5);vec2 aa=max(fwidth(cell),vec2(.002));vec2 grid=1.-smoothstep(aa*.35,aa*1.1,cell);float line=max(grid.x,grid.y);
     float fade=(1.-smoothstep(4.,14.,abs(vRoad.x)))*(1.-smoothstep(1.5,6.,abs(vRoad.z)));
     float lane=(1.-smoothstep(.015,.035,abs(abs(vRoad.z)-1.65)))*step(.4,fract((vRoad.x+uTravel)*.45));
-    gl_FragColor=vec4(.35,.43,.53,fade*(line*.025+lane*(.12+uGlow*.12)));}`,
+    gl_FragColor=vec4(.35,.43,.53,fade*(line*.01+lane*(.015+uGlow*.055)));}`,
   });
   const road = new T.Mesh(new T.PlaneGeometry(60, 14), roadMaterial);
   road.rotation.x = -Math.PI / 2;
@@ -43,12 +43,12 @@ export function createDriveStage(scene: T.Scene, car: T.Group) {
     vertexShader:
       "varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",
     fragmentShader:
-      "varying vec2 vUv;uniform float uStrength;void main(){float beam=exp(-pow((vUv.x-.5)*45.,2.));float halo=exp(-pow((vUv.x-.5)*10.,2.));float ends=smoothstep(0.,.18,vUv.y)*(1.-smoothstep(.78,1.,vUv.y));gl_FragColor=vec4(.48,.78,.94,(beam*.46+halo*.09)*ends*uStrength);}",
+      "varying vec2 vUv;uniform float uStrength;void main(){float beam=exp(-pow((vUv.x-.5)*45.,2.));float halo=exp(-pow((vUv.x-.5)*10.,2.));float ends=smoothstep(0.,.18,vUv.y)*(1.-smoothstep(.78,1.,vUv.y));gl_FragColor=vec4(.48,.78,.94,(beam*.22+halo*.04)*ends*uStrength);}",
   });
   scanMaterial.forceSinglePass = true;
-  const scanner = new T.Mesh(new T.PlaneGeometry(3.1, 2.05), scanMaterial);
+  const scanner = new T.Mesh(new T.PlaneGeometry(2.8, 1.7), scanMaterial);
   scanner.rotation.y = 0;
-  scanner.position.y = 0.96;
+  scanner.position.y = 0.8;
   scanner.renderOrder = 8;
   scanner.visible = false;
   car.add(scanner);

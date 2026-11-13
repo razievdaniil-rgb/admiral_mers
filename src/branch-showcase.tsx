@@ -1,3 +1,4 @@
+import { useDialogMotion } from "./dialog-motion";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -9,6 +10,7 @@ import {
 import { assetUrl, media } from "./assets";
 import { branches, branchStatus, mapLink } from "./data";
 import "./branch-showcase.css";
+import { CrossfadeImage } from "./crossfade-image";
 const photos = [
   {
     name: "Фасад",
@@ -40,6 +42,7 @@ function GalleryDialog({
   index: number;
   onClose: () => void;
 }) {
+  const { closing, dismiss } = useDialogMotion(onClose);
   const ref = useRef<HTMLDialogElement>(null),
     opener = useRef(document.activeElement as HTMLElement | null);
   const [photo, setPhoto] = useState(index);
@@ -59,14 +62,14 @@ function GalleryDialog({
   return (
     <dialog
       ref={ref}
-      className="branch-gallery-dialog"
+      className={`branch-gallery-dialog ${closing ? "is-closing" : ""}`}
       aria-labelledby="branch-gallery-title"
       onCancel={(e) => {
         e.preventDefault();
-        onClose();
+        dismiss();
       }}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) dismiss();
       }}
       onKeyDown={(e) => {
         if (e.key === "ArrowRight") next(1);
@@ -80,11 +83,14 @@ function GalleryDialog({
             {branch} · {photos[photo].name}
           </h2>
         </div>
-        <button aria-label="Закрыть фотографии" onClick={onClose}>
+        <button aria-label="Закрыть фотографии" onClick={() => dismiss()}>
           <X />
         </button>
       </div>
-      <img src={assetUrl(photos[photo].src)} alt={photos[photo].alt} />
+      <CrossfadeImage
+        src={assetUrl(photos[photo].src)}
+        alt={photos[photo].alt}
+      />
       <div className="branch-gallery-footer">
         <button aria-label="Предыдущее фото" onClick={() => next(-1)}>
           <ChevronLeft />
@@ -115,11 +121,9 @@ function BranchCard({
         onClick={() => setGallery(true)}
         aria-label={`Посмотреть фотографии: ${branch.name}`}
       >
-        <img
-          key={photo}
+        <CrossfadeImage
           src={assetUrl(photos[photo].src)}
           alt={photos[photo].alt}
-          loading="lazy"
         />
         <span className="branch-photo-note">Временные фото</span>
         <span className="branch-photo-expand">

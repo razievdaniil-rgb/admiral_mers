@@ -1,0 +1,419 @@
+/* A monochrome showroom: scale and light carry the hierarchy. */
+:root {
+  --black: #08090b;
+  --graphite: #101216;
+  --white: #f4f5f7;
+  --muted: #a5abb5;
+  --line: #ffffff1c;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+body {
+  background: var(--black);
+}
+.section {
+  padding-block: clamp(64px, 7.5vw, 112px);
+}
+.figma-home h2,
+.figma-centered-heading h2,
+.principles h2,
+.branch-showcase-heading h2 {
+  font-weight: 500;
+  font-size: clamp(32px, 4.2vw, 60px);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+.figma-centered-heading > p,
+.branch-showcase-heading > p {
+  color: #aeb3bc;
+  line-height: 1.7;
+}
+.button {
+  border-radius: 999px;
+  font-weight: 500;
+  background: #e1e3e7;
+  box-shadow: none;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    border-color 0.25s,
+    transform 0.3s var(--motion-ease);
+}
+.button:hover {
+  transform: translateY(-2px);
+}
+.button:active {
+  transform: translateY(0);
+}
+.button.secondary {
+  border: 1px solid #ffffff36;
+  background: transparent;
+  color: #e5e7ec;
+}
+.header-book .button {
+  background: transparent;
+  border: 1px solid #ffffff40;
+  color: #f4f5f7;
+}
+.header-book .button:hover {
+  background: #ffffff12;
+}
+.fhero-title {
+  font-weight: 550;
+  letter-spacing: -0.055em;
+}
+.fhero-subtitle {
+  font-weight: 400;
+  color: #c9cdd4;
+}
+.fhero-actions .button {
+  min-height: 48px;
+}
+.hero-drive-hint {
+  color: #a4aab4;
+  font-size: 12px;
+}
+.figma-who .figma-centered-heading {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  align-items: end;
+  gap: 48px;
+  text-align: left;
+}
+.figma-who .figma-centered-heading h2 {
+  text-align: left;
+}
+.figma-who .figma-centered-heading > p {
+  margin: 0;
+  max-width: 620px;
+  font-size: 17px;
+}
+.about-film {
+  border-radius: 28px;
+  border-color: #ffffff12;
+  background: #101216;
+}
+.about-film-controls {
+  background: #101216;
+}
+.about-film-shot {
+  transition: opacity 1.1s ease;
+}
+.about-film-shot.is-active > img,
+.about-film-shot:nth-child(2).is-active > img {
+  animation: none;
+}
+.about-film-copy {
+  transform: translateY(10px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+.about-film-shot.is-active .about-film-copy {
+  transition:
+    opacity 0.55s ease 0.42s,
+    transform 0.8s var(--motion-ease) 0.42s;
+}
+.about-film-addresses {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.about-film-shot.is-active .about-film-addresses {
+  transition:
+    opacity 0.6s ease 0.5s,
+    transform 0.8s var(--motion-ease) 0.5s;
+}
+.about-film-copy h3 {
+  font-weight: 500;
+}
+.about-film-copy p {
+  color: #e0e2e7;
+}
+.figma-facts strong {
+  color: #e2e5eb;
+  font-weight: 400;
+}
+.branch-showcase-card {
+  border-radius: 28px;
+  background: #101216;
+  border-color: #ffffff14;
+}
+.branch-showcase-heading {
+  margin-bottom: 40px;
+}
+.branch-photo-tabs button {
+  border-color: transparent;
+  border-radius: 999px;
+}
+.branch-photo-tabs button:hover {
+  background: #ffffff0c;
+}
+.branch-photo-tabs button[aria-pressed="true"] {
+  background: #ffffff14;
+  color: #fff;
+  border-color: #ffffff30;
+}
+.branch-showcase-copy h3 {
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+.branch-showcase-actions .button {
+  font-size: 14px;
+}
+.crossfade-image {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.crossfade-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.crossfade-image .crossfade-previous {
+  position: absolute;
+  inset: 0;
+}
+.crossfade-image .crossfade-current {
+  position: relative;
+}
+.crossfade-image .is-entering {
+  animation: photograph-in 0.65s ease both;
+}
+@keyframes photograph-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.branch-gallery-dialog > .crossfade-image {
+  height: min(62vh, 650px);
+  background: #08090b;
+  border-radius: 20px;
+}
+.branch-gallery-dialog > .crossfade-image img {
+  object-fit: contain;
+}
+.figma-home .branch-gallery-header h2 {
+  font-size: clamp(22px, 2.5vw, 32px);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.history-scene {
+  animation: none;
+}
+.history-scene figure {
+  border-radius: 28px;
+}
+.history-scene figure > .crossfade-image {
+  height: 100%;
+}
+.history-scene-copy {
+  animation: copy-in 0.55s var(--motion-ease) both;
+}
+@keyframes copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.garage {
+  border-color: #ffffff12;
+  border-radius: 28px;
+  padding: clamp(20px, 3vw, 40px);
+}
+.catalog-stage {
+  background: radial-gradient(ellipse at 50% 76%, #30394335, transparent 60%);
+}
+.catalog-heading h2 {
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+.catalog-heading p {
+  color: #b1b6bf;
+}
+.catalog-model-picker select {
+  background: #ffffff06;
+  border-color: #ffffff25;
+  border-radius: 999px;
+}
+.catalog-car-out {
+  animation: showroom-out 0.64s cubic-bezier(0.55, 0, 0.8, 0.45) both;
+}
+.catalog-car-in {
+  animation: showroom-in 0.84s cubic-bezier(0.16, 0.75, 0.22, 1) both;
+}
+@keyframes showroom-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(calc(-42% * var(--slide-direction))) scale(0.91);
+  }
+}
+@keyframes showroom-in {
+  0%,
+  12% {
+    opacity: 0;
+    transform: translateX(calc(38% * var(--slide-direction))) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+.catalog-arrow {
+  border-color: #ffffff25;
+  background: #16191ed9;
+  transition:
+    background 0.25s,
+    transform 0.3s;
+}
+.catalog-arrow:hover {
+  background: #2a2e35;
+  transform: scale(1.05);
+}
+.garage-work-options button {
+  border-radius: 999px;
+}
+.garage-work-options button[aria-pressed="true"] {
+  background: #e1e3e7;
+  color: #08090b;
+}
+.garage-selected-work {
+  animation: copy-in 0.35s var(--motion-ease);
+}
+.all-models-picker {
+  border-color: #ffffff18;
+}
+.figma-final-cta h2 {
+  font-weight: 450;
+  max-width: 1050px;
+  margin-inline: auto;
+}
+.sculpture-card,
+.approach-sculpture {
+  transform: none !important;
+  box-shadow: none;
+}
+.sculpture-card:hover,
+.approach-sculpture:hover {
+  transform: translateY(-4px) !important;
+}
+.sculpture-image {
+  transition: transform 0.65s var(--motion-ease);
+}
+.sculpture-card:hover .sculpture-image {
+  transform: translateY(-5px) scale(1.015);
+}
+main {
+  animation: page-arrive 0.42s ease both;
+}
+@keyframes page-arrive {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+dialog[open] {
+  animation: dialog-arrive 0.35s var(--motion-ease) both;
+}
+dialog[open]::backdrop {
+  animation: photograph-in 0.3s ease both;
+}
+@keyframes dialog-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+dialog[open].is-closing {
+  animation: dialog-leave 0.18s ease both;
+}
+dialog[open].is-closing::backdrop {
+  animation: backdrop-leave 0.18s ease both;
+}
+@keyframes dialog-leave {
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.992);
+  }
+}
+@keyframes backdrop-leave {
+  to {
+    opacity: 0;
+  }
+}
+@media (max-width: 700px) {
+  .figma-who .figma-centered-heading {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .figma-who .figma-centered-heading > p {
+    font-size: 16px;
+  }
+  .about-film,
+  .branch-showcase-card,
+  .garage,
+  .history-scene figure {
+    border-radius: 20px;
+  }
+  .branch-showcase-actions .button {
+    font-size: 13px;
+  }
+  .branch-gallery-dialog > .crossfade-image {
+    height: min(55vh, 480px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  main,
+  dialog[open],
+  dialog[open]::backdrop,
+  .history-scene-copy,
+  .crossfade-image .is-entering,
+  .catalog-car-in,
+  .garage-selected-work {
+    animation: none;
+  }
+  .about-film-shot,
+  .about-film-copy,
+  .about-film-addresses {
+    transition: none !important;
+  }
+  .about-film-shot > img {
+    transform: none !important;
+  }
+  .catalog-car-out {
+    display: none;
+  }
+  .button:hover,
+  .sculpture-card:hover,
+  .approach-sculpture:hover,
+  .sculpture-card:hover .sculpture-image {
+    transform: none !important;
+  }
+}
+
+.sculpture-card {
+  border-radius: 20px;
+}
+.sculpture-base {
+  border-radius: 20px;
+}

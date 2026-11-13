@@ -135,7 +135,7 @@ export function createVehicleEngine(
     if (!manualDrive && progress > 0.005) {
       manualDrive = true;
       const completed = activeAge >= ASSEMBLY_SECONDS + DRIVE_SECONDS;
-      scrollAnchor = completed ? Math.floor(drive) : drive;
+      scrollAnchor = drive;
       scrollOrigin = completed ? 0 : progress;
     }
     if (manualDrive)
@@ -265,7 +265,7 @@ export function createVehicleEngine(
         )
         .replace(
           "#include <dithering_fragment>",
-          "#include <dithering_fragment>\nfloat grain=fract(sin(dot(floor(gl_FragCoord.xy),vec2(12.9898,78.233)))*43758.5453);if(grain>uBody)discard;",
+          "#include <dithering_fragment>\nif(uBody<.001)discard;gl_FragColor.rgb*=smoothstep(0.,1.,uBody);",
         );
     };
     m.userData.outerShell = shell;
@@ -496,24 +496,31 @@ export function createVehicleEngine(
   function render(now: number) {
     frame = 0;
     if (disposed || !visible || document.hidden) return;
-    if (previous && now - previous < 1000 / 24) {
+    const frameRate = host.clientWidth < 700 ? 30 : 60;
+    if (previous && now - previous < 1000 / frameRate - 1) {
       frame = requestAnimationFrame(render);
       return;
     }
-    const dt = previous ? Math.min((now - previous) / 1000, 0.15) : 1 / 24;
+    const dt = previous
+      ? Math.min((now - previous) / 1000, 0.1)
+      : 1 / frameRate;
     previous = now;
     if (ready && dragPointer === null && !userOrbit) activeAge += dt;
     const age = activeAge;
     if (scrollPending) readScroll();
     if (ready && model) {
       if (intro && !settled) {
-        const p = T.MathUtils.clamp(age / 3.1, 0, 1);
-        fade.value = T.MathUtils.smoothstep(age, 2.1, 3.6);
+        const p = T.MathUtils.clamp(age / (ASSEMBLY_SECONDS * 0.92), 0, 1);
+        fade.value = T.MathUtils.smoothstep(
+          age,
+          ASSEMBLY_SECONDS * 0.56,
+          ASSEMBLY_SECONDS,
+        );
         if (particles) {
           particles.material.uniforms.uProgress.value = p;
           particles.material.uniforms.uFade.value = 1 - fade.value;
         }
-        if (age >= 3.6) {
+        if (age >= ASSEMBLY_SECONDS) {
           settled = true;
           release(particles);
           particles = null;
