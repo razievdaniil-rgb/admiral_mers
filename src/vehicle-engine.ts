@@ -340,7 +340,9 @@ export function createVehicleEngine(
     camera.fov = hero
       ? compactPortrait
         ? 38
-        : 30
+        : w < 900
+          ? 33
+          : 30
       : w < 700
         ? 27
         : modelHeight > 2.1
@@ -350,7 +352,11 @@ export function createVehicleEngine(
             : 18;
     if (compactPortrait) camera.position.set(8.8, 4.4, 8.8);
     else
-      camera.position.set(hero ? 5.4 : 6.2, hero ? 2.6 : 2.2, hero ? 5.4 : 6.2);
+      camera.position.set(
+        hero ? (w < 900 ? 6.8 : 5.4) : 6.2,
+        hero ? 2.6 : 2.2,
+        hero ? (w < 900 ? 6.8 : 5.4) : 6.2,
+      );
     camera.setViewOffset(w, h, 0, hero ? h * 0.06 : 0, w, h);
     camera.updateProjectionMatrix();
     controls.update();
