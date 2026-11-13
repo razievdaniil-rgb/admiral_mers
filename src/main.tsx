@@ -46,7 +46,6 @@ import { FigmaHome, FigmaTimeline, ApproachCards } from "./figma-sections";
 import "./figma.css";
 import "./motion-polish.css";
 import "./ux-refinement.css";
-import { SmoothScroll } from "./smooth-scroll";
 import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
 import { serviceContent } from "./service-content";
@@ -945,7 +944,6 @@ function App() {
   }, [path]);
   return (
     <BookContext.Provider value={(b) => setBooking(b || {})}>
-      <SmoothScroll />
       <a
         className="skip-link"
         href="#main"
@@ -993,6 +991,7 @@ function App() {
     </BookContext.Provider>
   );
 }
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 const root =
   import.meta.hot?.data.root ?? createRoot(document.getElementById("root")!);
 if (import.meta.hot) import.meta.hot.data.root = root;

@@ -5,7 +5,7 @@
   z-index: 40;
   border-bottom: 1px solid #ffffff12;
   background: #08090bf5;
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
 }
 .mobile-call {
   display: none;

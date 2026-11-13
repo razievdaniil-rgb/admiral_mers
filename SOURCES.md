@@ -20,3 +20,5 @@
 Референсы анимации: предоставленные архивы Nolith Freight Intelligence и Apex Roadster; интерактивные узлы обсуждены по https://horizonx.so/explore/aegis-skyforge. Их исходники не публикуются.
 
 3D-модели и лицензии: см. `3D-MODELS.md` и публичную страницу `models/credits.html`. Все исходные лицензии проверены через Sketchfab API 13.11.2026.
+
+Оптимизация геометрии: https://gltf-transform.dev/modules/functions/functions/simplify и https://gltf-transform.dev/modules/functions/functions/join.

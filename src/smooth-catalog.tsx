@@ -1,8 +1,9 @@
-import { useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { models, services } from "./data";
 import { vehicles, vehicleLabel } from "./vehicle-library";
-import { Vehicle3D } from "./vehicle-3d";
+import { assetUrl } from "./assets";
+import "./catalog-2d.css";
 export function SmoothCatalog({
   onBook,
   renderServices,
@@ -12,7 +13,7 @@ export function SmoothCatalog({
 }) {
   const pickerId = useId();
   const [index, setIndex] = useState(0),
-    [busy, setBusy] = useState(true),
+    [busy, setBusy] = useState(false),
     [activeNode, setActiveNode] = useState<string | null>(null),
     [otherId, setOtherId] = useState("b"),
     [otherGeneration, setOtherGeneration] = useState("W247");
@@ -21,70 +22,96 @@ export function SmoothCatalog({
     label = vehicleLabel(selected),
     other = models.find((m) => m.id === otherId)!,
     selectedService = services.find((s) => s.id === activeNode);
-  const select = (next: number) => {
+  const [previous, setPrevious] = useState<number | null>(null),
+    [direction, setDirection] = useState(1);
+  const transition = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      clearTimeout(transition.current);
+    };
+  }, []);
+  useEffect(() => {
+    for (const offset of [-1, 1]) {
+      const image = new Image();
+      image.src = assetUrl(
+        "media/vehicles/" +
+          vehicles[(index + offset + vehicles.length) % vehicles.length].id +
+          ".webp",
+      );
+    }
+  }, [index]);
+  const select = async (next: number) => {
     if (busy) return;
+    const direction = next < index ? -1 : 1;
     next = (next + vehicles.length) % vehicles.length;
     if (next === index) return;
     setBusy(true);
+    const image = new Image();
+    image.src = assetUrl("media/vehicles/" + vehicles[next].id + ".webp");
+    try {
+      await image.decode();
+    } catch {
+      if (mounted.current) setBusy(false);
+      return;
+    }
+    if (!mounted.current) return;
+    setDirection(direction);
+    setPrevious(index);
     setIndex(next);
+    clearTimeout(transition.current);
+    transition.current = setTimeout(
+      () => {
+        setPrevious(null);
+        setBusy(false);
+      },
+      matchMedia("(prefers-reduced-motion:reduce)").matches ? 0 : 720,
+    );
     setActiveNode(null);
   };
   return (
     <>
       <section className="garage container">
-        <div
-          className="garage-models"
-          role="group"
-          aria-label="Выбор автомобиля"
-        >
-          {vehicles.map((m, i) => (
-            <button
-              key={m.id}
-              aria-pressed={index === i}
-              disabled={busy}
-              onClick={() => select(i)}
-            >
-              {m.name}
-              <span>{m.generation}</span>
-            </button>
-          ))}
-        </div>
-        <div className="garage-3d-heading">
-          <div className="garage-3d-title" aria-live="polite">
+        <div className="catalog-heading">
+          <div aria-live="polite">
             <h2>{selected.name}</h2>
             <p>{selected.generation}</p>
           </div>
-          <div className="garage-3d-navigation">
-            <button
-              aria-label="Предыдущий класс"
+          <label
+            className="catalog-model-picker"
+            htmlFor={pickerId + "-showcase"}
+          >
+            <span>Выбрать модель</span>
+            <select
+              id={pickerId + "-showcase"}
+              value={index}
               disabled={busy}
-              onClick={() => select(index - 1)}
+              onChange={(e) => void select(Number(e.target.value))}
             >
-              <ChevronLeft size={20} />
-            </button>
-            <span>
-              {index + 1} / {vehicles.length}
-            </span>
-            <button
-              aria-label="Следующий класс"
-              disabled={busy}
-              onClick={() => select(index + 1)}
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+              {vehicles.map((v, i) => (
+                <option key={v.id} value={i}>
+                  {v.name} · {v.generation}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div
-          className="garage-stage garage-stage-3d"
+          className="catalog-stage"
           role="group"
           tabIndex={0}
-          aria-label="Витрина моделей. Стрелки влево и вправо переключают классы."
+          aria-label="Витрина Mercedes-Benz. Стрелки влево и вправо переключают автомобили."
           aria-busy={busy}
+          style={{ "--slide-direction": direction } as React.CSSProperties}
           onKeyDown={(e) => {
             if (e.target !== e.currentTarget) return;
             if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
               e.preventDefault();
-              select(index + (e.key === "ArrowRight" ? 1 : -1));
+              void select(index + (e.key === "ArrowRight" ? 1 : -1));
             }
           }}
           onTouchStart={(e) => {
@@ -98,16 +125,55 @@ export function SmoothCatalog({
             if (!touch.current) return;
             const dx = e.changedTouches[0].clientX - touch.current.x,
               dy = e.changedTouches[0].clientY - touch.current.y;
-            if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
-              select(index + (dx < 0 ? 1 : -1));
-            }
+            if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy))
+              void select(index + (dx < 0 ? 1 : -1));
             touch.current = null;
           }}
         >
-          <Vehicle3D
-            vehicle={selected}
-            onStatusChange={(state) => setBusy(state === "loading")}
+          {previous !== null && (
+            <img
+              key={"out-" + previous}
+              className="catalog-car catalog-car-out"
+              src={assetUrl(
+                "media/vehicles/" + vehicles[previous].id + ".webp",
+              )}
+              alt=""
+              aria-hidden="true"
+              width="900"
+              height="500"
+            />
+          )}
+          <img
+            key={selected.id}
+            className={
+              "catalog-car " + (previous !== null ? "catalog-car-in" : "")
+            }
+            src={assetUrl("media/vehicles/" + selected.id + ".webp")}
+            alt={"Mercedes-Benz " + label}
+            width="900"
+            height="500"
+            fetchPriority="high"
+            draggable={false}
           />
+          <button
+            className="catalog-arrow catalog-arrow-prev"
+            aria-label="Предыдущий автомобиль"
+            disabled={busy}
+            onClick={() => void select(index - 1)}
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <button
+            className="catalog-arrow catalog-arrow-next"
+            aria-label="Следующий автомобиль"
+            disabled={busy}
+            onClick={() => void select(index + 1)}
+          >
+            <ChevronRight size={24} />
+          </button>
+          <span className="catalog-counter">
+            {index + 1} / {vehicles.length}
+          </span>
         </div>
         <div className="garage-work-panel">
           <div
