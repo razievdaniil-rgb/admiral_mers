@@ -336,8 +336,9 @@ export function createVehicleEngine(
           .setFromObject(current.group)
           .getSize(new THREE.Vector3()).y
       : 1.6;
+    const compactPortrait = hero && camera.aspect < 0.75;
     camera.fov = hero
-      ? w < 700
+      ? compactPortrait
         ? 38
         : 30
       : w < 700
@@ -347,7 +348,7 @@ export function createVehicleEngine(
           : modelHeight > 1.8
             ? 20
             : 18;
-    if (w < 700 && hero) camera.position.set(8.8, 4.4, 8.8);
+    if (compactPortrait) camera.position.set(8.8, 4.4, 8.8);
     else
       camera.position.set(hero ? 5.4 : 6.2, hero ? 2.6 : 2.2, hero ? 5.4 : 6.2);
     camera.setViewOffset(w, h, 0, hero ? h * 0.06 : 0, w, h);
