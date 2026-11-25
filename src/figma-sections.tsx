@@ -213,8 +213,8 @@ export function FigmaHome() {
             <XrayImage
               className="service-hero-car"
               src={media.hero}
-              cutaway="media/xray/hero-v2.webp"
-              alt="Mercedes-Benz — ремонт и обслуживание в техцентре Адмирал"
+              cutaway="media/xray/hero-suv.webp"
+              alt="Белый внедорожник Mercedes-Benz — ремонт и обслуживание в техцентре Адмирал"
               priority
               showControls={false}
             >
@@ -343,6 +343,17 @@ export function FigmaHome() {
             <Cookie strokeWidth={1} />
             Угощения
           </span>
+        </div>
+        <div className="comfort-gallery" data-reveal>
+          <figure>
+            {picture("media/comfort/reception.webp", "Пример оформления приёмки и зоны ожидания", "comfort-photo")}
+            <figcaption>Приёмка и зона ожидания</figcaption>
+          </figure>
+          <figure>
+            {picture("media/comfort/treats.webp", "Пример подачи кофе и угощений для гостей", "comfort-photo")}
+            <figcaption>Кофе и угощения для Вас</figcaption>
+          </figure>
+          <p className="comfort-placeholder-note">Примеры оформления — фотографии наших техцентров добавим позже.</p>
         </div>
       </section>
       <section className="figma-final-cta container section" data-reveal>

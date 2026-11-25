@@ -53,6 +53,7 @@ import { MaintenanceCalculator } from "./maintenance-calculator";
 import { ServiceUnitDetails } from "./service-unit-details";
 import "./page-density.css";
 import "./contact-controls.css";
+import "./comfort-gallery.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };

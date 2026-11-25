@@ -1,7 +1,7 @@
 // Original exports belong in public/media. Empty slots render without broken images.
 export const media = {
   logo: "media/home-imgLayer1.svg",
-  hero: "media/home-img1.webp",
+  hero: "media/hero-suv.webp",
   atmosphere: "media/home-img.webp",
   workshop: "media/home-imgRectangle12.webp",
   history: "media/home-imgRectangle11.webp",
