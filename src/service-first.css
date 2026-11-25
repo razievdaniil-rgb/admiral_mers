@@ -1,4 +1,20 @@
 /* Service comes first. The car supports the offer rather than hiding it. */
+.service-hero-car.xray-image {
+  pointer-events: auto;
+}
+.service-hero-car .xray-toggle {
+  right: 4%;
+  bottom: 28px;
+  min-height: 32px;
+  padding: 7px 9px;
+  font-size: 11px;
+  background: #08090b70;
+  border: 1px solid #ffffff18;
+  border-radius: 100px;
+}
+.service-hero-car .xray-caption {
+  display: none;
+}
 .service-shortcuts {
   display: flex;
   gap: 9px;

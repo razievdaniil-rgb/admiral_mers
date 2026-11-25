@@ -18,6 +18,7 @@ import { assetUrl, media } from "./assets";
 import { history, services } from "./data";
 import { BranchShowcase } from "./branch-showcase";
 import { CrossfadeImage } from "./crossfade-image";
+import { XrayImage } from "./xray-image";
 const picture = (path: string, alt: string, className = "") => (
   <img
     className={className}
@@ -201,13 +202,12 @@ export function FigmaHome() {
             <span className="hero-visual-label" aria-hidden="true">
               MERCEDES-BENZ ONLY
             </span>
-            <img
+            <XrayImage
               className="service-hero-car"
-              src={assetUrl(media.hero)}
+              src={media.hero}
+              cutaway="media/xray/hero-v2.webp"
               alt="Mercedes-Benz — ремонт и обслуживание в техцентре Адмирал"
-              width="1100"
-              height="578"
-              fetchPriority="high"
+              priority
             />
             <div
               className="hero-service-links"
