@@ -406,6 +406,21 @@ function Catalog() {
   );
 }
 function ServicesPage() {
+  const catalog = useRef<HTMLDetailsElement>(null);
+  const showCatalog = () => {
+    if (!catalog.current) return;
+    catalog.current.open = true;
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      catalog.current?.scrollIntoView({
+        block: "start",
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
+      catalog.current?.querySelector("select")?.focus({ preventScroll: true });
+    });
+  };
   return (
     <>
       <Intro
@@ -417,6 +432,15 @@ function ServicesPage() {
         className="container service-shortcuts"
         aria-label="Быстрый выбор направления"
       >
+        <button
+          className="catalog-shortcut"
+          onClick={showCatalog}
+          aria-controls="mercedes-catalog"
+        >
+          <CarFront size={17} />
+          Выбрать Mercedes
+          <ArrowUpRight size={14} />
+        </button>
         {services.map((s) => (
           <a href={`#/services/${s.id}`} key={s.id}>
             {s.id === "maintenance" ? "ТО" : s.short}
@@ -442,7 +466,7 @@ function ServicesPage() {
           нет на витрине, это не ограничивает запись в сервис.
         </p>
       </section>
-      <details className="optional-catalog">
+      <details className="optional-catalog" ref={catalog} id="mercedes-catalog">
         <summary className="container">
           Посмотреть модели Mercedes-Benz <Plus size={22} />
         </summary>

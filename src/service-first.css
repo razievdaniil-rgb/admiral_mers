@@ -21,7 +21,8 @@
   flex-wrap: wrap;
   padding-bottom: 30px;
 }
-.service-shortcuts > a {
+.service-shortcuts > a,
+.service-shortcuts > button {
   display: flex;
   align-items: center;
   gap: 9px;
@@ -34,6 +35,17 @@
 .service-shortcuts > a:hover {
   border-color: #a5abb5;
   background: #ffffff0d;
+}
+.service-shortcuts > .catalog-shortcut {
+  color: #11151a;
+  background: #e2e5ea;
+  border-color: #e2e5ea;
+}
+.service-shortcuts > .catalog-shortcut:hover {
+  background: #fff;
+}
+.optional-catalog {
+  scroll-margin-top: 100px;
 }
 .price-search input::-webkit-search-cancel-button {
   display: none;
@@ -49,7 +61,7 @@
 .footer .logo {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 7px;
   width: 210px;
   flex-shrink: 0;
@@ -61,6 +73,7 @@
   max-width: 100%;
 }
 .logo .logo-descriptor {
+  text-align: center;
   font:
     400 10px/1.45 "Inter Variable",
     sans-serif;
