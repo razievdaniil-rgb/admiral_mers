@@ -52,6 +52,7 @@ import "./service-first.css";
 import { MaintenanceCalculator } from "./maintenance-calculator";
 import { ServiceUnitDetails } from "./service-unit-details";
 import "./page-density.css";
+import "./contact-controls.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -171,6 +172,7 @@ function Header({ route }: { route: string }) {
     background.forEach((el) => (el.inert = true));
     const close = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        if (document.querySelector(".contact-popover:popover-open")) return;
         setOpen(false);
         toggle.current?.focus();
       }
