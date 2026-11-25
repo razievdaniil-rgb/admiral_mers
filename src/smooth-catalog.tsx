@@ -1,3 +1,4 @@
+import { consultationLink } from "./contact";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { models, services } from "./data";
@@ -5,10 +6,8 @@ import vehicles from "./catalog-vehicles.json";
 import { assetUrl } from "./assets";
 import "./catalog-2d.css";
 export function SmoothCatalog({
-  onBook,
   renderServices,
 }: {
-  onBook: (b: { model: string; service?: string }) => void;
   renderServices: (model: string) => ReactNode;
 }) {
   const pickerId = useId();
@@ -197,6 +196,7 @@ export function SmoothCatalog({
             aria-label="Направления работ"
           >
             {[
+              ["maintenance", "ТО"],
               ["diagnostics", "Диагностика"],
               ["engine", "Двигатель"],
               ["suspension", "Ходовая"],
@@ -233,15 +233,14 @@ export function SmoothCatalog({
                 : "Выберите направление работ выше"}
               <span>{label}</span>
             </p>
-            <button
+            <a
               className="button"
-              onClick={() =>
-                onBook({ model: label, service: activeNode || undefined })
-              }
+              href={consultationLink(label, selectedService?.short)}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Записаться
-              <ArrowUpRight size={18} />
-            </button>
+              Обсудить в WhatsApp <ArrowUpRight size={18} />
+            </a>
           </div>
         </div>
         <details className="all-models-picker">
@@ -283,18 +282,17 @@ export function SmoothCatalog({
                 ))}
               </select>
             </label>
-            <button
+            <a
               className="button"
-              onClick={() =>
-                onBook({
-                  model: `${other.name} ${otherGeneration}`,
-                  service: activeNode || undefined,
-                })
-              }
+              href={consultationLink(
+                `${other.name} ${otherGeneration}`,
+                selectedService?.short,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Записаться: {other.name}
-              <ArrowUpRight size={17} />
-            </button>
+              Обсудить: {other.name} <ArrowUpRight size={17} />
+            </a>
           </div>
         </details>
       </section>

@@ -1,12 +1,4 @@
-import { useDialogMotion } from "./dialog-motion";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   ArrowUpRight,
@@ -55,11 +47,12 @@ import { serviceContent } from "./service-content";
 import "./service-content.css";
 import "./form-polish.css";
 import "./premium-motion.css";
+import { telegram, ContactLinks } from "./contact";
+import { PriceList } from "./price-list";
+import "./service-first.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
-const BookContext = createContext<(b?: Booking) => void>(() => {});
-const useBook = () => useContext(BookContext);
 const icons = {
   scan: ScanLine,
   wrench: Wrench,
@@ -77,34 +70,28 @@ const nav = [
   ["/contacts", "Контакты"],
 ];
 
-function Logo({ since = false }: { since?: boolean }) {
+function Logo({ since: _since = false }: { since?: boolean }) {
   return (
-    <a href="#/" className="logo" aria-label="Адмирал — на главную">
-      {media.logo ? (
-        <span className={since ? "logo-art" : "logo-art-full"}>
-          <img
-            src={assetUrl(since ? "media/admiral-wordmark.svg" : media.logo)}
-            width="223"
-            height="42"
-            alt="Адмирал. Ремонт и обслуживание Mercedes-Benz с 1999 года"
-          />
-        </span>
-      ) : (
-        <>
-          <strong>АДМИРАЛ</strong>
-          <span>ТЕХЦЕНТР · MERCEDES-BENZ ONLY</span>
-        </>
-      )}
-      {since && (
-        <span className="logo-since" aria-hidden="true">
-          С 1999 года
-        </span>
-      )}
+    <a
+      href="#/"
+      className="logo"
+      aria-label="Адмирал — ремонт и обслуживание Mercedes-Benz с 1999 года. На главную"
+    >
+      <img
+        src={assetUrl("media/admiral-wordmark.svg")}
+        width="223"
+        height="22"
+        alt="Адмирал"
+      />
+      <span className="logo-descriptor">
+        Ремонт и обслуживание Mercedes-Benz
+        <br />с 1999 года
+      </span>
     </a>
   );
 }
 function BookButton({
-  children = "Записаться",
+  children = "Написать в Telegram",
   booking,
   className = "",
 }: {
@@ -112,12 +99,24 @@ function BookButton({
   booking?: Booking;
   className?: string;
 }) {
-  const book = useBook();
+  const context = [
+    booking?.service &&
+      allServices.find((s) => s.id === booking.service)?.short,
+    booking?.model,
+  ]
+    .filter(Boolean)
+    .join(" · ");
   return (
-    <button className={`button ${className}`} onClick={() => book(booking)}>
+    <a
+      className={`button ${className}`}
+      href={telegram}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={context ? `Написать в Telegram: ${context}` : undefined}
+    >
       {children}
       <ArrowUpRight size={19} />
-    </button>
+    </a>
   );
 }
 function Image({
@@ -156,7 +155,6 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 function Header({ route }: { route: string }) {
   const [open, setOpen] = useState(false);
-  const book = useBook();
   const toggle = useRef<HTMLButtonElement>(null);
   useEffect(() => setOpen(false), [route]);
   useEffect(() => {
@@ -166,6 +164,7 @@ function Header({ route }: { route: string }) {
     const background = [
       document.querySelector("main"),
       document.querySelector("footer"),
+      document.querySelector(".mobile-contact-dock"),
     ].filter(Boolean) as HTMLElement[];
     background.forEach((el) => (el.inert = true));
     const close = (e: KeyboardEvent) => {
@@ -226,7 +225,7 @@ function Header({ route }: { route: string }) {
           <Phone size={19} />
         </a>
         <div className="header-book">
-          <BookButton />
+          <ContactLinks compact />
         </div>
         <button
           ref={toggle}
@@ -251,21 +250,8 @@ function Header({ route }: { route: string }) {
               <ArrowUpRight />
             </a>
           ))}
-          <a href={telephone}>
-            {phone}
-            <Phone size={20} />
-          </a>
-          <button
-            className="button mobile-menu-book"
-            onClick={() => {
-              setOpen(false);
-              book();
-            }}
-          >
-            Записаться
-            <ArrowUpRight size={18} />
-          </button>
-          <p>Только Mercedes-Benz. С 1999 года.</p>
+          <ContactLinks compact />
+          <p>Ремонт и обслуживание Mercedes-Benz с 1999 года.</p>
         </nav>
       )}
     </header>
@@ -288,6 +274,7 @@ function Footer() {
           <ArrowUpRight size={18} />
         </a>
       </div>
+      <ContactLinks />
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} ТехЦентр Адмирал</span>
         <span>Независимый специализированный сервис Mercedes-Benz</span>
@@ -321,11 +308,10 @@ function Intro({
 function CTA() {
   return (
     <section className="cta-section container" data-reveal>
-      <Eyebrow>Начнём со знакомства</Eyebrow>
+      <Eyebrow>Обсудим Ваш автомобиль</Eyebrow>
       <h2>
-        Ваш Mercedes.
-        <br />
-        <span>Наша ответственность.</span>
+        Ваш Мерседес —<br />
+        <span>наша ответственность</span>
       </h2>
       <div className="cta-bottom">
         <p>
@@ -333,7 +319,7 @@ function CTA() {
           <br />
           Вместе определим следующий шаг.
         </p>
-        <BookButton>Выбрать время</BookButton>
+        <ContactLinks compact />
       </div>
     </section>
   );
@@ -374,7 +360,6 @@ function ServiceGrid({
   compact?: boolean;
 }) {
   const [active, setActive] = useState<string | null>(null);
-  const book = useBook();
   const service = services.find((s) => s.id === active);
   return (
     <>
@@ -402,7 +387,6 @@ function ServiceGrid({
           service={service}
           model={selectedModel}
           onClose={() => setActive(null)}
-          onBook={() => book({ service: service.id, model: selectedModel })}
         />
       )}
     </>
@@ -412,14 +396,11 @@ function Timeline() {
   return <FigmaTimeline />;
 }
 function Home() {
-  const book = useBook();
-  return <FigmaHome onBook={book} />;
+  return <FigmaHome />;
 }
 function Catalog() {
-  const book = useBook();
   return (
     <SmoothCatalog
-      onBook={book}
       renderServices={(model) => <ServiceGrid selectedModel={model} />}
     />
   );
@@ -430,9 +411,43 @@ function ServicesPage() {
       <Intro
         eyebrow="Услуги"
         title="Услуги для Вашего Mercedes"
-        description="Обслуживаем весь модельный ряд. Выберите автомобиль или укажите другую модель."
+        description="ТО, диагностика, ремонт агрегатов, кузов и детейлинг. Найдите нужную работу или свяжитесь с нами напрямую."
       />
-      <Catalog />
+      <nav
+        className="container service-shortcuts"
+        aria-label="Быстрый выбор направления"
+      >
+        {services.map((s) => (
+          <a href={`#/services/${s.id}`} key={s.id}>
+            {s.id === "maintenance" ? "ТО" : s.short}
+            <ArrowUpRight size={13} />
+          </a>
+        ))}
+      </nav>
+      <PriceList />
+      <section className="container section direct-directions">
+        <div className="price-section-heading">
+          <div>
+            <p className="eyebrow">От ТО до кузовного ремонта</p>
+            <h2>Все направления</h2>
+          </div>
+        </div>
+        <ServiceGrid />
+      </section>
+      <section className="container section supported-models">
+        <p className="eyebrow">Только Mercedes-Benz. Любого поколения.</p>
+        <h2>От W140 и SL до современных моделей</h2>
+        <p>
+          Обслуживаем и классические, и новые Mercedes-Benz. Если Вашего кузова
+          нет на витрине, это не ограничивает запись в сервис.
+        </p>
+      </section>
+      <details className="optional-catalog">
+        <summary className="container">
+          Посмотреть модели Mercedes-Benz <Plus size={22} />
+        </summary>
+        <Catalog />
+      </details>
       <CTA />
     </>
   );
@@ -514,6 +529,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
           </a>
         </div>
       </section>
+      <PriceList service={service.id} />
       {content && (
         <section
           className="service-guidance container section"
@@ -608,7 +624,7 @@ function AboutPage() {
             согласовываем работы до начала ремонта.
           </p>
           <a href={telephone} className="text-link">
-            Познакомиться по телефону
+            Обсудить по телефону
             <ArrowUpRight size={18} />
           </a>
         </div>
@@ -673,6 +689,7 @@ function ContactsPage() {
         description="Выберите удобный техцентр. Перед визитом позвоните — поможем с записью и подскажем, как проехать."
       />
       <section className="container contact-section">
+        <ContactLinks />
         <div className="contact-strip">
           <a href={telephone}>
             <Phone size={22} />
@@ -698,12 +715,12 @@ function ContactsPage() {
 function Privacy() {
   return (
     <>
-      <Intro eyebrow="О персональных данных" title="Демонстрационная форма." />
+      <Intro eyebrow="О персональных данных" title="Связь с техцентром" />
       <section className="container legal-copy">
         <p>
-          На этой версии сайта форма записи не отправляет и не сохраняет
-          введённые данные. Проверка заполнения выполняется в Вашем браузере.
-          После закрытия формы данные очищаются.
+          На сайте нет формы сбора заявок. Для общения Вы можете позвонить или
+          перейти в Telegram и WhatsApp. Переписка происходит в выбранном Вами
+          сервисе на его условиях.
         </p>
         <p>
           Для записи позвоните по номеру <a href={telephone}>{phone}</a>.
@@ -721,182 +738,8 @@ function Privacy() {
     </>
   );
 }
-function BookingModal({
-  booking,
-  onClose,
-}: {
-  booking: Booking;
-  onClose: () => void;
-}) {
-  const { closing, dismiss } = useDialogMotion(onClose);
-  const dialog = useRef<HTMLDialogElement>(null);
-  const opener = useRef(document.activeElement as HTMLElement | null);
-  const [result, setResult] = useState(false);
-  useEffect(() => {
-    const previous = opener.current;
-    const element = dialog.current;
-    const overflow = document.body.style.overflow;
-    element?.showModal();
-    document.body.style.overflow = "hidden";
-    return () => {
-      element?.close();
-      document.body.style.overflow = overflow;
-      if (previous?.isConnected) previous.focus();
-      else document.querySelector<HTMLButtonElement>(".menu-toggle")?.focus();
-    };
-  }, []);
-  return (
-    <dialog
-      ref={dialog}
-      className={`booking-dialog ${closing ? "is-closing" : ""}`}
-      aria-labelledby="booking-title"
-      onCancel={(e) => {
-        e.preventDefault();
-        dismiss();
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) dismiss();
-      }}
-    >
-      <div className="booking-layout">
-        <button
-          className="icon-button modal-close"
-          aria-label="Закрыть форму"
-          onClick={() => dismiss()}
-        >
-          <X />
-        </button>
-        <div className="booking-main">
-          <Eyebrow>Начнём с Вашего Mercedes</Eyebrow>
-          <h2 id="booking-title">Запись в техцентр</h2>
-          <p className="demo-note">
-            Демонстрация формы. Отправка заявок пока не подключена. Для записи
-            позвоните нам.
-          </p>
-          <a className="booking-call" href={telephone}>
-            <Phone size={18} />
-            Позвонить {phone}
-          </a>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setResult(true);
-            }}
-          >
-            <label>
-              Ваше имя
-              <input
-                name="name"
-                autoComplete="given-name"
-                required
-                minLength={2}
-                maxLength={80}
-                placeholder="Как к Вам обращаться"
-                onChange={() => setResult(false)}
-              />
-            </label>
-            <label>
-              Номер телефона
-              <input
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                inputMode="tel"
-                required
-                placeholder="+7 (___) ___-__-__"
-                maxLength={22}
-                onChange={(e) => {
-                  const d = e.currentTarget.value.replace(/\D/g, "");
-                  e.currentTarget.setCustomValidity(
-                    d.length === 11 && /^[78]/.test(d)
-                      ? ""
-                      : "Введите номер из 11 цифр, начиная с +7 или 8.",
-                  );
-                  setResult(false);
-                }}
-              />
-            </label>
-            <div className="form-row">
-              <label>
-                Техцентр
-                <select name="branch" defaultValue={booking.branch || "kiev"}>
-                  {branches.map((b) => (
-                    <option value={b.id} key={b.id}>
-                      {b.name}
-                      {b.new &&
-                      new Date() < new Date("2026-11-15T00:00:00+03:00")
-                        ? " · с 15 ноября"
-                        : ""}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Направление
-                <select name="service" defaultValue={booking.service || ""}>
-                  <option value="">Нужна консультация</option>
-                  {allServices.map((s) => (
-                    <option value={s.id} key={s.id}>
-                      {s.short}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <label>
-              Автомобиль
-              <input
-                name="model"
-                defaultValue={booking.model || ""}
-                placeholder="Например, E-Класс W213"
-                maxLength={100}
-              />
-            </label>
-            <button className="button" type="submit">
-              Проверить заполнение
-              <ArrowRight size={19} />
-            </button>
-            <div aria-live="polite">
-              {result && (
-                <p className="form-result">
-                  <Check size={20} />
-                  Поля заполнены. Заявка не отправлена — для записи позвоните в
-                  техцентр.
-                </p>
-              )}
-            </div>
-            <p className="form-privacy">
-              Данные не отправляются и не сохраняются.{" "}
-              <a href="#/privacy" onClick={onClose}>
-                Подробнее
-              </a>
-            </p>
-          </form>
-        </div>
-        <div className="booking-aside">
-          <Image
-            src={media.service}
-            alt="Диагностика Mercedes-Benz в сервисе"
-          />
-          <div>
-            <span>
-              ONLY
-              <br />
-              MERCEDES.
-            </span>
-            <p>
-              С 1999 года.
-              <br />С вниманием к Вашему автомобилю.
-            </p>
-          </div>
-        </div>
-      </div>
-    </dialog>
-  );
-}
 function App() {
   const [route, setRoute] = useState(location.hash.slice(1) || "/");
-  const [booking, setBooking] = useState<Booking | null>(null);
   const main = useRef<HTMLElement>(null);
   const first = useRef(true);
   useEffect(() => {
@@ -911,7 +754,6 @@ function App() {
   useEffect(() => {
     document.title = `${service?.title || { "/": "Только Mercedes-Benz с 1999 года", "/services": "Услуги", "/about": "О нас", "/contacts": "Контакты", "/privacy": "О персональных данных" }[path] || "Страница не найдена"} — ТехЦентр Адмирал`;
     window.scrollTo({ top: 0, behavior: "instant" });
-    setBooking(null);
     if (!first.current) main.current?.focus({ preventScroll: true });
     first.current = false;
   }, [route, path, service]);
@@ -948,7 +790,7 @@ function App() {
     };
   }, [path]);
   return (
-    <BookContext.Provider value={(b) => setBooking(b || {})}>
+    <>
       <SmoothScroll />
       <a
         className="skip-link"
@@ -979,7 +821,7 @@ function App() {
             <Intro
               eyebrow="404"
               title="Эта дорога ведёт обратно."
-              description="Страница не найдена. На главной есть всё, чтобы начать знакомство."
+              description="Страница не найдена. Откройте главную или раздел услуг."
             />
             <div className="container section">
               <a className="button" href="#/">
@@ -991,10 +833,10 @@ function App() {
         )}
       </main>
       <Footer />
-      {booking && (
-        <BookingModal booking={booking} onClose={() => setBooking(null)} />
-      )}
-    </BookContext.Provider>
+      <div className="mobile-contact-dock">
+        <ContactLinks compact />
+      </div>
+    </>
   );
 }
 const root =

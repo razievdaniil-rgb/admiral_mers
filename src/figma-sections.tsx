@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -10,16 +10,14 @@ import {
   Plus,
 } from "lucide-react";
 import { gsap } from "gsap";
-import { XrayImage } from "./xray-image";
+import { PopularPrices } from "./price-list";
+import { telegram, ContactLinks } from "./contact";
 import { AboutFilm } from "./about-film";
 import { HeroAtmosphere } from "./hero-atmosphere";
-import { CarAssembly } from "./car-assembly";
 import { assetUrl, media } from "./assets";
 import { history, services } from "./data";
 import { BranchShowcase } from "./branch-showcase";
 import { CrossfadeImage } from "./crossfade-image";
-type Booking = { service?: string; branch?: string; model?: string };
-type Props = { onBook: (booking?: Booking) => void };
 const picture = (path: string, alt: string, className = "") => (
   <img
     className={className}
@@ -29,106 +27,6 @@ const picture = (path: string, alt: string, className = "") => (
     decoding="async"
   />
 );
-export function PromotionCarousel({ onBook }: Props) {
-  const [active, setActive] = useState(0);
-  const touch = useRef<number | null>(null);
-  const offers = [
-    {
-      title: "Первое знакомство",
-      text: "Познакомьтесь с техцентром и обсудите Ваш автомобиль.",
-      image: media.promotions[0],
-      service: "",
-    },
-    {
-      title: "Диагностика ходовой",
-      text: "Предложение для первого визита. Условия уточните при записи.",
-      image: media.promotions[1],
-      service: "suspension",
-    },
-    {
-      title: "Компьютерная диагностика",
-      text: "Предложение для новых клиентов. Условия уточните при записи.",
-      image: media.promotions[2],
-      service: "diagnostics",
-    },
-  ];
-  const move = (delta: number) =>
-    setActive((i) => (i + delta + offers.length) % offers.length);
-  return (
-    <section
-      className="figma-offers container"
-      aria-label="Предложения первого визита"
-    >
-      <h2 data-reveal>
-        ПЕРВОЕ ЗНАКОМСТВО —<br />
-        БЕСПЛАТНО
-      </h2>
-      <div
-        className="offer-carousel"
-        onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
-        onTouchEnd={(e) => {
-          if (touch.current !== null) {
-            const d = e.changedTouches[0].clientX - touch.current;
-            if (Math.abs(d) > 45) {
-              e.preventDefault();
-              move(d < 0 ? 1 : -1);
-            }
-          }
-          touch.current = null;
-        }}
-      >
-        <button
-          className="icon-button offer-prev"
-          aria-label="Предыдущее предложение"
-          onClick={() => move(-1)}
-        >
-          <ChevronLeft />
-        </button>
-        <div className="offer-cards">
-          {offers.map((offer, i) => (
-            <button
-              key={offer.title}
-              className={`sculpture-card offer-card ${i === active ? "selected" : ""}`}
-              onClick={() => {
-                setActive(i);
-                onBook({ service: offer.service || undefined });
-              }}
-              aria-label={`${offer.title}: записаться`}
-              aria-describedby={`offer-note-${i}`}
-            >
-              <div className="sculpture-base" />
-              {picture(offer.image, "", "sculpture-image")}
-              <h3>{offer.title}</h3>
-              <p id={`offer-note-${i}`}>{offer.text}</p>
-              <ArrowUpRight className="card-arrow" size={18} />
-            </button>
-          ))}
-        </div>
-        <button
-          className="icon-button offer-next"
-          aria-label="Следующее предложение"
-          onClick={() => move(1)}
-        >
-          <ChevronRight />
-        </button>
-      </div>
-      <div className="offer-dots" aria-label="Выбор предложения">
-        {offers.map((o, i) => (
-          <button
-            aria-label={o.title}
-            aria-pressed={i === active}
-            key={o.title}
-            onClick={() => setActive(i)}
-          />
-        ))}
-      </div>
-      <p className="offer-conditions">
-        Вид бесплатной диагностики, условия и доступное время уточните при
-        записи.
-      </p>
-    </section>
-  );
-}
 export function FigmaTimeline() {
   const [active, setActive] = useState(0);
   return (
@@ -183,7 +81,7 @@ export function FigmaTimeline() {
           />
           <figcaption>
             {active === 2
-              ? "Ремзона на Киевской. Вторая точка — с 15 ноября."
+              ? "Ремзона на Киевской и второй техцентр на Гостиничном проезде."
               : history[active].year}
           </figcaption>
         </figure>
@@ -250,7 +148,7 @@ export function ApproachCards() {
     </div>
   );
 }
-export function FigmaHome({ onBook }: Props) {
+export function FigmaHome() {
   const root = useRef<HTMLDivElement>(null);
   const car = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -265,111 +163,94 @@ export function FigmaHome({ onBook }: Props) {
             { y: 14, autoAlpha: 0, duration: 1.1, ease: "power3.out" },
             0.15,
           )
-          .from(".fhero-actions", { autoAlpha: 0, y: 8, duration: 0.8 }, 0.85);
+          .from(".fhero-actions", { autoAlpha: 0, y: 8, duration: 0.8 }, 0.35)
+          .from(
+            ".service-hero-car",
+            { autoAlpha: 0, y: 16, duration: 1.2, ease: "power3.out" },
+            0.15,
+          );
       }, root);
       return () => ctx.revert();
     });
     return () => mm.revert();
   }, []);
-  useEffect(() => {
-    if (!car.current) return;
-    const el = car.current;
-    const move = (e: PointerEvent) => {
-      if (
-        !matchMedia("(pointer:fine) and (prefers-reduced-motion:no-preference)")
-          .matches
-      )
-        return;
-      const r = el.getBoundingClientRect();
-      el.style.setProperty(
-        "--mx",
-        `${(e.clientX - r.left - r.width / 2) * 0.018}px`,
-      );
-      el.style.setProperty(
-        "--my",
-        `${(e.clientY - r.top - r.height / 2) * 0.01}px`,
-      );
-    };
-    el.addEventListener("pointermove", move);
-    return () => el.removeEventListener("pointermove", move);
-  }, []);
   return (
     <div className="figma-home" ref={root}>
-      <section className="fhero">
+      <section className="service-hero">
         <HeroAtmosphere />
-        <div
-          className="fhero-background"
-          style={{ backgroundImage: `url(${assetUrl(media.atmosphere)})` }}
-        />
-        <img
-          className="fhero-emblem fhero-emblem-left"
-          src={assetUrl(media.symbols[0])}
-          alt=""
-        />
-        <img
-          className="fhero-emblem fhero-emblem-small"
-          src={assetUrl(media.symbols[1])}
-          alt=""
-        />
-        <img
-          className="fhero-emblem fhero-emblem-right"
-          src={assetUrl(media.symbols[2])}
-          alt=""
-        />
-        <div className="container fhero-content">
-          <p className="fhero-subtitle">Ремонт и обслуживание только</p>
-          <h1 className="fhero-title">MERCEDES-BENZ</h1>
-          <div className="fhero-car-area" ref={car}>
-            <CarAssembly>
-              <XrayImage
-                className="fhero-car"
-                src={media.hero}
-                alt="Серебристый Mercedes-Benz — ТехЦентр Адмирал"
-                priority
-                cutaway="media/xray/hero-v2.webp"
-              >
-                <a
-                  href="#/services"
-                  className="hero-node hero-node-engine"
-                  aria-label="Посмотреть диагностику и услуги"
-                >
-                  <span>
-                    <Plus size={14} />
-                  </span>
-                  <em>
-                    <span className="hero-node-full">Диагностика и ремонт</span>
-                    <span className="hero-node-short">Диагностика</span>
-                  </em>
-                </a>
-                <a
-                  href="#/services/suspension"
-                  className="hero-node hero-node-wheel"
-                  aria-label="Услуги по ходовой и тормозам"
-                >
-                  <span>
-                    <Plus size={14} />
-                  </span>
-                  <em>
-                    <span className="hero-node-full">Ходовая и тормоза</span>
-                    <span className="hero-node-short">Ходовая</span>
-                  </em>
-                </a>
-              </XrayImage>
-            </CarAssembly>
+        <div className="container service-hero-grid">
+          <div className="service-hero-copy">
+            <p className="eyebrow fhero-subtitle">
+              Москва · Только Mercedes-Benz · С 1999 года
+            </p>
+            <h1 className="fhero-title">
+              Ремонт и обслуживание <span>Mercedes-Benz</span>
+            </h1>
+            <p className="service-hero-description">
+              ТО и ремонт любой сложности. Двигатель, ходовая, электрика, кузов
+              и детейлинг.
+            </p>
+            <div className="fhero-actions">
+              <ContactLinks compact />
+              <a className="text-link" href="#/services">
+                Услуги и цены <ArrowRight size={17} />
+              </a>
+            </div>
           </div>
-          <div className="fhero-actions">
-            <button className="button" onClick={() => onBook()}>
-              Записаться
-              <ArrowUpRight size={16} />
-            </button>
-            <a className="fhero-services" href="#/services">
-              Выбрать свой Mercedes
-              <ArrowRight size={17} />
-            </a>
+          <div className="service-hero-visual" ref={car}>
+            <span className="hero-visual-label" aria-hidden="true">
+              MERCEDES-BENZ ONLY
+            </span>
+            <img
+              className="service-hero-car"
+              src={assetUrl(media.hero)}
+              alt="Mercedes-Benz — ремонт и обслуживание в техцентре Адмирал"
+              width="1100"
+              height="578"
+              fetchPriority="high"
+            />
+            <div
+              className="hero-service-links"
+              aria-label="Услуги для Вашего автомобиля"
+            >
+              <a href="#/services/maintenance">
+                <span>ТО Mercedes-Benz</span>
+                <strong>
+                  от 7 750 ₽ <ArrowUpRight size={15} />
+                </strong>
+              </a>
+              <a href="#/services/diagnostics">
+                <span>Диагностика Xentry</span>
+                <strong>
+                  от 3 700 ₽ <ArrowUpRight size={15} />
+                </strong>
+              </a>
+              <a href="#/services/suspension">
+                <span>Ходовая и тормоза</span>
+                <strong>
+                  Колодки от 4 550 ₽ <ArrowUpRight size={15} />
+                </strong>
+              </a>
+              <a href="#/services/body">
+                <span>Кузов и детейлинг</span>
+                <strong>
+                  Все направления <ArrowUpRight size={15} />
+                </strong>
+              </a>
+            </div>
+            <p className="hero-price-note">
+              Цены за работу. Запчасти и материалы — отдельно.
+            </p>
           </div>
         </div>
+        <div className="container hero-bottomline">
+          <span>27 лет специализации на Mercedes-Benz</span>
+          <a href="#/contacts">
+            Два техцентра в Москве <ArrowUpRight size={15} />
+          </a>
+        </div>
       </section>
-      <PromotionCarousel onBook={onBook} />
+      <PopularPrices />
       <section className="figma-who container section" id="intro">
         <div className="figma-centered-heading" data-reveal>
           <h2>КТО МЫ</h2>
@@ -397,7 +278,7 @@ export function FigmaHome({ onBook }: Props) {
           <ArrowUpRight size={17} />
         </a>
       </section>
-      <BranchShowcase onBook={(branch) => onBook({ branch })} />
+      <BranchShowcase />
       <section className="figma-service-section container section">
         <div className="figma-centered-heading" data-reveal>
           <h2>ВСЁ ДЛЯ ВАШЕГО MERCEDES</h2>
@@ -422,7 +303,7 @@ export function FigmaHome({ onBook }: Props) {
           ))}
         </div>
         <a className="button" href="#/services">
-          Выбрать модель Mercedes
+          Смотреть услуги и цены
           <ArrowUpRight size={17} />
         </a>
       </section>
@@ -454,13 +335,18 @@ export function FigmaHome({ onBook }: Props) {
       </section>
       <section className="figma-final-cta container section" data-reveal>
         <h2>
-          ПРИЕЗЖАЙТЕ ПОЗНАКОМИТЬСЯ С НАМИ —<br />
-          ЭТО АБСОЛЮТНО БЕСПЛАТНО
+          ВАШ МЕРСЕДЕС —<br />
+          НАША ОТВЕТСТВЕННОСТЬ
         </h2>
-        <button className="button" onClick={() => onBook()}>
-          Записаться онлайн
+        <a
+          className="button"
+          href={telegram}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Написать в Telegram
           <ArrowUpRight size={17} />
-        </button>
+        </a>
       </section>
     </div>
   );

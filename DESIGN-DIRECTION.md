@@ -4,10 +4,12 @@ Based on the supplied Dala and Apple style references, while preserving the clie
 
 - A near-black showroom, graphite surfaces, porcelain type and silver actions. No borrowed SaaS accent colours.
 - Manrope display headings at 500 weight; local Inter body copy at readable 16–18 px. Hierarchy comes from scale and spacing.
-- The original silver Mercedes photograph remains the hero. A finite 2.65-second particle entrance gathers from across the viewport. No WebGL, GLB models or pinned hero scroll.
+- The original silver Mercedes photograph supports a clear repair and maintenance offer. A short fade and rise replaces the particle assembly and cutaway controls. Ambient background dust remains subtle. No WebGL, GLB models or pinned hero scroll.
 - Fifteen lightweight 2D catalogue illustrations, predecoded before transition. Sources are recorded in `public/media/catalog-v2/sources.json`.
 - Large photographs with 20–28 px corners, restrained hairlines and pill controls. Two branch cards provide galleries and route buttons.
 - History and gallery photographs crossfade after decoding; captions do not overlap. Reduced motion keeps all content available.
-- Booking remains an explicitly labelled demonstration. No personal data is transmitted or stored.
+- Direct telephone, Telegram and WhatsApp links replace the demonstration booking form. The catalogue's WhatsApp draft includes the selected model and service; the visitor sends it themselves.
+- Popular work prices appear on the home page; all 26 approved work prices are searchable without selecting a model. Parts and consumables are separate, and final costs are agreed before work.
+- Services and prices precede the optional 2D catalogue. ТО is accessible directly. The model list includes W124, W140, SL and SLK/SLC.
 
-Work branch: `design/premium-2d`. Base: the morning 2D revision `3bad5af`.
+Work branch: `client/service-first`. Based on the premium 2D design and the client's 25 November feedback. The reference site's clear service hierarchy and direct contact approach inform the information architecture; its visual design and unverified claims are not copied. Price/contact source: https://elkancode.ru/admiral-mercedes-msk/ (approved in chat).

@@ -2,16 +2,16 @@ import { useDialogMotion } from "./dialog-motion";
 import { useEffect, useRef } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 import type { Service } from "./data";
+import { prices, formatPrice } from "./pricing";
+import { telegram } from "./contact";
 export function CategoryModal({
   service,
   model,
   onClose,
-  onBook,
 }: {
   service: Service;
   model: string;
   onClose: () => void;
-  onBook: () => void;
 }) {
   const { closing, dismiss } = useDialogMotion(onClose);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -70,23 +70,34 @@ export function CategoryModal({
           </li>
         ))}
       </ul>
+      <div className="category-price-list">
+        {prices
+          .filter((p) => p.service === service.id)
+          .map((p) => (
+            <div key={p.id}>
+              <span>{p.name}</span>
+              <strong>{formatPrice(p.price)}</strong>
+            </div>
+          ))}
+      </div>
       <p className="category-price-note">
-        Стоимость и сроки согласуем после осмотра автомобиля.
+        Цены за работу, без запчастей. Итоговую стоимость согласуем до начала
+        ремонта.
       </p>
       <div className="category-actions">
         <a className="text-link" href={url} onClick={onClose}>
           Подробнее об услуге
           <ArrowUpRight size={17} />
         </a>
-        <button
+        <a
           className="button"
-          onClick={() => {
-            dismiss(onBook);
-          }}
+          href={telegram}
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          Обсудить работы
+          Написать в Telegram
           <ArrowUpRight size={17} />
-        </button>
+        </a>
       </div>
     </dialog>
   );

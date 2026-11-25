@@ -1,3 +1,4 @@
+import { telegram } from "./contact";
 import { useDialogMotion } from "./dialog-motion";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -105,13 +106,7 @@ function GalleryDialog({
     </dialog>
   );
 }
-function BranchCard({
-  branch,
-  onBook,
-}: {
-  branch: (typeof branches)[number];
-  onBook: (id: string) => void;
-}) {
+function BranchCard({ branch }: { branch: (typeof branches)[number] }) {
   const [photo, setPhoto] = useState(0),
     [gallery, setGallery] = useState(false);
   return (
@@ -160,9 +155,14 @@ function BranchCard({
           >
             Построить маршрут <ArrowUpRight size={17} />
           </a>
-          <button className="text-link" onClick={() => onBook(branch.id)}>
-            Записаться <ArrowUpRight size={17} />
-          </button>
+          <a
+            className="text-link"
+            href={telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Telegram <ArrowUpRight size={17} />
+          </a>
         </div>
       </div>
       {gallery && (
@@ -175,7 +175,7 @@ function BranchCard({
     </article>
   );
 }
-export function BranchShowcase({ onBook }: { onBook: (id: string) => void }) {
+export function BranchShowcase() {
   return (
     <section className="branch-showcase container section" id="our-centres">
       <div className="branch-showcase-heading">
@@ -194,7 +194,7 @@ export function BranchShowcase({ onBook }: { onBook: (id: string) => void }) {
       </div>
       <div className="branch-showcase-grid">
         {branches.map((b) => (
-          <BranchCard key={b.id} branch={b} onBook={onBook} />
+          <BranchCard key={b.id} branch={b} />
         ))}
       </div>
     </section>
