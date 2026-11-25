@@ -12,6 +12,7 @@ type Props = {
   enabled?: boolean;
   children?: ReactNode;
   controlsHost?: HTMLElement | null;
+  showControls?: boolean;
 };
 export function XrayImage({
   src,
@@ -22,6 +23,7 @@ export function XrayImage({
   enabled = true,
   children,
   controlsHost,
+  showControls = true,
 }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const frame = useRef<number | null>(null);
@@ -194,11 +196,24 @@ export function XrayImage({
       <div className="xray-lens" aria-hidden="true" />
       {children}
       <span id={description} className="sr-only">
-        Наведите курсор или нажмите «Показать внутренности». Иллюстративный
-        разрез, устройство конкретной комплектации может отличаться.
+        Наведите курсор на автомобиль или коснитесь его на телефоне.
+        Иллюстративный разрез, устройство конкретной комплектации может
+        отличаться.
       </span>
-      {controlsHost ? (
-        createPortal(
+      {showControls &&
+        (controlsHost ? (
+          createPortal(
+            <button
+              className="xray-toggle"
+              aria-pressed={pinned}
+              onClick={() => setPinned((p) => !p)}
+            >
+              {pinned ? <Eye size={16} /> : <ScanLine size={16} />}
+              <span>{pinned ? "Показать кузов" : "Показать внутренности"}</span>
+            </button>,
+            controlsHost,
+          )
+        ) : (
           <button
             className="xray-toggle"
             aria-pressed={pinned}
@@ -206,19 +221,8 @@ export function XrayImage({
           >
             {pinned ? <Eye size={16} /> : <ScanLine size={16} />}
             <span>{pinned ? "Показать кузов" : "Показать внутренности"}</span>
-          </button>,
-          controlsHost,
-        )
-      ) : (
-        <button
-          className="xray-toggle"
-          aria-pressed={pinned}
-          onClick={() => setPinned((p) => !p)}
-        >
-          {pinned ? <Eye size={16} /> : <ScanLine size={16} />}
-          <span>{pinned ? "Показать кузов" : "Показать внутренности"}</span>
-        </button>
-      )}
+          </button>
+        ))}
       <span className="xray-caption" aria-hidden="true">
         Иллюстрация узлов
       </span>

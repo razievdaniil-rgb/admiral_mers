@@ -209,6 +209,7 @@ export function FigmaHome() {
               cutaway="media/xray/hero-v2.webp"
               alt="Mercedes-Benz — ремонт и обслуживание в техцентре Адмирал"
               priority
+              showControls={false}
             >
               <HeroServiceHotspots />
             </XrayImage>
