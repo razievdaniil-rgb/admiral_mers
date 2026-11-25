@@ -118,6 +118,9 @@ select:not([multiple]):not([size]) {
 .contact-section > .contact-group {
   justify-self: start;
 }
+.calculator-summary > .contact-group {
+  margin-top: 14px;
+}
 .service-hero .contact-group > a {
   padding: 11px 16px;
 }

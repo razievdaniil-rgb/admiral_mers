@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ArrowUpRight, Phone, Calculator } from "lucide-react";
-import { models, telephone } from "./data";
-import { whatsapp, telegram } from "./contact";
+import { ArrowUpRight, Calculator } from "lucide-react";
+import { models } from "./data";
+import { whatsapp, ContactLinks } from "./contact";
 import { formatPrice } from "./pricing";
 import {
   maintenanceWorks,
@@ -148,18 +148,7 @@ export function MaintenanceCalculator() {
               Обсудить расчёт в WhatsApp <ArrowUpRight size={18} />
             </a>
           )}
-          <a className="text-link" href={telephone}>
-            <Phone size={16} />
-            Позвонить в техцентр
-          </a>
-          <a
-            className="text-link"
-            href={telegram}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Написать в Telegram <ArrowUpRight size={16} />
-          </a>
+          <ContactLinks compact />
           <p className="calculator-note">
             В WhatsApp откроется готовый текст с Вашим выбором. Отправку
             сообщения подтверждаете Вы.
