@@ -1,0 +1,88 @@
+/* Quiet, short feedback. No animation loop or additional pointer listeners. */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --ui-ease: cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .page-arrival {
+    animation: page-arrival 280ms var(--ui-ease) both;
+  }
+  @keyframes page-arrival {
+    from { opacity: .6; translate: 0 6px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+
+  :is(.button, .icon-button, .contact-group > a, .contact-group .contact-write,
+    .hero-quick-actions > a, .branch-photo-tabs button, .mobile-call) {
+    transition: background-color 180ms ease, border-color 180ms ease,
+      color 180ms ease, box-shadow 200ms ease,
+      transform 240ms var(--ui-ease), scale 160ms var(--ui-ease);
+  }
+  :is(.button, .icon-button, .contact-group > a, .contact-group .contact-write,
+    .hero-quick-actions > a, .branch-photo-tabs button, .mobile-call):active {
+    scale: .97;
+    transition-duration: 80ms;
+  }
+
+  :is(.button, .text-link, .hero-quick-actions > a) > svg:last-child {
+    transition: translate 220ms var(--ui-ease);
+  }
+  :is(.button, .text-link, .hero-quick-actions > a):focus-visible > svg:last-child {
+    translate: 2px -1px;
+  }
+
+  .desktop-nav a {
+    transition: color 180ms ease;
+  }
+  :is(.hero-service-links a, .popular-price-card, .price-row, .branch-photo-tabs button) {
+    transition: background-color 220ms ease, border-color 220ms ease,
+      color 180ms ease, box-shadow 220ms ease;
+  }
+  :is(input, select) {
+    transition: border-color 180ms ease, background-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .contact-popover:popover-open {
+    animation: menu-arrival 180ms var(--ui-ease) both;
+  }
+  .mobile-menu {
+    animation: menu-arrival 240ms var(--ui-ease) both;
+  }
+  @keyframes menu-arrival {
+    from { opacity: 0; translate: 0 -5px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+
+  .faq-list summary {
+    transition: color 180ms ease;
+  }
+  .faq-list summary svg {
+    transition: transform 240ms var(--ui-ease), color 180ms ease;
+  }
+  .faq-list details[open] > p {
+    animation: answer-arrival 220ms var(--ui-ease) both;
+  }
+  @keyframes answer-arrival {
+    from { opacity: 0; translate: 0 -3px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+  @supports (interpolate-size: allow-keywords) {
+    .faq-list details { interpolate-size: allow-keywords; }
+    .faq-list details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size 260ms var(--ui-ease),
+        content-visibility 260ms allow-discrete;
+    }
+    .faq-list details[open]::details-content { block-size: auto; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :is(.button, .text-link, .hero-quick-actions > a):hover > svg:last-child {
+      translate: 2px -1px;
+    }
+    .price-row:hover { background-color: #ffffff04; }
+    .faq-list summary:hover { color: #fff; }
+  }
+}

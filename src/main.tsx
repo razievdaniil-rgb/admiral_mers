@@ -54,6 +54,7 @@ import { ServiceUnitDetails } from "./service-unit-details";
 import "./page-density.css";
 import "./contact-controls.css";
 import "./comfort-gallery.css";
+import "./interaction-polish.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -847,7 +848,7 @@ function App() {
         К содержимому
       </a>
       <Header route={path} />
-      <main ref={main} id="main" tabIndex={-1} key={path}>
+      <main ref={main} id="main" tabIndex={-1} key={path} className={path === "/" ? undefined : "page-arrival"}>
         {path === "/" ? (
           <Home />
         ) : path === "/services" ? (
