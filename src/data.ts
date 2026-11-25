@@ -40,8 +40,18 @@ export type Model = {
   generations: string[];
 };
 export const models: Model[] = [
-  { id: "sl", name: "SL", kind: "Родстер", generations: ["R129", "R230", "R231", "R232"] },
-  { id: "slk", name: "SLK / SLC", kind: "Родстер", generations: ["R170", "R171", "R172"] },
+  {
+    id: "sl",
+    name: "SL",
+    kind: "Родстер",
+    generations: ["R129", "R230", "R231", "R232"],
+  },
+  {
+    id: "slk",
+    name: "SLK / SLC",
+    kind: "Родстер",
+    generations: ["R170", "R171", "R172"],
+  },
   {
     id: "a",
     name: "A-Класс",
@@ -342,6 +352,6 @@ export const history = [
   {
     year: "15.11.2026",
     title: "Становимся ближе.",
-    body: "Открываем вторую точку на Гостиничном проезде, 10А, строение 1. Продолжаем историю, которая началась в 1999 году.",
+    body: "Вторая точка — на Гостиничном проезде, 10А, строение 1. Продолжаем историю, которая началась в 1999 году.",
   },
 ];

@@ -6,8 +6,9 @@ import {
   ChevronRight,
   Coffee,
   Tv,
-  Check,
   Plus,
+  Calculator,
+  Cookie,
 } from "lucide-react";
 import { gsap } from "gsap";
 import { PopularPrices } from "./price-list";
@@ -194,9 +195,15 @@ export function FigmaHome() {
             </p>
             <div className="fhero-actions">
               <ContactLinks compact />
-              <a className="text-link" href="#/services">
-                Услуги и цены <ArrowRight size={17} />
-              </a>
+              <div className="hero-quick-actions">
+                <a className="hero-maintenance-link" href="#/maintenance-cost">
+                  <Calculator size={17} />
+                  Рассчитать ТО <ArrowUpRight size={16} />
+                </a>
+                <a className="text-link" href="#/services">
+                  Услуги и цены <ArrowRight size={17} />
+                </a>
+              </div>
             </div>
           </div>
           <div className="service-hero-visual" ref={car}>
@@ -235,10 +242,10 @@ export function FigmaHome() {
                   Колодки от 4 550 ₽ <ArrowUpRight size={15} />
                 </strong>
               </a>
-              <a href="#/services/body">
-                <span>Кузов и детейлинг</span>
+              <a href="#/services/detailing">
+                <span>Детейлинг</span>
                 <strong>
-                  Все направления <ArrowUpRight size={15} />
+                  Кузов и салон <ArrowUpRight size={15} />
                 </strong>
               </a>
             </div>
@@ -257,7 +264,7 @@ export function FigmaHome() {
       <PopularPrices />
       <section className="figma-who container section" id="intro">
         <div className="figma-centered-heading" data-reveal>
-          <h2>КТО МЫ</h2>
+          <h2>О НАС</h2>
           <p>
             Профильный сервис только для Mercedes-Benz с 1999 года.
             <br />
@@ -318,8 +325,9 @@ export function FigmaHome() {
             ТОЖЕ ЧАСТЬ СЕРВИСА
           </h2>
           <p>
-            Обсудите задачу с приёмщиком. А пока мы занимаемся автомобилем —
-            кофе, телевизор и время для себя.
+            Обсудите задачу с приёмщиком и расположитесь в зоне ожидания. Пока
+            автомобиль в работе — кофе, угощения и ролики об обслуживании
+            Mercedes-Benz.
           </p>
         </div>
         <div className="figma-amenities">
@@ -329,11 +337,11 @@ export function FigmaHome() {
           </span>
           <span>
             <Tv strokeWidth={1} />
-            Зона ожидания
+            Видео о Mercedes-Benz
           </span>
           <span>
-            <Check strokeWidth={1} />
-            Личное общение
+            <Cookie strokeWidth={1} />
+            Угощения
           </span>
         </div>
       </section>
@@ -342,6 +350,7 @@ export function FigmaHome() {
           ВАШ МЕРСЕДЕС —<br />
           НАША ОТВЕТСТВЕННОСТЬ
         </h2>
+        <p className="brand-principle">Лучшее — в каждой детали.</p>
         <a
           className="button"
           href={telegram}

@@ -1,7 +1,7 @@
 import { consultationLink } from "./contact";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
-import { models, services } from "./data";
+import { models, allServices } from "./data";
 import vehicles from "./catalog-vehicles.json";
 import { assetUrl } from "./assets";
 import "./catalog-2d.css";
@@ -20,7 +20,7 @@ export function SmoothCatalog({
   const selected = vehicles[index],
     label = `${selected.name} ${selected.generation}`,
     other = models.find((m) => m.id === otherId)!,
-    selectedService = services.find((s) => s.id === activeNode);
+    selectedService = allServices.find((s) => s.id === activeNode);
   const [previous, setPrevious] = useState<number | null>(null),
     [direction, setDirection] = useState(1);
   const transition = useRef<ReturnType<typeof setTimeout> | undefined>(
@@ -199,6 +199,7 @@ export function SmoothCatalog({
               ["maintenance", "ТО"],
               ["diagnostics", "Диагностика"],
               ["engine", "Двигатель"],
+              ["transmission", "КПП и привод"],
               ["suspension", "Ходовая"],
               ["electrics", "Электрика"],
             ].map(([id, title]) => (

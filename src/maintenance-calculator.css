@@ -1,0 +1,303 @@
+.maintenance-calculator > .text-link {
+  margin-bottom: 35px;
+}
+.maintenance-calculator > .eyebrow {
+  margin-bottom: 14px;
+}
+.maintenance-calculator h1 {
+  font-size: clamp(34px, 4.5vw, 64px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+}
+.calculator-intro {
+  max-width: 780px;
+  color: var(--muted);
+  margin: 24px 0 38px;
+}
+.calculator-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.8fr);
+  gap: 30px;
+  align-items: start;
+}
+.calculator-options fieldset {
+  border: 0;
+  margin: 30px 0 0;
+  padding: 0;
+  min-width: 0;
+}
+.calculator-options legend {
+  font-family: var(--heading);
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+.calculator-model {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 17px;
+}
+.calculator-model > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.calculator-model select {
+  width: 100%;
+  background: #11151a;
+  border: 1px solid #ffffff35;
+  border-radius: 13px;
+  color: #f4f5f7;
+  padding: 17px;
+  font-size: 15px;
+}
+.calculator-modes {
+  display: grid;
+  gap: 12px;
+}
+.calculator-modes label,
+.calculator-works label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #ffffff24;
+  border-radius: 15px;
+  padding: 20px;
+  background: #ffffff04;
+  cursor: pointer;
+}
+.calculator-modes label:has(input:checked),
+.calculator-works label:has(input:checked) {
+  border-color: #a5abb5;
+  background: #ffffff0a;
+}
+.calculator-modes input,
+.calculator-works input {
+  accent-color: #c7ccd3;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.calculator-modes strong {
+  font-size: 17px;
+  font-weight: 500;
+}
+.calculator-modes small {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 7px;
+}
+.calculator-works {
+  display: grid;
+  gap: 10px;
+}
+.calculator-works label {
+  padding: 17px;
+  font-size: 14px;
+}
+.calculator-works label > span {
+  flex: 1;
+  line-height: 1.5;
+}
+.calculator-works strong {
+  font-weight: 500;
+  white-space: nowrap;
+}
+.calculator-summary {
+  position: sticky;
+  top: 130px;
+  padding: 30px;
+  border: 1px solid #ffffff30;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #1c222b, #101318);
+}
+.calculator-summary > p:first-of-type {
+  color: var(--muted);
+  margin-top: 20px;
+  font-size: 14px;
+}
+.calculator-total {
+  display: block;
+  font-family: var(--heading);
+  font-size: clamp(30px, 3.4vw, 48px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  margin-block: 12px 22px;
+}
+.calculator-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.calculator-summary .button {
+  width: 100%;
+  font-size: 13px;
+  justify-content: space-between;
+  margin-top: 25px;
+  padding-inline: 18px;
+}
+.calculator-summary > .text-link {
+  display: flex;
+  width: fit-content;
+  margin-top: 20px;
+  font-size: 13px;
+}
+.calculator-summary > .calculator-note:last-child {
+  margin-top: 25px;
+}
+.service-related-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 22px 0;
+}
+.service-related-links a {
+  padding: 11px 15px;
+  border: 1px solid #ffffff30;
+  border-radius: 100px;
+  font-size: 13px;
+}
+.service-related-links a:hover {
+  background: #ffffff0c;
+}
+.service-unit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.service-unit-grid article {
+  border: 1px solid #ffffff25;
+  border-radius: 20px;
+  padding: 25px;
+  background: #ffffff04;
+}
+.service-unit-grid h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.service-unit-grid p {
+  font-size: 15px;
+  color: var(--muted);
+}
+.service-unit-grid ul {
+  padding-left: 20px;
+  margin: 18px 0 0;
+  color: #c7ccd3;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.brand-principle {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 20px 0 28px;
+}
+@media (max-width: 800px) {
+  .calculator-layout {
+    grid-template-columns: 1fr;
+  }
+  .calculator-summary {
+    position: static;
+  }
+  .service-unit-grid {
+    grid-template-columns: 1fr;
+  }
+  .calculator-intro {
+    font-size: 15px;
+  }
+  .calculator-works label {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 14px;
+    font-size: 13px;
+  }
+  .calculator-works label > span {
+    min-width: 0;
+  }
+  .calculator-works strong {
+    margin: 0;
+    font-size: 12px;
+  }
+  .maintenance-calculator {
+    padding-top: 30px;
+  }
+  .calculator-summary {
+    padding: 24px;
+  }
+  .calculator-total {
+    font-size: 36px;
+  }
+}
+.hero-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.hero-maintenance-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 17px;
+  border: 1px solid #c7ccd380;
+  border-radius: 100px;
+  background: #ffffff0a;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.hero-maintenance-link:hover {
+  background: #ffffff18;
+}
+.service-hero .fhero-actions {
+  gap: 18px;
+}
+@media (max-width: 600px) {
+  .hero-quick-actions {
+    gap: 14px;
+    flex-wrap: nowrap;
+  }
+  .hero-maintenance-link {
+    font-size: 12px;
+    padding: 10px 12px;
+    gap: 7px;
+  }
+  .hero-maintenance-link svg {
+    width: 14px;
+  }
+  .hero-quick-actions > .text-link {
+    font-size: 11px !important;
+    gap: 6px !important;
+  }
+  .service-hero .fhero-actions {
+    gap: 10px;
+  }
+}
+.calculator-inline-total {
+  display: none;
+}
+@media (max-width: 800px) {
+  .calculator-inline-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: calc(var(--site-header-height) + 8px);
+    z-index: 20;
+    margin-top: 24px;
+    padding: 14px;
+    border: 1px solid #ffffff35;
+    border-radius: 13px;
+    background: #171d25;
+    font-size: 12px;
+  }
+  .calculator-inline-total strong {
+    font-size: 17px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}

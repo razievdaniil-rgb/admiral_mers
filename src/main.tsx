@@ -50,6 +50,8 @@ import "./premium-motion.css";
 import { telegram, ContactLinks } from "./contact";
 import { PriceList } from "./price-list";
 import "./service-first.css";
+import { MaintenanceCalculator } from "./maintenance-calculator";
+import { ServiceUnitDetails } from "./service-unit-details";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -250,6 +252,9 @@ function Header({ route }: { route: string }) {
               <ArrowUpRight />
             </a>
           ))}
+          <a href="#/maintenance-cost" onClick={() => setOpen(false)}>
+            Рассчитать ТО <ArrowUpRight size={18} />
+          </a>
           <ContactLinks compact />
           <p>Ремонт и обслуживание Mercedes-Benz с 1999 года.</p>
         </nav>
@@ -432,7 +437,7 @@ function ServicesPage() {
           Выбрать Mercedes
           <ArrowUpRight size={14} />
         </button>
-        {services.map((s) => (
+        {allServices.map((s) => (
           <a href={`#/services/${s.id}`} key={s.id}>
             {s.id === "maintenance" ? "ТО" : s.short}
             <ArrowUpRight size={13} />
@@ -539,12 +544,25 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
           <BookButton booking={{ service: service.id, model }}>
             Обсудить {service.id === "maintenance" ? "обслуживание" : "работы"}
           </BookButton>
+          {service.id === "maintenance" && (
+            <a className="button secondary" href="#/maintenance-cost">
+              Рассчитать ТО <ArrowUpRight size={18} />
+            </a>
+          )}
+          {service.id === "engine" && (
+            <div className="service-related-links">
+              <a href="#/services/transmission">
+                КПП, РКПП, раздатка и редукторы ↗
+              </a>
+            </div>
+          )}
           <a className="back-link" href="#/services">
             <ChevronLeft size={17} />К списку услуг
           </a>
         </div>
       </section>
       <PriceList service={service.id} />
+      <ServiceUnitDetails service={service.id} />
       {content && (
         <section
           className="service-guidance container section"
@@ -767,7 +785,7 @@ function App() {
     new URLSearchParams(route.split("?")[1] || "").get("model") || "";
   const service = allServices.find((s) => path === `/services/${s.id}`);
   useEffect(() => {
-    document.title = `${service?.title || { "/": "Только Mercedes-Benz с 1999 года", "/services": "Услуги", "/about": "О нас", "/contacts": "Контакты", "/privacy": "О персональных данных" }[path] || "Страница не найдена"} — ТехЦентр Адмирал`;
+    document.title = `${service?.title || { "/": "Только Mercedes-Benz с 1999 года", "/services": "Услуги", "/maintenance-cost": "Рассчитать ТО", "/about": "О нас", "/contacts": "Контакты", "/privacy": "О персональных данных" }[path] || "Страница не найдена"} — ТехЦентр Адмирал`;
     window.scrollTo({ top: 0, behavior: "instant" });
     if (!first.current) main.current?.focus({ preventScroll: true });
     first.current = false;
@@ -823,6 +841,8 @@ function App() {
           <Home />
         ) : path === "/services" ? (
           <ServicesPage />
+        ) : path === "/maintenance-cost" ? (
+          <MaintenanceCalculator />
         ) : path === "/about" ? (
           <AboutPage />
         ) : path === "/contacts" ? (

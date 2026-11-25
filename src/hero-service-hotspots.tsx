@@ -3,6 +3,15 @@ import { ArrowUpRight, Plus } from "lucide-react";
 // Positions follow the visible parts of the original three-quarter car photograph.
 const parts = [
   {
+    id: "transmission",
+    title: "КПП, раздатка и редукторы",
+    label: "Трансмиссия",
+    left: 44,
+    top: 42,
+    width: 16,
+    height: 12,
+  },
+  {
     id: "engine",
     title: "Ремонт двигателя",
     label: "Двигатель",
