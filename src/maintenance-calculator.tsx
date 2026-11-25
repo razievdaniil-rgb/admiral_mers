@@ -27,6 +27,19 @@ export function MaintenanceCalculator() {
         Выберите плановое ТО или отдельные работы. Сразу покажем предварительную
         стоимость работ; запчасти и расходные материалы считаются отдельно.
       </p>
+      <div className="calculator-mobile-action">
+        <span>
+          Работы{" "}
+          <strong aria-live="polite">
+            {total ? formatPrice(total) : "Выберите работы"}
+          </strong>
+        </span>
+        {total > 0 && (
+          <a href={link} target="_blank" rel="noopener noreferrer">
+            Обсудить в WhatsApp <ArrowUpRight size={16} />
+          </a>
+        )}
+      </div>
       <div className="calculator-layout">
         <div className="calculator-options">
           <label className="calculator-model">

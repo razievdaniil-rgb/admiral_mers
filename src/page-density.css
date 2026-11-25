@@ -1,0 +1,498 @@
+/* Inner pages start with useful content, without a second hero-sized spacer. */
+.maintenance-calculator > .text-link {
+  justify-self: start;
+}
+.calculator-mobile-action {
+  display: none;
+}
+.price-list .price-section-heading .eyebrow {
+  display: none;
+}
+.price-list > .price-note {
+  max-width: none;
+}
+.section {
+  padding-block: clamp(36px, 4vw, 60px);
+}
+.page-intro,
+.figma-about .page-intro {
+  padding-block: 20px 24px;
+}
+.page-intro .breadcrumbs {
+  margin-bottom: 14px;
+  font-size: 12px;
+}
+.page-intro > .eyebrow {
+  display: none;
+}
+.page-intro > h1,
+.figma-about .page-intro > h1 {
+  font-size: clamp(30px, 3.2vw, 44px);
+  line-height: 1.13;
+}
+.page-intro > .lead,
+.figma-about .page-intro > .lead {
+  font-size: 15px;
+  line-height: 1.55;
+  margin-top: 10px;
+  max-width: 900px;
+}
+.price-section-heading {
+  margin-bottom: 20px;
+  gap: 20px;
+}
+.price-section-heading h2 {
+  font-size: clamp(26px, 2.7vw, 36px);
+}
+.price-section-heading .eyebrow {
+  margin-bottom: 8px;
+}
+.service-shortcuts {
+  gap: 7px;
+  padding-bottom: 18px;
+}
+.service-shortcuts > a,
+.service-shortcuts > button {
+  padding: 9px 13px;
+  font-size: 12px;
+}
+.price-list {
+  padding-top: 16px;
+}
+.price-search input {
+  padding-block: 15px;
+}
+.price-note {
+  margin-top: 14px;
+}
+.price-result-count {
+  margin-top: 18px;
+}
+.price-row {
+  padding-block: 16px;
+}
+.service-detail {
+  gap: 32px;
+  align-items: start;
+}
+.page-intro:has(+ .service-detail) {
+  padding-block: 18px;
+}
+.service-detail .service-photo {
+  min-height: 0;
+  height: clamp(250px, calc(100svh - var(--site-header-height) - 110px), 430px);
+}
+.service-detail .service-detail-copy {
+  padding-block: 0;
+}
+.service-detail .service-detail-copy h1 {
+  font-size: clamp(28px, 2.8vw, 36px);
+  line-height: 1.15;
+  margin: 0;
+}
+.service-detail .service-detail-copy > p:not(.eyebrow):not(.selected-model) {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-block: 12px;
+}
+.service-detail .service-detail-copy .eyebrow {
+  margin-block: 14px 10px;
+}
+.service-detail .service-detail-copy ul {
+  gap: 8px;
+}
+.service-detail .service-detail-copy li {
+  font-size: 14px;
+  line-height: 1.45;
+}
+.service-detail-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.service-detail-actions .button {
+  min-height: 42px;
+  padding: 11px 17px;
+  font-size: 13px;
+}
+.service-detail-copy .service-related-links {
+  margin: 12px 0;
+}
+.service-detail-copy .back-link {
+  margin-top: 10px;
+  font-size: 12px;
+}
+.figma-about .about-history-section {
+  padding-top: 0;
+}
+.figma-history .history-tabs {
+  margin-bottom: 16px;
+}
+.history-tabs > button {
+  padding-bottom: 14px;
+  gap: 6px;
+}
+.history-tabs strong {
+  font-size: 21px;
+}
+.history-scene {
+  margin-top: 14px;
+  gap: 32px;
+}
+.history-scene figure {
+  height: clamp(220px, calc(100svh - var(--site-header-height) - 300px), 340px);
+}
+.history-large-year {
+  font-size: 36px;
+}
+.history-scene-copy h3 {
+  font-size: 25px;
+  margin-block: 10px;
+}
+.history-scene-copy > p {
+  font-size: 15px;
+  line-height: 1.55;
+}
+.history-nav {
+  margin-top: 16px;
+}
+.optional-catalog > .catalog-section-heading {
+  padding-block: 18px;
+}
+.optional-catalog .garage {
+  margin-top: 14px;
+  padding: 20px 26px;
+}
+.catalog-stage {
+  height: clamp(220px, calc(100svh - var(--site-header-height) - 340px), 360px);
+}
+.garage-actions {
+  padding-block: 14px;
+}
+.maintenance-calculator {
+  padding-block: 22px 48px;
+}
+.maintenance-calculator > .text-link {
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.maintenance-calculator > .eyebrow {
+  margin-bottom: 8px;
+  font-size: 10px;
+}
+.maintenance-calculator h1 {
+  font-size: clamp(32px, 3.4vw, 48px);
+}
+.calculator-intro {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 12px 0 22px;
+}
+.calculator-options fieldset {
+  margin-top: 18px;
+}
+.calculator-options legend {
+  font-size: 19px;
+  margin-bottom: 12px;
+}
+.calculator-model {
+  gap: 7px;
+  font-size: 15px;
+}
+.calculator-model > span {
+  font-size: 11px;
+}
+.calculator-model select {
+  padding: 12px 14px;
+  font-size: 14px;
+}
+.calculator-modes {
+  gap: 9px;
+}
+.calculator-modes label {
+  padding: 14px 16px;
+}
+.calculator-modes strong {
+  font-size: 15px;
+}
+.calculator-modes small {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.calculator-summary {
+  padding: 22px;
+}
+.calculator-summary > svg {
+  display: none;
+}
+.calculator-summary > p:first-of-type {
+  margin-top: 0;
+  font-size: 13px;
+}
+.calculator-total {
+  font-size: 38px;
+  margin-block: 8px 14px;
+}
+.calculator-note {
+  font-size: 11px;
+  line-height: 1.55;
+}
+.calculator-summary .button {
+  margin-top: 18px;
+  min-height: 44px;
+  padding-block: 12px;
+}
+.calculator-summary > .text-link {
+  margin-top: 14px;
+}
+.calculator-summary > .calculator-note:last-child {
+  margin-top: 16px;
+}
+@media (min-width: 801px) {
+  .maintenance-calculator {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.8fr);
+    column-gap: 28px;
+    align-items: start;
+  }
+  .maintenance-calculator > .text-link,
+  .maintenance-calculator > .eyebrow,
+  .maintenance-calculator > h1,
+  .maintenance-calculator > .calculator-intro {
+    grid-column: 1;
+  }
+  .calculator-layout {
+    display: contents;
+  }
+  .calculator-options {
+    grid-column: 1;
+  }
+  .calculator-summary {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    top: calc(var(--site-header-height) + 22px);
+  }
+  .contact-section {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 16px 24px;
+    padding-bottom: 24px;
+  }
+  .contact-section > .contact-links {
+    grid-column: 1 / -1;
+  }
+  .contact-section > .branch-grid {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .contact-section > .map-frame {
+    grid-column: 2;
+    grid-row: 2;
+    height: 100%;
+    min-height: 280px;
+    margin: 0;
+  }
+  .contact-section > .map-note {
+    grid-column: 2;
+    margin: 0;
+    font-size: 11px;
+  }
+  .contact-section .branch-card {
+    padding: 16px 20px;
+  }
+  .contact-section .branch-card > .eyebrow {
+    display: none;
+  }
+  .contact-section .branch-top {
+    margin-bottom: 8px;
+  }
+  .contact-section .branch-card h3 {
+    font-size: 23px;
+    margin-block: 8px;
+  }
+  .contact-section .branch-card > p:not(.eyebrow) {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .contact-section .branch-actions {
+    margin-top: 12px;
+    padding-top: 10px;
+    gap: 18px;
+  }
+  .contact-section .branch-actions > a {
+    font-size: 12px;
+  }
+}
+@media (max-width: 800px) {
+  .calculator-mobile-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 14px;
+    border: 1px solid #ffffff30;
+    border-radius: 14px;
+    background: #161c24;
+    margin-bottom: 18px;
+    font-size: 12px;
+  }
+  .calculator-mobile-action > span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--muted);
+  }
+  .calculator-mobile-action strong {
+    color: var(--white);
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .calculator-mobile-action > a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 9px 12px;
+    border-radius: 100px;
+    background: #e2e5ea;
+    color: #11151a;
+  }
+  .page-intro,
+  .figma-about .page-intro {
+    padding-block: 18px 22px;
+  }
+  .page-intro .breadcrumbs {
+    margin-bottom: 12px;
+  }
+  .page-intro > h1,
+  .figma-about .page-intro > h1 {
+    font-size: 30px;
+  }
+  .page-intro > .lead,
+  .figma-about .page-intro > .lead {
+    font-size: 14px;
+  }
+  .service-detail {
+    gap: 22px;
+  }
+  .service-detail .service-photo {
+    height: 220px;
+  }
+  .service-detail .service-detail-copy h1 {
+    font-size: 28px;
+  }
+  .service-detail .service-detail-copy > p:not(.eyebrow):not(.selected-model) {
+    font-size: 14px;
+  }
+  .service-detail-actions {
+    margin-block: 12px;
+  }
+  .history-scene {
+    gap: 22px;
+  }
+  .history-scene figure {
+    height: 220px;
+  }
+  .history-tabs strong {
+    font-size: 17px;
+  }
+  .maintenance-calculator {
+    padding-top: 20px;
+  }
+  .maintenance-calculator h1 {
+    font-size: 34px;
+  }
+  .calculator-intro {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+  .calculator-layout {
+    gap: 20px;
+  }
+  .calculator-summary {
+    padding: 20px;
+  }
+  .contact-section > .contact-links {
+    margin-bottom: 18px;
+  }
+  .contact-section .branch-card {
+    padding: 22px;
+  }
+  .contact-section .map-frame {
+    height: 260px;
+    margin-top: 22px;
+  }
+  .catalog-stage {
+    height: 220px;
+  }
+}
+@media (min-width: 801px) and (max-height: 720px) {
+  .service-detail .service-detail-copy ul {
+    gap: 6px;
+  }
+  .service-detail .service-detail-copy > p:not(.eyebrow):not(.selected-model) {
+    margin-block: 10px;
+  }
+  .service-detail .service-detail-copy .eyebrow {
+    margin-block: 12px 8px;
+  }
+  .service-detail-copy .back-link {
+    margin-top: 8px;
+  }
+  .contact-section .branch-card {
+    padding: 12px 18px;
+  }
+  .contact-section .branch-top {
+    margin-bottom: 4px;
+  }
+  .contact-section .branch-card h3 {
+    font-size: 21px;
+    margin-block: 4px;
+  }
+  .contact-section .branch-actions {
+    margin-top: 8px;
+    padding-top: 6px;
+  }
+  .contact-section .branch-actions .button {
+    min-height: 34px;
+    padding: 7px 12px;
+  }
+  .price-result-count {
+    margin-top: 12px;
+  }
+  .price-row {
+    padding-block: 12px;
+  }
+  .page-intro,
+  .figma-about .page-intro {
+    padding-block: 16px 20px;
+  }
+  .page-intro h1,
+  .figma-about .page-intro > h1 {
+    font-size: 34px;
+  }
+  .maintenance-calculator {
+    padding-top: 18px;
+  }
+  .maintenance-calculator h1 {
+    font-size: 38px;
+  }
+  .calculator-intro {
+    font-size: 14px;
+    margin-block: 10px 16px;
+  }
+  .calculator-summary {
+    padding: 20px;
+  }
+  .calculator-summary > .calculator-note:last-child {
+    font-size: 10px;
+  }
+  .history-scene figure {
+    height: 220px;
+  }
+}

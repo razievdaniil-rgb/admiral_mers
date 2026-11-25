@@ -9,7 +9,6 @@ import {
   Menu,
   Phone,
   MapPin,
-  Clock3,
   ScanLine,
   Wrench,
   Cog,
@@ -52,6 +51,7 @@ import { PriceList } from "./price-list";
 import "./service-first.css";
 import { MaintenanceCalculator } from "./maintenance-calculator";
 import { ServiceUnitDetails } from "./service-unit-details";
+import "./page-density.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
@@ -411,6 +411,17 @@ function Catalog() {
   );
 }
 function ServicesPage() {
+  const shortcutLabels: Record<string, string> = {
+    maintenance: "ТО",
+    diagnostics: "Диагностика",
+    engine: "Двигатель",
+    transmission: "КПП и привод",
+    suspension: "Ходовая",
+    electrics: "Электрика",
+    body: "Кузов",
+    retrofit: "Дооснащение",
+    detailing: "Детейлинг",
+  };
   const catalog = useRef<HTMLElement>(null);
   const showCatalog = () => {
     if (!catalog.current) return;
@@ -438,8 +449,13 @@ function ServicesPage() {
           <ArrowUpRight size={14} />
         </button>
         {allServices.map((s) => (
-          <a href={`#/services/${s.id}`} key={s.id}>
-            {s.id === "maintenance" ? "ТО" : s.short}
+          <a
+            href={`#/services/${s.id}`}
+            key={s.id}
+            aria-label={s.short}
+            title={s.short}
+          >
+            {shortcutLabels[s.id] || s.short}
             <ArrowUpRight size={13} />
           </a>
         ))}
@@ -528,6 +544,24 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
               {model}
             </p>
           )}
+          <div className="service-detail-actions">
+            <BookButton booking={{ service: service.id, model }}>
+              Обсудить{" "}
+              {service.id === "maintenance" ? "обслуживание" : "работы"}
+            </BookButton>
+            {service.id === "maintenance" && (
+              <a className="button secondary" href="#/maintenance-cost">
+                Рассчитать ТО <ArrowUpRight size={18} />
+              </a>
+            )}
+            {service.id === "engine" && (
+              <div className="service-related-links">
+                <a href="#/services/transmission">
+                  КПП, РКПП, раздатка и редукторы ↗
+                </a>
+              </div>
+            )}
+          </div>
           <Eyebrow>Что можем сделать</Eyebrow>
           <ul>
             {service.works.map((w) => (
@@ -541,21 +575,6 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
             Стоимость, сроки и объём работ согласуем после диагностики. Без
             ремонта, о котором Вы не договаривались.
           </p>
-          <BookButton booking={{ service: service.id, model }}>
-            Обсудить {service.id === "maintenance" ? "обслуживание" : "работы"}
-          </BookButton>
-          {service.id === "maintenance" && (
-            <a className="button secondary" href="#/maintenance-cost">
-              Рассчитать ТО <ArrowUpRight size={18} />
-            </a>
-          )}
-          {service.id === "engine" && (
-            <div className="service-related-links">
-              <a href="#/services/transmission">
-                КПП, РКПП, раздатка и редукторы ↗
-              </a>
-            </div>
-          )}
           <a className="back-link" href="#/services">
             <ChevronLeft size={17} />К списку услуг
           </a>
@@ -723,17 +742,6 @@ function ContactsPage() {
       />
       <section className="container contact-section">
         <ContactLinks />
-        <div className="contact-strip">
-          <a href={telephone}>
-            <Phone size={22} />
-            {phone}
-            <ArrowUpRight size={20} />
-          </a>
-          <span>
-            <Clock3 size={20} />
-            Ежедневно · 09:00–20:00
-          </span>
-        </div>
         <BranchCards />
         <Map />
         <p className="map-note">
