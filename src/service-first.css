@@ -1,4 +1,118 @@
 /* Service comes first. The car supports the offer rather than hiding it. */
+:root {
+  --site-header-height: 104px;
+}
+.hero-service-hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.hero-part {
+  position: absolute;
+  display: block;
+  border-radius: 35%;
+  pointer-events: auto;
+}
+.hero-part-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff70;
+  border-radius: 50%;
+  background: #111820b8;
+  color: #f4f5f7;
+  box-shadow: 0 2px 12px #0005;
+  pointer-events: none;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.hero-part-label {
+  position: absolute;
+  bottom: calc(100% - 1px);
+  left: 50%;
+  width: 220px;
+  transform: translate(-50%, 5px);
+  padding: 13px 16px;
+  border: 1px solid #ffffff35;
+  border-radius: 14px;
+  background: #10151bf5;
+  box-shadow: 0 12px 32px #0005;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    visibility 0.2s;
+}
+.hero-part-label strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.hero-part-label > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  color: #b3bdcc;
+  margin-top: 6px;
+}
+.hero-part:hover,
+.hero-part:focus-visible {
+  z-index: 5;
+}
+.hero-part:hover .hero-part-label,
+.hero-part:focus-visible .hero-part-label {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+.hero-part:hover .hero-part-marker,
+.hero-part:focus-visible .hero-part-marker {
+  background: #e2e5ea;
+  border-color: #e2e5ea;
+  color: #11151a;
+}
+@media (max-width: 600px) {
+  :root {
+    --site-header-height: 88px;
+  }
+  .header .header-inner {
+    min-height: 88px;
+    padding-block: 14px;
+  }
+  .hero-part-marker {
+    width: 20px;
+    height: 20px;
+  }
+  .hero-part-label {
+    width: 190px;
+    padding: 11px 13px;
+  }
+  .hero-part-label strong {
+    font-size: 12px;
+  }
+  .hero-part-label > span {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-part-label,
+  .hero-part-marker {
+    transition: none;
+  }
+}
 .service-hero-car.xray-image {
   pointer-events: auto;
 }
@@ -83,6 +197,9 @@
 }
 .header-inner {
   gap: 24px;
+  height: auto;
+  min-height: 104px;
+  padding-block: 20px;
 }
 .header-book .contact-links > a:first-child {
   display: none;

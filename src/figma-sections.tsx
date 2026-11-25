@@ -19,6 +19,7 @@ import { history, services } from "./data";
 import { BranchShowcase } from "./branch-showcase";
 import { CrossfadeImage } from "./crossfade-image";
 import { XrayImage } from "./xray-image";
+import { HeroServiceHotspots } from "./hero-service-hotspots";
 const picture = (path: string, alt: string, className = "") => (
   <img
     className={className}
@@ -208,7 +209,9 @@ export function FigmaHome() {
               cutaway="media/xray/hero-v2.webp"
               alt="Mercedes-Benz — ремонт и обслуживание в техцентре Адмирал"
               priority
-            />
+            >
+              <HeroServiceHotspots />
+            </XrayImage>
             <div
               className="hero-service-links"
               aria-label="Услуги для Вашего автомобиля"
