@@ -3,6 +3,23 @@ import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "lenis/dist/lenis.css";
+let activeScroll: Lenis | null = null;
+export function scrollToSection(element: HTMLElement) {
+  if (activeScroll) {
+    activeScroll.scrollTo(element, {
+      offset: -100,
+      duration: 0.85,
+      force: true,
+    });
+  } else {
+    element.scrollIntoView({
+      block: "start",
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+    });
+  }
+}
 export function SmoothScroll() {
   useLayoutEffect(() => {
     const mm = gsap.matchMedia();
@@ -16,6 +33,7 @@ export function SmoothScroll() {
           prevent: (node) =>
             !!node.closest("dialog,.vehicle-explorer-viewport.zoomed,select"),
         });
+        activeScroll = lenis;
         const tick = (time: number) => lenis.raf(time * 1000);
         const reset = () => lenis.scrollTo(0, { immediate: true, force: true });
         const lock = () => {
@@ -36,6 +54,7 @@ export function SmoothScroll() {
           window.removeEventListener("hashchange", reset);
           gsap.ticker.remove(tick);
           lenis.destroy();
+          if (activeScroll === lenis) activeScroll = null;
         };
       },
     );

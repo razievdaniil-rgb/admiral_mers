@@ -10,7 +10,6 @@ Based on the supplied Dala and Apple style references, while preserving the clie
 - History and gallery photographs crossfade after decoding; captions do not overlap. Reduced motion keeps all content available.
 - Direct telephone, Telegram and WhatsApp links replace the demonstration booking form. The catalogue's WhatsApp draft includes the selected model and service; the visitor sends it themselves.
 - Popular work prices appear on the home page; all 26 approved work prices are searchable without selecting a model. Parts and consumables are separate, and final costs are agreed before work.
-- Services and prices precede the optional 2D catalogue. ТО is accessible directly. The model list includes W124, W140, SL and SLK/SLC.
+- Services and prices precede the always-visible 2D catalogue. A shortcut at the top of Services scrolls directly to the cars. ТО is accessible directly. The model list includes W124, W140, SL and SLK/SLC.
 
 Work branch: `client/service-first`. Based on the premium 2D design and the client's 25 November feedback. The reference site's clear service hierarchy and direct contact approach inform the information architecture; its visual design and unverified claims are not copied. Price/contact source: https://elkancode.ru/admiral-mercedes-msk/ (approved in chat).
-

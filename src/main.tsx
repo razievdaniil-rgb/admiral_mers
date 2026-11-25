@@ -40,7 +40,7 @@ import "./figma.css";
 import "./motion-polish.css";
 import "./ux-refinement.css";
 import "./xray-image.css";
-import { SmoothScroll } from "./smooth-scroll";
+import { SmoothScroll, scrollToSection } from "./smooth-scroll";
 import { SmoothCatalog } from "./smooth-catalog";
 import { CategoryModal } from "./category-modal";
 import { serviceContent } from "./service-content";
@@ -406,20 +406,11 @@ function Catalog() {
   );
 }
 function ServicesPage() {
-  const catalog = useRef<HTMLDetailsElement>(null);
+  const catalog = useRef<HTMLElement>(null);
   const showCatalog = () => {
     if (!catalog.current) return;
-    catalog.current.open = true;
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-      catalog.current?.scrollIntoView({
-        block: "start",
-        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-      });
-      catalog.current?.querySelector("select")?.focus({ preventScroll: true });
-    });
+    scrollToSection(catalog.current);
+    catalog.current.querySelector("select")?.focus({ preventScroll: true });
   };
   return (
     <>
@@ -466,12 +457,12 @@ function ServicesPage() {
           нет на витрине, это не ограничивает запись в сервис.
         </p>
       </section>
-      <details className="optional-catalog" ref={catalog} id="mercedes-catalog">
-        <summary className="container">
-          Посмотреть модели Mercedes-Benz <Plus size={22} />
-        </summary>
+      <section className="optional-catalog" ref={catalog} id="mercedes-catalog">
+        <div className="container catalog-section-heading">
+          Модели Mercedes-Benz
+        </div>
         <Catalog />
-      </details>
+      </section>
       <CTA />
     </>
   );
