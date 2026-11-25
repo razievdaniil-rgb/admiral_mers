@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { ArrowUpRight, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { prices, searchPrices, formatPrice } from "./pricing";
 import { telegram, ContactLinks } from "./contact";
 export function PopularPrices() {
@@ -14,7 +14,7 @@ export function PopularPrices() {
           <h2 id="popular-title">Популярные работы</h2>
         </div>
         <a className="text-link" href="#/services">
-          Все услуги и цены <ArrowUpRight size={18} />
+          Все услуги и цены
         </a>
       </div>
       <div className="popular-price-grid">
@@ -26,10 +26,7 @@ export function PopularPrices() {
               href={`#/services/${item.service}`}
               key={id}
             >
-              <span className="price-card-index">
-                0{i + 1}
-                <ArrowUpRight size={20} />
-              </span>
+              <span className="price-card-index">0{i + 1}</span>
               <h3>{item.name}</h3>
               <strong>{formatPrice(item.price)}</strong>
             </a>
@@ -62,7 +59,7 @@ export function PriceList({ service }: { service?: string }) {
         </p>
         <ContactLinks compact />
         <a className="text-link" href="#/services">
-          Посмотреть прайс на другие работы <ArrowUpRight size={17} />
+          Посмотреть прайс на другие работы
         </a>
       </section>
     );
@@ -113,9 +110,7 @@ export function PriceList({ service }: { service?: string }) {
           <article className="price-row" key={item.id}>
             <a href={`#/services/${item.service}`}>
               {item.name}
-              <span>
-                Подробнее о направлении <ArrowUpRight size={13} />
-              </span>
+              <span>Подробнее о направлении</span>
             </a>
             <strong>{formatPrice(item.price)}</strong>
             <a
@@ -125,7 +120,7 @@ export function PriceList({ service }: { service?: string }) {
               rel="noopener noreferrer"
               aria-label={`Обсудить в Telegram: ${item.name}`}
             >
-              Обсудить <ArrowUpRight size={16} />
+              Обсудить
             </a>
           </article>
         ))}
@@ -144,7 +139,7 @@ export function PriceList({ service }: { service?: string }) {
         Кузовной ремонт, детейлинг, дооснащение и другие индивидуальные задачи —
         обсудите напрямую с техцентром.{" "}
         <a href={telegram} target="_blank" rel="noopener noreferrer">
-          Написать в Telegram ↗
+          Написать в Telegram
         </a>
       </p>
     </section>

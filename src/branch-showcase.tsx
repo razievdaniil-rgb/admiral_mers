@@ -1,13 +1,7 @@
 import { telegram } from "./contact";
 import { useDialogMotion } from "./dialog-motion";
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
-  Expand,
-  X,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { assetUrl, media } from "./assets";
 import { branches, branchStatus, mapLink } from "./data";
 import "./branch-showcase.css";
@@ -153,7 +147,7 @@ function BranchCard({ branch }: { branch: (typeof branches)[number] }) {
             target="_blank"
             rel="noreferrer"
           >
-            Построить маршрут <ArrowUpRight size={17} />
+            Построить маршрут
           </a>
           <a
             className="text-link"
@@ -161,7 +155,7 @@ function BranchCard({ branch }: { branch: (typeof branches)[number] }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Telegram <ArrowUpRight size={17} />
+            Telegram
           </a>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { consultationLink } from "./contact";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { models, allServices } from "./data";
 import vehicles from "./catalog-vehicles.json";
 import { assetUrl } from "./assets";
@@ -223,7 +223,6 @@ export function SmoothCatalog({
                 href={`#/services/${selectedService.id}?model=${encodeURIComponent(label)}`}
               >
                 Смотреть работы
-                <ArrowUpRight size={17} />
               </a>
             </div>
           )}
@@ -240,7 +239,7 @@ export function SmoothCatalog({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Обсудить в WhatsApp <ArrowUpRight size={18} />
+              Обсудить в WhatsApp
             </a>
           </div>
         </div>
@@ -292,7 +291,7 @@ export function SmoothCatalog({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Обсудить: {other.name} <ArrowUpRight size={17} />
+              Обсудить: {other.name}
             </a>
           </div>
         </details>

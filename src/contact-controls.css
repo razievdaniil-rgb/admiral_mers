@@ -99,10 +99,6 @@ select:not([multiple]):not([size]) {
   color: #f4f5f7;
   text-decoration: none;
 }
-.contact-popover > a svg:last-child {
-  margin-left: auto;
-  color: #a5abb5;
-}
 .contact-popover > a:hover,
 .contact-popover > a:focus-visible {
   background: #ffffff0c;

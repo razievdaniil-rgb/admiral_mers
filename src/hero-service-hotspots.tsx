@@ -1,4 +1,4 @@
-import { ArrowUpRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 // Positions follow the white SUV's registered 1335 × 701 exterior/cutaway pair.
 const parts = [
@@ -74,9 +74,7 @@ export function HeroServiceHotspots() {
           </span>
           <span className="hero-part-label">
             <strong>{part.title}</strong>
-            <span>
-              Подробнее об услуге <ArrowUpRight size={14} />
-            </span>
+            <span>Подробнее об услуге</span>
           </span>
         </a>
       ))}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowUpRight, Calculator } from "lucide-react";
+import { Calculator } from "lucide-react";
 import { models } from "./data";
 import { whatsapp, ContactLinks } from "./contact";
 import { formatPrice } from "./pricing";
@@ -19,7 +19,7 @@ export function MaintenanceCalculator() {
   return (
     <section className="maintenance-calculator container section">
       <a className="text-link" href="#/services">
-        Услуги и прайс <ArrowUpRight size={17} />
+        Услуги и прайс
       </a>
       <p className="eyebrow">Обслуживание Mercedes-Benz</p>
       <h1>Рассчитать ТО</h1>
@@ -36,7 +36,7 @@ export function MaintenanceCalculator() {
         </span>
         {total > 0 && (
           <a href={link} target="_blank" rel="noopener noreferrer">
-            Обсудить в WhatsApp <ArrowUpRight size={16} />
+            Обсудить в WhatsApp
           </a>
         )}
       </div>
@@ -145,7 +145,7 @@ export function MaintenanceCalculator() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Обсудить расчёт в WhatsApp <ArrowUpRight size={18} />
+              Обсудить расчёт в WhatsApp
             </a>
           )}
           <ContactLinks compact />

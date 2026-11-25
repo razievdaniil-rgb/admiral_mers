@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  ArrowUpRight,
   ArrowRight,
   ChevronLeft,
   Plus,
@@ -121,7 +120,6 @@ function BookButton({
       aria-label={context ? `Написать в Telegram: ${context}` : undefined}
     >
       {children}
-      <ArrowUpRight size={19} />
     </a>
   );
 }
@@ -254,11 +252,10 @@ function Header({ route }: { route: string }) {
           {nav.map(([path, label]) => (
             <a key={path} href={`#${path}`} onClick={() => setOpen(false)}>
               {label}
-              <ArrowUpRight />
             </a>
           ))}
           <a href="#/maintenance-cost" onClick={() => setOpen(false)}>
-            Рассчитать ТО <ArrowUpRight size={18} />
+            Рассчитать ТО
           </a>
           <ContactLinks compact />
           <p>Ремонт и обслуживание Mercedes-Benz с 1999 года.</p>
@@ -279,10 +276,7 @@ function Footer() {
             </a>
           ))}
         </nav>
-        <a href={telephone}>
-          {phone}
-          <ArrowUpRight size={18} />
-        </a>
+        <a href={telephone}>{phone}</a>
       </div>
       <ContactLinks />
       <div className="footer-bottom">
@@ -351,7 +345,6 @@ function BranchCards() {
           <div className="branch-actions">
             <a href={mapLink(b.address)} target="_blank" rel="noreferrer">
               Маршрут
-              <ArrowUpRight size={16} />
             </a>
             <BookButton booking={{ branch: b.id }} className="text-button">
               Записаться
@@ -451,7 +444,6 @@ function ServicesPage() {
         >
           <CarFront size={17} />
           Выбрать Mercedes
-          <ArrowUpRight size={14} />
         </button>
         {allServices.map((s) => (
           <a
@@ -461,7 +453,6 @@ function ServicesPage() {
             title={s.short}
           >
             {shortcutLabels[s.id] || s.short}
-            <ArrowUpRight size={13} />
           </a>
         ))}
       </nav>
@@ -505,7 +496,6 @@ function FAQ({ items }: { items: [string, string][] }) {
         </h2>
         <a href={telephone} className="text-link">
           Обсудить с мастером
-          <ArrowUpRight size={18} />
         </a>
       </div>
       <div className="faq-list">
@@ -556,13 +546,13 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
             </BookButton>
             {service.id === "maintenance" && (
               <a className="button secondary" href="#/maintenance-cost">
-                Рассчитать ТО <ArrowUpRight size={18} />
+                Рассчитать ТО
               </a>
             )}
             {service.id === "engine" && (
               <div className="service-related-links">
                 <a href="#/services/transmission">
-                  КПП, РКПП, раздатка и редукторы ↗
+                  КПП, РКПП, раздатка и редукторы
                 </a>
               </div>
             )}
@@ -611,7 +601,7 @@ function ServicePage({ service, model }: { service: Service; model: string }) {
             <h3>Перед визитом</h3>
             <p>{content.preparation}</p>
             <a className="text-link" href={telephone}>
-              Обсудить с техцентром <ArrowUpRight size={18} />
+              Обсудить с техцентром
             </a>
           </div>
         </section>
@@ -682,7 +672,6 @@ function AboutPage() {
           </p>
           <a href={telephone} className="text-link">
             Обсудить по телефону
-            <ArrowUpRight size={18} />
           </a>
         </div>
       </section>
@@ -732,7 +721,6 @@ function Map() {
         rel="noreferrer"
       >
         Открыть обе точки в Яндекс Картах
-        <ArrowUpRight size={17} />
       </a>
     </div>
   );
@@ -849,7 +837,13 @@ function App() {
         К содержимому
       </a>
       <Header route={path} />
-      <main ref={main} id="main" tabIndex={-1} key={path} className={path === "/" ? undefined : "page-arrival"}>
+      <main
+        ref={main}
+        id="main"
+        tabIndex={-1}
+        key={path}
+        className={path === "/" ? undefined : "page-arrival"}
+      >
         {path === "/" ? (
           <Home />
         ) : path === "/services" ? (

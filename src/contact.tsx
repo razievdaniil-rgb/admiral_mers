@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { MessageCircle, Phone, ArrowUpRight, ChevronDown } from "lucide-react";
+import { MessageCircle, Phone, ChevronDown } from "lucide-react";
 import { phone, telephone } from "./data";
 export const telegram = "https://t.me/MB_ADMIRAL";
 export const whatsapp = "https://wa.me/79164583217";
@@ -68,7 +68,6 @@ export function ContactLinks({ compact = false }: { compact?: boolean }) {
           >
             <MessageCircle size={17} />
             Telegram
-            <ArrowUpRight size={15} />
           </a>
           <a
             href={whatsapp}
@@ -78,7 +77,6 @@ export function ContactLinks({ compact = false }: { compact?: boolean }) {
           >
             <MessageCircle size={17} />
             WhatsApp
-            <ArrowUpRight size={15} />
           </a>
         </div>
       </div>

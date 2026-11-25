@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import {
-  ArrowUpRight,
   ArrowRight,
   ChevronLeft,
   ChevronRight,
@@ -198,7 +197,7 @@ export function FigmaHome() {
               <div className="hero-quick-actions">
                 <a className="hero-maintenance-link" href="#/maintenance-cost">
                   <Calculator size={17} />
-                  Рассчитать ТО <ArrowUpRight size={16} />
+                  Рассчитать ТО
                 </a>
                 <a className="text-link" href="#/services">
                   Услуги и цены <ArrowRight size={17} />
@@ -226,27 +225,19 @@ export function FigmaHome() {
             >
               <a href="#/services/maintenance">
                 <span>ТО Mercedes-Benz</span>
-                <strong>
-                  от 7 750 ₽ <ArrowUpRight size={15} />
-                </strong>
+                <strong>от 7 750 ₽</strong>
               </a>
               <a href="#/services/diagnostics">
                 <span>Диагностика Xentry</span>
-                <strong>
-                  от 3 700 ₽ <ArrowUpRight size={15} />
-                </strong>
+                <strong>от 3 700 ₽</strong>
               </a>
               <a href="#/services/suspension">
                 <span>Ходовая и тормоза</span>
-                <strong>
-                  Колодки от 4 550 ₽ <ArrowUpRight size={15} />
-                </strong>
+                <strong>Колодки от 4 550 ₽</strong>
               </a>
               <a href="#/services/detailing">
                 <span>Детейлинг</span>
-                <strong>
-                  Кузов и салон <ArrowUpRight size={15} />
-                </strong>
+                <strong>Кузов и салон</strong>
               </a>
             </div>
             <p className="hero-price-note">
@@ -256,9 +247,7 @@ export function FigmaHome() {
         </div>
         <div className="container hero-bottomline">
           <span>27 лет специализации на Mercedes-Benz</span>
-          <a href="#/contacts">
-            Два техцентра в Москве <ArrowUpRight size={15} />
-          </a>
+          <a href="#/contacts">Два техцентра в Москве</a>
         </div>
       </section>
       <PopularPrices />
@@ -286,7 +275,6 @@ export function FigmaHome() {
         </div>
         <a href="#/about" className="text-link">
           Больше о техцентре
-          <ArrowUpRight size={17} />
         </a>
       </section>
       <BranchShowcase />
@@ -309,13 +297,11 @@ export function FigmaHome() {
               <div className="sculpture-base" />
               {picture(media.serviceIllustrations[i], "", "sculpture-image")}
               <h3>{s.short}</h3>
-              <ArrowUpRight className="card-arrow" size={17} />
             </a>
           ))}
         </div>
         <a className="button" href="#/services">
           Смотреть услуги и цены
-          <ArrowUpRight size={17} />
         </a>
       </section>
       <section className="figma-comfort container">
@@ -346,14 +332,24 @@ export function FigmaHome() {
         </div>
         <div className="comfort-gallery" data-reveal>
           <figure>
-            {picture("media/comfort/reception.webp", "Пример оформления приёмки и зоны ожидания", "comfort-photo")}
+            {picture(
+              "media/comfort/reception.webp",
+              "Пример оформления приёмки и зоны ожидания",
+              "comfort-photo",
+            )}
             <figcaption>Приёмка и зона ожидания</figcaption>
           </figure>
           <figure>
-            {picture("media/comfort/treats.webp", "Пример подачи кофе и угощений для гостей", "comfort-photo")}
+            {picture(
+              "media/comfort/treats.webp",
+              "Пример подачи кофе и угощений для гостей",
+              "comfort-photo",
+            )}
             <figcaption>Кофе и угощения для Вас</figcaption>
           </figure>
-          <p className="comfort-placeholder-note">Примеры оформления — фотографии наших техцентров добавим позже.</p>
+          <p className="comfort-placeholder-note">
+            Примеры оформления — фотографии наших техцентров добавим позже.
+          </p>
         </div>
       </section>
       <section className="figma-final-cta container section" data-reveal>
@@ -369,7 +365,6 @@ export function FigmaHome() {
           rel="noopener noreferrer"
         >
           Написать в Telegram
-          <ArrowUpRight size={17} />
         </a>
       </section>
     </div>

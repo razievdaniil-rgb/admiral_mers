@@ -1,6 +1,6 @@
 import { useDialogMotion } from "./dialog-motion";
 import { useEffect, useRef } from "react";
-import { ArrowUpRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import type { Service } from "./data";
 import { prices, formatPrice } from "./pricing";
 import { telegram } from "./contact";
@@ -65,7 +65,6 @@ export function CategoryModal({
               onClick={onClose}
             >
               {w}
-              <ArrowUpRight size={17} />
             </a>
           </li>
         ))}
@@ -87,7 +86,6 @@ export function CategoryModal({
       <div className="category-actions">
         <a className="text-link" href={url} onClick={onClose}>
           Подробнее об услуге
-          <ArrowUpRight size={17} />
         </a>
         <a
           className="button"
@@ -96,7 +94,6 @@ export function CategoryModal({
           rel="noopener noreferrer"
         >
           Написать в Telegram
-          <ArrowUpRight size={17} />
         </a>
       </div>
     </dialog>
