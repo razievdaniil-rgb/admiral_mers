@@ -40,8 +40,8 @@ const parts = [
   },
   {
     id: "electrics",
-    title: "Электрика и электроника",
-    label: "Салон и электроника",
+    title: "Электрика",
+    label: "Электрика",
     left: 32,
     top: 9,
     width: 30,

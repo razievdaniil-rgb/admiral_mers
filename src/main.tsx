@@ -16,6 +16,7 @@ import {
   CarFront,
   Settings2,
   Sparkles,
+  Snowflake,
   Check,
 } from "lucide-react";
 import { gsap } from "gsap";
@@ -50,6 +51,7 @@ import { PriceList } from "./price-list";
 import "./service-first.css";
 import { MaintenanceCalculator } from "./maintenance-calculator";
 import { ServiceUnitDetails } from "./service-unit-details";
+import { TeamSection } from "./team";
 import "./page-density.css";
 import "./contact-controls.css";
 import "./comfort-gallery.css";
@@ -67,6 +69,7 @@ const icons = {
   car: CarFront,
   settings: Settings2,
   sparkles: Sparkles,
+  snowflake: Snowflake,
 };
 const nav = [
   ["/", "Главная"],
@@ -367,7 +370,7 @@ function ServiceGrid({
   return (
     <>
       <div className={`service-grid ${compact ? "compact" : ""}`}>
-        {services.map((s, i) => (
+        {services.map((s) => (
           <article className="service-card" key={s.id} data-reveal>
             <button
               className="service-toggle"
@@ -375,7 +378,7 @@ function ServiceGrid({
               onClick={() => setActive(s.id)}
             >
               <Image
-                src={media.serviceIllustrations[i]}
+                src={media.serviceIllustrations[s.id]}
                 alt=""
                 className="service-illustration"
               />
@@ -417,6 +420,7 @@ function ServicesPage() {
     suspension: "Ходовая",
     electrics: "Электрика",
     body: "Кузов",
+    climate: "Климат-контроль",
     retrofit: "Дооснащение",
     detailing: "Детейлинг",
   };
@@ -431,7 +435,7 @@ function ServicesPage() {
       <Intro
         eyebrow="Услуги"
         title="Услуги для Вашего Mercedes"
-        description="ТО, диагностика, ремонт агрегатов, кузов и детейлинг. Найдите нужную работу или свяжитесь с нами напрямую."
+        description="ТО, диагностика, ремонт агрегатов, кузов, климат-контроль и детейлинг. Найдите нужную работу или свяжитесь с нами напрямую."
       />
       <nav
         className="container service-shortcuts"
@@ -650,31 +654,7 @@ function AboutPage() {
       <section className="container about-history-section">
         <Timeline />
       </section>
-      <section className="about-team container section">
-        <div>
-          <h2>КОМАНДА</h2>
-          <Image src={media.service} alt="Работа с автомобилем Mercedes-Benz" />
-        </div>
-        <div>
-          <h3>
-            Знаем Mercedes.
-            <br />
-            Слышим владельца.
-          </h3>
-          <p className="lead">
-            За названием «Адмирал» — специалисты, которые занимаются
-            Mercedes-Benz с 1999 года. Наша работа строится на опыте, внимании к
-            автомобилю и открытом общении.
-          </p>
-          <p>
-            Разбираемся в истории автомобиля, объясняем результаты диагностики и
-            согласовываем работы до начала ремонта.
-          </p>
-          <a href={telephone} className="text-link">
-            Обсудить по телефону
-          </a>
-        </div>
-      </section>
+      <TeamSection />
       <section className="section principles container">
         <div className="figma-centered-heading">
           <h2>НАШ ПОДХОД</h2>
@@ -790,6 +770,19 @@ function App() {
     window.scrollTo({ top: 0, behavior: "instant" });
     if (!first.current) main.current?.focus({ preventScroll: true });
     first.current = false;
+    if (
+      path === "/about" &&
+      new URLSearchParams(route.split("?")[1] || "").get("section") === "team"
+    ) {
+      const timer = window.setTimeout(() => {
+        const team = document.getElementById("team");
+        if (team) {
+          ScrollTrigger.refresh();
+          scrollToSection(team, true);
+        }
+      }, 100);
+      return () => window.clearTimeout(timer);
+    }
   }, [route, path, service]);
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {

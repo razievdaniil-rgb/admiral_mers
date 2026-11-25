@@ -202,6 +202,8 @@ export function SmoothCatalog({
               ["transmission", "КПП и привод"],
               ["suspension", "Ходовая"],
               ["electrics", "Электрика"],
+              ["body", "Кузов"],
+              ["climate", "Климат-контроль"],
             ].map(([id, title]) => (
               <button
                 key={id}

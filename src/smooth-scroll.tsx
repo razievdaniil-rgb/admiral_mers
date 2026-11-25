@@ -4,12 +4,24 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "lenis/dist/lenis.css";
 let activeScroll: Lenis | null = null;
-export function scrollToSection(element: HTMLElement) {
+export function scrollToSection(element: HTMLElement, immediate = false) {
+  const header =
+    document.querySelector(".header")?.getBoundingClientRect().height || 0;
+  const target = Math.max(
+    0,
+    element.getBoundingClientRect().top + window.scrollY - header - 16,
+  );
   if (activeScroll) {
-    activeScroll.scrollTo(element, {
-      offset: -100,
+    activeScroll.scrollTo(immediate ? target : element, {
+      offset: immediate ? 0 : -100,
       duration: 0.85,
       force: true,
+      immediate,
+    });
+  } else if (immediate) {
+    window.scrollTo({
+      top: target,
+      behavior: "instant",
     });
   } else {
     element.scrollIntoView({

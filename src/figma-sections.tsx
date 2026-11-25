@@ -20,6 +20,7 @@ import { BranchShowcase } from "./branch-showcase";
 import { CrossfadeImage } from "./crossfade-image";
 import { XrayImage } from "./xray-image";
 import { HeroServiceHotspots } from "./hero-service-hotspots";
+import { TeamSection } from "./team";
 const picture = (path: string, alt: string, className = "") => (
   <img
     className={className}
@@ -278,24 +279,25 @@ export function FigmaHome() {
         </a>
       </section>
       <BranchShowcase />
+      <TeamSection preview />
       <section className="figma-service-section container section">
         <div className="figma-centered-heading" data-reveal>
           <h2>ВСЁ ДЛЯ ВАШЕГО MERCEDES</h2>
           <p>
-            Техника, кузов, электрика, дооснащение и детейлинг.
+            Техника, кузов, климат-контроль, электрика, дооснащение и детейлинг.
             <br />
             Выберите направление — обсудим работы для Вашего автомобиля.
           </p>
         </div>
         <div className="figma-service-links">
-          {services.map((s, i) => (
+          {services.map((s) => (
             <a
               href={`#/services/${s.id}`}
               className="sculpture-card"
               key={s.id}
             >
               <div className="sculpture-base" />
-              {picture(media.serviceIllustrations[i], "", "sculpture-image")}
+              {picture(media.serviceIllustrations[s.id], "", "sculpture-image")}
               <h3>{s.short}</h3>
             </a>
           ))}

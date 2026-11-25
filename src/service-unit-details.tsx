@@ -77,7 +77,7 @@ export function ServiceUnitDetails({ service }: { service: string }) {
           <h2>
             {service === "transmission"
               ? "От коробки до привода"
-              : "От проводки до электроники"}
+              : "Электрика: питание, проводка и системы автомобиля"}
           </h2>
         </div>
       </div>

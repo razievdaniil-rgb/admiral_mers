@@ -1,0 +1,110 @@
+.team-section {
+  scroll-margin-top: calc(var(--site-header-height) + 24px);
+}
+.team-section-heading {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+.team-section-heading .eyebrow {
+  margin-bottom: 12px;
+}
+.team-section-heading h2 {
+  font-size: var(--type-section);
+  line-height: 1.2;
+  font-weight: 550;
+  letter-spacing: -0.035em;
+}
+.team-section-heading > p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 520px;
+}
+.team-role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.team-role-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: #101318;
+}
+.team-role-card img {
+  width: 100%;
+  aspect-ratio: 1.5;
+  height: auto;
+  object-fit: cover;
+}
+.team-role-copy {
+  padding: 24px;
+}
+.team-role-copy .team-role-subtitle {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #a5abb5;
+  margin-bottom: 8px;
+}
+.team-role-copy h3 {
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 550;
+  letter-spacing: -0.025em;
+  margin-bottom: 12px;
+}
+.team-role-copy > p:not(.team-role-subtitle),
+.team-role-copy li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #bdc3cc;
+}
+.team-role-copy ul {
+  padding-left: 16px;
+  margin: 24px 0 0;
+  display: grid;
+  gap: 12px;
+}
+.team-section-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 24px;
+}
+.team-section-footer > p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 480px;
+}
+.team-section-footer .button {
+  flex-shrink: 0;
+}
+@media (max-width: 800px) {
+  .team-section-heading {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .team-role-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .team-role-card {
+    border-radius: 20px;
+  }
+  .team-role-card img {
+    aspect-ratio: 1.8;
+  }
+  .team-role-copy {
+    padding: 20px;
+  }
+  .team-section-footer {
+    align-items: start;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

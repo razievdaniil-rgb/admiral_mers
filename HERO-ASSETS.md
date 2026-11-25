@@ -8,3 +8,7 @@ Created using the built-in imagegen tool, 25 November 2026. Optimised with Sharp
 - `public/media/comfort/treats.webp`: generated placeholder. Prompt: editorial photograph of coffee cups, a full plate of pastries and cookies, water and linen on an oak table, softly blurred automotive lounge with charcoal sofa, natural daylight, no people or lettering.
 
 Hospitality photos are visibly labelled examples on the website, pending actual branch photographs. Both hero layers use the same 1335 × 701 canvas; homepage service hotspots were repositioned to match the SUV. Catalogue assets are unchanged.
+
+## Climate service illustration — 26 November 2026
+
+`public/media/services/climate.webp` was generated using the built-in imagegen tool, then optimised locally. Prompt: realistic automotive workshop close-up, technician checking the temperature at a Mercedes-Benz cabin air vent with a probe, dashboard and climate controls, graphite and silver palette, no faces, bodywork repairs or text overlays. This is an illustrative service image. The matching `climate-symbol.svg` is a lightweight native vector showing vents and a snowflake.

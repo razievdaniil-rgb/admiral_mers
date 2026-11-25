@@ -254,7 +254,7 @@ const baseServices: Service[] = [
     id: "electrics",
     image: "media/services/electrics.webp",
     imageAlt: "Проверка проводки автомобиля мультиметром",
-    title: "Электрика и электроника",
+    title: "Электрика",
     short: "Электрика",
     icon: "bolt",
     intro:
@@ -271,16 +271,16 @@ const baseServices: Service[] = [
     id: "body",
     image: "media/services/body.webp",
     imageAlt: "Восстановление металлической кузовной панели",
-    title: "Кузов и климат",
-    short: "Кузов и климат",
+    title: "Кузовной ремонт",
+    short: "Кузов",
     icon: "car",
     intro:
-      "Забота о внешнем виде автомобиля и комфорте внутри. Подбираем работы после осмотра.",
+      "Осматриваем повреждения кузова и согласуем восстановление деталей и покрытия.",
     works: [
       "Осмотр кузова и оценка работ",
       "Кузовной ремонт",
-      "Диагностика климатической системы",
-      "Обслуживание кондиционера",
+      "Восстановление кузовных деталей",
+      "Восстановление лакокрасочного покрытия",
     ],
     faq: commonFaq,
   },
@@ -319,6 +319,22 @@ const baseServices: Service[] = [
     faq: commonFaq,
   },
 ];
+baseServices.splice(6, 0, {
+  id: "climate",
+  image: "media/services/climate.webp",
+  imageAlt: "Проверка температуры воздуха и работы климат-контроля в салоне",
+  title: "Климат-контроль",
+  short: "Климат-контроль",
+  icon: "snowflake",
+  intro:
+    "Система обогрева, система кондиционирования и система вентиляции салона — отдельное направление обслуживания.",
+  works: [
+    "Проверка обогрева салона",
+    "Диагностика кондиционера",
+    "Проверка вентиляции и управления климатом",
+  ],
+  faq: commonFaq,
+});
 export const services = baseServices.map(enrichService);
 export const transmission: Service = enrichService({
   id: "transmission",
