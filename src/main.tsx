@@ -55,6 +55,7 @@ import "./page-density.css";
 import "./contact-controls.css";
 import "./comfort-gallery.css";
 import "./interaction-polish.css";
+import "./visual-consistency.css";
 
 gsap.registerPlugin(ScrollTrigger);
 type Booking = { service?: string; model?: string; branch?: string };
