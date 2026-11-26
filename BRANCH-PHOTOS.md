@@ -1,6 +1,6 @@
 # Client photographs — 26 November 2026
 
-All 17 attached client images are used. Confirmed mapping: photos 1–6 are Kievskaya workshop; 7–9 Gostinichny workshop; 10–11 Kievskaya facade; 12–14 Gostinichny facade; 15–17 Kievskaya reception.
+All 17 attached client images are used. Confirmed mapping: photos 1–6 are Kievskaya workshop; 7 is Gostinichny reception (direct acceptance bays), 8–9 Gostinichny workshop; 10–11 Kievskaya facade; 12–14 Gostinichny facade; 15–17 Kievskaya reception. The reception/workshop split was corrected following the client's follow-up on 26 November.
 
 Optimised files live in `public/media/branches/`. Each has a full WebP (maximum 1600 × 1200, preserving aspect ratio) and a preview WebP (maximum 680 × 510). No generated alterations; originals remain in the attachment folder. Landscape facade shots are shown first; the dialog shows full photographs with `object-fit: contain`.
 

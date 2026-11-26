@@ -20,7 +20,8 @@ function series(
   }));
 }
 
-// Client confirmed: attachments 1–6 Kiev, 7–9 Gostinichny; 10–11 / 12–14 facades;
+// Client confirmed: attachments 1–6 Kiev; 7 Gostinichny reception, 8–9 workshop;
+// 10–11 / 12–14 facades;
 // 15–17 Kiev reception. Do not reuse one branch's images for another branch.
 const kievFacades = series("kiev", "facade", "Фасад", 2);
 const hotelFacades = series("hotel", "facade", "Фасад", 3);
@@ -35,6 +36,7 @@ export const branchPhotos: Record<"kiev" | "hotel", BranchPhoto[]> = {
     hotelFacades[1],
     hotelFacades[0],
     hotelFacades[2],
-    ...series("hotel", "workshop", "Ремзона", 3),
+    ...series("hotel", "workshop", "Ремзона", 3).slice(1),
+    ...series("hotel", "reception", "Приёмка", 1),
   ],
 };

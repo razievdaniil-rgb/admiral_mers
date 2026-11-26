@@ -24,8 +24,10 @@ test("all seventeen client photographs belong to their confirmed branch and reso
   assert.equal(branchPhotos.kiev.filter((p) => p.name === "Ремзона").length, 6);
   assert.equal(
     branchPhotos.hotel.filter((p) => p.name === "Ремзона").length,
-    3,
+    2,
   );
   assert.equal(branchPhotos.kiev.filter((p) => p.name === "Приёмка").length, 3);
-  assert.ok(!branchPhotos.hotel.some((p) => p.name === "Приёмка"));
+  const hotelReception = branchPhotos.hotel.filter((p) => p.name === "Приёмка");
+  assert.equal(hotelReception.length, 1);
+  assert.equal(hotelReception[0].src, "media/branches/hotel-reception-1.webp");
 });
