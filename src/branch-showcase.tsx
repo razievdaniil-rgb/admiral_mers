@@ -2,38 +2,19 @@ import { telegram } from "./contact";
 import { useDialogMotion } from "./dialog-motion";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
-import { assetUrl, media } from "./assets";
+import { assetUrl } from "./assets";
+import { branchPhotos, type BranchPhoto } from "./branch-photos";
 import { branches, branchStatus, mapLink } from "./data";
 import "./branch-showcase.css";
 import { CrossfadeImage } from "./crossfade-image";
-const photos = [
-  {
-    name: "Фасад",
-    src: media.history,
-    alt: "Фасад техцентра — временное фото для макета",
-  },
-  {
-    name: "Ремзона",
-    src: media.workshop,
-    alt: "Ремонтная зона — временное фото для макета",
-  },
-  {
-    name: "Приёмка",
-    src: media.service,
-    alt: "Работа с автомобилем — временное фото для блока приёмки",
-  },
-  {
-    name: "Работы",
-    src: "media/services/maintenance.webp",
-    alt: "Обслуживание автомобиля — временная иллюстрация",
-  },
-];
 function GalleryDialog({
   branch,
+  photos,
   index,
   onClose,
 }: {
   branch: string;
+  photos: BranchPhoto[];
   index: number;
   onClose: () => void;
 }) {
@@ -53,7 +34,9 @@ function GalleryDialog({
     };
   }, []);
   const next = (direction: number) =>
-    setPhoto((photo + direction + photos.length) % photos.length);
+    setPhoto(
+      (current) => (current + direction + photos.length) % photos.length,
+    );
   return (
     <dialog
       ref={ref}
@@ -91,7 +74,7 @@ function GalleryDialog({
           <ChevronLeft />
         </button>
         <span>
-          {photo + 1} / {photos.length} · Временные фото для макета
+          {photo + 1} / {photos.length}
         </span>
         <button aria-label="Следующее фото" onClick={() => next(1)}>
           <ChevronRight />
@@ -101,8 +84,20 @@ function GalleryDialog({
   );
 }
 function BranchCard({ branch }: { branch: (typeof branches)[number] }) {
+  const photos = branchPhotos[branch.id as keyof typeof branchPhotos];
   const [photo, setPhoto] = useState(0),
     [gallery, setGallery] = useState(false);
+  const categories = [...new Set(photos.map((p) => p.name))];
+  const categoryPhotos = photos
+    .map((p, i) => ({ ...p, index: i }))
+    .filter((p) => p.name === photos[photo].name);
+  const categoryIndex = categoryPhotos.findIndex((p) => p.index === photo);
+  const nextInCategory = (direction: number) => {
+    const next =
+      (categoryIndex + direction + categoryPhotos.length) %
+      categoryPhotos.length;
+    setPhoto(categoryPhotos[next].index);
+  };
   return (
     <article className="branch-showcase-card">
       <button
@@ -111,10 +106,12 @@ function BranchCard({ branch }: { branch: (typeof branches)[number] }) {
         aria-label={`Посмотреть фотографии: ${branch.name}`}
       >
         <CrossfadeImage
-          src={assetUrl(photos[photo].src)}
+          src={assetUrl(photos[photo].preview)}
           alt={photos[photo].alt}
         />
-        <span className="branch-photo-note">Временные фото</span>
+        <span className="branch-photo-note">
+          {photos[photo].name} · {categoryIndex + 1} / {categoryPhotos.length}
+        </span>
         <span className="branch-photo-expand">
           <Expand size={17} />
         </span>
@@ -124,15 +121,32 @@ function BranchCard({ branch }: { branch: (typeof branches)[number] }) {
         role="group"
         aria-label={`Фотографии техцентра: ${branch.name}`}
       >
-        {photos.map((p, i) => (
+        {categories.map((name) => (
           <button
-            key={p.name}
-            aria-pressed={photo === i}
-            onClick={() => setPhoto(i)}
+            key={name}
+            aria-pressed={photos[photo].name === name}
+            onClick={() => setPhoto(photos.findIndex((p) => p.name === name))}
           >
-            {p.name}
+            {name}
           </button>
         ))}
+      </div>
+      <div className="branch-photo-paging">
+        <button
+          onClick={() => nextInCategory(-1)}
+          aria-label={`Предыдущее фото: ${branch.name}`}
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <span aria-live="polite">
+          {photos[photo].name} · {categoryIndex + 1} из {categoryPhotos.length}
+        </span>
+        <button
+          onClick={() => nextInCategory(1)}
+          aria-label={`Следующее фото: ${branch.name}`}
+        >
+          <ChevronRight size={18} />
+        </button>
       </div>
       <div className="branch-showcase-copy">
         <span className={`branch-showcase-status ${branch.new ? "new" : ""}`}>
@@ -162,6 +176,7 @@ function BranchCard({ branch }: { branch: (typeof branches)[number] }) {
       {gallery && (
         <GalleryDialog
           branch={branch.name}
+          photos={photos}
           index={photo}
           onClose={() => setGallery(false)}
         />

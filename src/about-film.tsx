@@ -23,8 +23,8 @@ const chapters = [
     label: "Два адреса",
     title: "Продолжаем движение",
     text: "Вторая точка — Гостиничный проезд, 10А, строение 1.",
-    image: media.workshop,
-    alt: "Ремонтная зона Адмирала",
+    image: media.hotelWorkshop,
+    alt: "Ремонтная зона техцентра на Гостиничном проезде",
     duration: 8500,
   },
 ];

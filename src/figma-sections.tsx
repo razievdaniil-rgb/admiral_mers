@@ -75,16 +75,24 @@ export function FigmaTimeline() {
       >
         <figure>
           <CrossfadeImage
-            src={assetUrl(active === 0 ? media.history : media.workshop)}
+            src={assetUrl(
+              active === 0
+                ? media.history
+                : active === 1
+                  ? media.workshop
+                  : media.hotelWorkshop,
+            )}
             alt={
               active === 0
                 ? "Прежний техцентр Адмирал"
-                : "Ремонтная зона Адмирала"
+                : active === 1
+                  ? "Ремонтная зона на Киевской"
+                  : "Ремонтная зона на Гостиничном проезде"
             }
           />
           <figcaption>
             {active === 2
-              ? "Ремзона на Киевской и второй техцентр на Гостиничном проезде."
+              ? "Техцентр на Гостиничном проезде."
               : history[active].year}
           </figcaption>
         </figure>
@@ -335,23 +343,20 @@ export function FigmaHome() {
         <div className="comfort-gallery" data-reveal>
           <figure>
             {picture(
-              "media/comfort/reception.webp",
-              "Пример оформления приёмки и зоны ожидания",
+              media.kievReception,
+              "Приёмка и зона ожидания техцентра на Киевской",
               "comfort-photo",
             )}
-            <figcaption>Приёмка и зона ожидания</figcaption>
+            <figcaption>Приёмка на Киевской</figcaption>
           </figure>
           <figure>
             {picture(
-              "media/comfort/treats.webp",
-              "Пример подачи кофе и угощений для гостей",
+              media.kievHospitality,
+              "Кофейная зона для гостей техцентра на Киевской",
               "comfort-photo",
             )}
             <figcaption>Кофе и угощения для Вас</figcaption>
           </figure>
-          <p className="comfort-placeholder-note">
-            Примеры оформления — фотографии наших техцентров добавим позже.
-          </p>
         </div>
       </section>
       <section className="figma-final-cta container section" data-reveal>
